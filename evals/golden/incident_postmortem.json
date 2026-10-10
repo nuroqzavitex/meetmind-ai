@@ -1,0 +1,197 @@
+{
+  "context": {
+    "meeting_id": "incident_postmortem",
+    "title": "Post-mortem sự cố hệ thống đơn hàng",
+    "meeting_date": "2026-10-22",
+    "participants": [
+      {
+        "name": "Sang",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Hiền"
+      },
+      {
+        "name": "Tùng"
+      },
+      {
+        "name": "Vân"
+      },
+      {
+        "name": "Cường"
+      }
+    ]
+  },
+  "transcript": "datasets/transcripts/incident_postmortem.txt",
+  "kind": "realistic",
+  "topics": [
+    {
+      "question": "Cách chặn cạn pool kết nối CSDL",
+      "final_option": "PgBouncer",
+      "match": [
+        "pool",
+        "pgbouncer"
+      ],
+      "final_match": [
+        "pgbouncer"
+      ]
+    },
+    {
+      "question": "Ngưỡng cảnh báo",
+      "final_option": "Hạ xuống 70%",
+      "match": [
+        "nguong",
+        "canh bao"
+      ],
+      "final_match": [
+        "70%",
+        "70 phan tram"
+      ]
+    },
+    {
+      "question": "Quy định duyệt hotfix",
+      "final_option": "Hai người duyệt",
+      "match": [
+        "hotfix"
+      ],
+      "final_match": [
+        "hai nguoi",
+        "2 nguoi"
+      ]
+    },
+    {
+      "question": "Có bắt buộc feature flag cho tính năng lớn không?",
+      "final_option": null,
+      "match": [
+        "feature flag"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Cách chặn cạn pool kết nối → PgBouncer",
+      "match": [
+        "pgbouncer"
+      ],
+      "owner": "Sang",
+      "status": "final"
+    },
+    {
+      "type": "decision",
+      "content": "Ngưỡng cảnh báo → Hạ xuống 70%",
+      "match": [
+        "70%",
+        "70 phan tram"
+      ],
+      "owner": "Sang",
+      "status": "final"
+    },
+    {
+      "type": "decision",
+      "content": "Hotfix phải có hai người duyệt",
+      "match": [
+        "hai nguoi",
+        "2 nguoi"
+      ],
+      "owner": "Sang",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Cài PgBouncer ở môi trường staging",
+      "match": [
+        "pgbouncer",
+        "staging"
+      ],
+      "owner": "Cường",
+      "due_date": "2026-10-26"
+    },
+    {
+      "type": "action_item",
+      "content": "Chỉnh ngưỡng cảnh báo xuống 70%",
+      "match": [
+        "canh bao",
+        "nguong"
+      ],
+      "owner": "Vân",
+      "due_date": "2026-10-22"
+    },
+    {
+      "type": "action_item",
+      "content": "Viết script quay lui cho các migration",
+      "match": [
+        "quay lui",
+        "migration"
+      ],
+      "owner": "Tùng",
+      "due_date": null
+    },
+    {
+      "type": "action_item",
+      "content": "Xuất danh sách đơn lỗi gửi CS",
+      "match": [
+        "danh sach don"
+      ],
+      "owner": "Hiền",
+      "due_date": "2026-10-23"
+    },
+    {
+      "type": "action_item",
+      "content": "Viết báo cáo sự cố",
+      "match": [
+        "viet bao cao",
+        "su co lan nay"
+      ],
+      "owner": "Vân",
+      "due_date": "2026-10-23"
+    },
+    {
+      "type": "blocker",
+      "content": "Migration không có script quay lui nên chưa rollback an toàn được",
+      "match": [
+        "quay lui",
+        "rollback"
+      ]
+    },
+    {
+      "type": "request",
+      "content": "CS nhờ xuất danh sách đơn lỗi để gọi lại khách",
+      "match": [
+        "danh sach don"
+      ]
+    },
+    {
+      "type": "knowledge",
+      "content": "Nguyên nhân sự cố: bản mới không đóng kết nối CSDL khiến pool bị cạn",
+      "match": [
+        "ket noi",
+        "pool"
+      ]
+    },
+    {
+      "type": "knowledge",
+      "content": "Sau mỗi lần phát hành cần có người trực theo dõi biểu đồ trong 30 phút đầu",
+      "match": [
+        "phat hanh",
+        "theo doi"
+      ]
+    },
+    {
+      "type": "feedback",
+      "content": "Báo cáo sự cố lần trước của Vân viết rất rõ ràng",
+      "match": [
+        "lan truoc",
+        "ro rang"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Có nên bắt buộc feature flag cho mọi tính năng lớn không?",
+      "match": [
+        "feature flag"
+      ]
+    }
+  ]
+}

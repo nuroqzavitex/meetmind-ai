@@ -1,0 +1,9 @@
+[00:00:08] Mai: Mình chọn công cụ CI cho repo backend nhé.
+[00:00:25] Sơn: Mình đang có server Jenkins cũ, em đề xuất dùng lại.
+[00:00:50] Mai: Ok, chốt Jenkins, đỡ tốn thêm chi phí.
+[00:01:20] Sơn: Dạ, vậy em ghi nhận là dùng Jenkins.
+[00:03:10] Linh: Chị Mai ơi, em vừa thử GitHub Actions, chạy test nhanh hơn Jenkins gấp đôi mà không phải bảo trì server.
+[00:03:40] Mai: Vậy à, vậy thì chị đổi ý, chốt luôn GitHub Actions, không dùng Jenkins nữa.
+[00:04:05] Sơn: Dạ, em đồng ý.
+[00:04:30] Mai: Linh chuyển pipeline test sang GitHub Actions giúp chị, hạn là 15/10.
+[00:04:45] Linh: Vâng, em nhận.

@@ -1,0 +1,10 @@
+[00:00:10] Ngọc: Mình chọn framework cho trang quản trị mới nhé.
+[00:00:30] Bảo: Em đề xuất React, vì cả team đã dùng ở dự án cũ.
+[00:00:55] Ngọc: Ok, chốt React.
+[00:01:30] Quân: Chị ơi, em thấy Vue nhẹ hơn nhiều, mình đổi sang Vue được không?
+[00:01:55] Ngọc: Cũng được, vậy chốt Vue luôn.
+[00:02:40] Bảo: Khoan chị, trong team chỉ có Quân rành Vue, ba người còn lại làm React hết, mở lại chuyện này đi.
+[00:03:10] Quân: Ừ, đúng rồi, em cũng thấy quay lại React thì an toàn hơn.
+[00:03:35] Ngọc: Ok, vậy quay lại React, chốt React, quên Vue đi.
+[00:04:00] Ngọc: Quân dựng khung dự án React và cấu hình lint giúp chị, xong trước thứ Sáu tuần này.
+[00:04:15] Quân: Dạ vâng.

@@ -1,0 +1,136 @@
+{
+  "acts": [
+    {
+      "utterance_id": "u0001",
+      "act": "propose",
+      "quote": "đề xuất dùng MongoDB",
+      "confidence": 0.9,
+      "topic_hint": "database",
+      "option": "MongoDB"
+    },
+    {
+      "utterance_id": "u0002",
+      "act": "object",
+      "quote": "Mongo thì phần transaction nhiều bảng hơi khó",
+      "confidence": 0.9,
+      "topic_hint": "database",
+      "option": "Mongo"
+    },
+    {
+      "utterance_id": "u0003",
+      "act": "hypothetical",
+      "quote": "Giả sử mình bỏ luôn phần hoàn tiền",
+      "confidence": 0.9,
+      "topic_hint": "database"
+    },
+    {
+      "utterance_id": "u0004",
+      "act": "propose",
+      "quote": "Hay mình dùng Postgres?",
+      "confidence": 0.9,
+      "topic_hint": "database",
+      "option": "Postgres"
+    },
+    {
+      "utterance_id": "u0005",
+      "act": "support",
+      "quote": "Postgres cũng ổn, em đồng ý",
+      "confidence": 0.9,
+      "topic_hint": "database",
+      "option": "Postgres"
+    },
+    {
+      "utterance_id": "u0006",
+      "act": "support",
+      "quote": "Em cũng thấy Postgres hợp hơn",
+      "confidence": 0.9,
+      "topic_hint": "database",
+      "option": "Postgres"
+    },
+    {
+      "utterance_id": "u0007",
+      "act": "decide",
+      "quote": "Vậy mình chốt Postgres nhé",
+      "confidence": 0.9,
+      "topic_hint": "database",
+      "option": "Postgres"
+    },
+    {
+      "utterance_id": "u0007",
+      "act": "knowledge",
+      "quote": "dịch vụ thanh toán bắt buộc giao dịch ACID",
+      "confidence": 0.9,
+      "content": "Dịch vụ thanh toán bắt buộc giao dịch ACID"
+    },
+    {
+      "utterance_id": "u0008",
+      "act": "assign",
+      "quote": "Minh dựng schema Postgres, xong trước thứ Sáu tuần sau nhé",
+      "confidence": 0.9,
+      "content": "Dựng schema Postgres",
+      "assignee": "Minh",
+      "due_text": "thứ Sáu tuần sau"
+    },
+    {
+      "utterance_id": "u0009",
+      "act": "accept_task",
+      "quote": "Vâng ạ",
+      "confidence": 0.9,
+      "content": "Dựng schema Postgres"
+    },
+    {
+      "utterance_id": "u0010",
+      "act": "raise_blocker",
+      "quote": "Môi trường staging đang hỏng, em chưa test được API cũ",
+      "confidence": 0.9,
+      "content": "Staging hỏng, chưa test được API cũ"
+    },
+    {
+      "utterance_id": "u0011",
+      "act": "accept_task",
+      "quote": "Cái staging để em lo luôn",
+      "confidence": 0.9,
+      "content": "Sửa môi trường staging"
+    },
+    {
+      "utterance_id": "u0012",
+      "act": "ask",
+      "quote": "Còn có cần replica đọc không chị?",
+      "confidence": 0.9,
+      "topic_hint": "replica",
+      "content": "Có cần replica đọc không?"
+    },
+    {
+      "utterance_id": "u0013",
+      "act": "defer",
+      "quote": "Cái này để chị xin ý kiến anh Tuấn rồi báo lại",
+      "confidence": 0.9,
+      "topic_hint": "replica",
+      "content": "xin ý kiến anh Tuấn về replica đọc",
+      "assignee": "Lan"
+    },
+    {
+      "utterance_id": "u0014",
+      "act": "request",
+      "quote": "Bên CS nhờ mình xuất báo cáo giao dịch lỗi hằng tuần",
+      "confidence": 0.9,
+      "content": "Xuất báo cáo giao dịch lỗi hằng tuần",
+      "assignee": "CS"
+    },
+    {
+      "utterance_id": "u0015",
+      "act": "assign",
+      "quote": "Hoa làm báo cáo đó, bắt đầu từ tuần sau",
+      "confidence": 0.9,
+      "content": "Xuất báo cáo giao dịch lỗi hằng tuần",
+      "assignee": "Hoa"
+    },
+    {
+      "utterance_id": "u0015",
+      "act": "feedback",
+      "quote": "Tài liệu API đợt này viết rõ hơn hẳn, tốt lắm",
+      "confidence": 0.9,
+      "content": "Tài liệu API đợt này viết rõ hơn (tích cực)"
+    }
+  ]
+}

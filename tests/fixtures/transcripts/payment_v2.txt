@@ -1,0 +1,16 @@
+[00:00:05] Lan: Hôm nay mình chốt CSDL cho dịch vụ thanh toán và phân việc sprint tới nhé.
+[00:00:20] Minh: Em đề xuất dùng MongoDB cho nhanh, schema linh hoạt.
+[00:01:02] Hoa: Mongo thì phần transaction nhiều bảng hơi khó, mình đang cần ACID.
+[00:01:40] Minh: Giả sử mình bỏ luôn phần hoàn tiền thì Mongo vẫn ổn mà, đùa thôi.
+[00:02:15] Lan: Hay mình dùng Postgres? Team đã quen rồi.
+[00:02:40] Minh: Postgres cũng ổn, em đồng ý.
+[00:03:05] Hoa: Em cũng thấy Postgres hợp hơn.
+[00:03:30] Lan: Vậy mình chốt Postgres nhé. Lưu ý chung: dịch vụ thanh toán bắt buộc giao dịch ACID.
+[00:04:10] Lan: Minh dựng schema Postgres, xong trước thứ Sáu tuần sau nhé.
+[00:04:20] Minh: Vâng ạ.
+[00:04:45] Hoa: Môi trường staging đang hỏng, em chưa test được API cũ.
+[00:05:10] Minh: Cái staging để em lo luôn.
+[00:05:40] Hoa: Còn có cần replica đọc không chị?
+[00:06:00] Lan: Cái này để chị xin ý kiến anh Tuấn rồi báo lại.
+[00:06:30] Hoa: Bên CS nhờ mình xuất báo cáo giao dịch lỗi hằng tuần.
+[00:07:00] Lan: Ok, Hoa làm báo cáo đó, bắt đầu từ tuần sau. Tài liệu API đợt này viết rõ hơn hẳn, tốt lắm.

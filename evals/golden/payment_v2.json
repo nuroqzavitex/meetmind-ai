@@ -1,0 +1,31 @@
+{
+  "context": {
+    "meeting_id": "payment_v2",
+    "title": "Payment sprint planning",
+    "meeting_date": "2026-10-08",
+    "participants": [
+      {"name": "Lan", "is_decision_maker": true},
+      {"name": "Minh"},
+      {"name": "Hoa"}
+    ]
+  },
+  "transcript": "datasets/transcripts/payment_v2.txt",
+  "kind": "realistic",
+  "topics": [
+    {"question": "CSDL cho dịch vụ thanh toán", "final_option": "PostgreSQL", "match": ["postgres", "mongo", "csdl"],
+     "final_match": ["postgres"]},
+    {"question": "Có cần replica đọc không?", "final_option": null, "match": ["replica"], "final_match": []}
+  ],
+  "items": [
+    {"type": "decision", "content": "Dùng PostgreSQL cho dịch vụ thanh toán", "match": ["postgres"], "owner": "Lan", "status": "final"},
+    {"type": "action_item", "content": "Dựng schema Postgres", "match": ["schema"], "owner": "Minh", "due_date": "2026-10-16"},
+    {"type": "action_item", "content": "Sửa môi trường staging", "match": ["staging"], "owner": "Minh", "due_date": null},
+    {"type": "action_item", "content": "Xin ý kiến anh Tuấn về replica đọc", "match": ["tuan", "replica"], "owner": "Lan", "due_date": null},
+    {"type": "action_item", "content": "Xuất báo cáo giao dịch lỗi hằng tuần", "match": ["bao cao"], "owner": "Hoa", "due_date": null},
+    {"type": "blocker", "content": "Staging hỏng, chưa test được API cũ", "match": ["staging"]},
+    {"type": "request", "content": "CS cần báo cáo giao dịch lỗi hằng tuần", "match": ["bao cao"]},
+    {"type": "open_question", "content": "Có cần replica đọc không?", "match": ["replica"]},
+    {"type": "knowledge", "content": "Dịch vụ thanh toán bắt buộc giao dịch ACID", "match": ["acid"]},
+    {"type": "feedback", "content": "Tài liệu API đợt này viết rõ hơn", "match": ["tai lieu"]}
+  ]
+}

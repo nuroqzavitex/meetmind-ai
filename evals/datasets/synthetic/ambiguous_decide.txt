@@ -1,0 +1,9 @@
+[00:00:09] Vy: Mình cần chọn cách lưu file đính kèm của khách hàng.
+[00:00:30] Kiên: Một là lưu thẳng vào S3, hai là lưu trên ổ đĩa server rồi đồng bộ lên S3 sau.
+[00:00:50] Kiên: Em nghiêng về S3 nhưng cũng chưa chắc lắm.
+[00:01:05] Hiếu: S3 thì dễ mở rộng, ổ đĩa thì nhanh hơn lúc đầu nhưng mất công backup.
+[00:01:20] Kiên: Backup ổ đĩa thì mình phải tự viết script.
+[00:01:40] Vy: Ừm, cả hai đều có cái hay.
+[00:02:05] Kiên: Vậy sao chị?
+[00:02:15] Vy: Ok chốt vậy nhé.
+[00:02:30] Hiếu: Dạ, vậy là xong chủ đề này.

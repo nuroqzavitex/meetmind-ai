@@ -1,0 +1,55 @@
+{
+  "topics": [
+    {
+      "topic_id": "t1",
+      "question": "Dùng CSDL nào cho dịch vụ thanh toán?"
+    },
+    {
+      "topic_id": "t2",
+      "question": "Có cần replica đọc không?"
+    }
+  ],
+  "aliases": [
+    {
+      "alias": "Mongo",
+      "canonical": "MongoDB"
+    }
+  ],
+  "assignments": [
+    {
+      "act_id": "a0001_0",
+      "topic_id": "t1",
+      "option": "MongoDB"
+    },
+    {
+      "act_id": "a0002_0",
+      "topic_id": "t1",
+      "option": "MongoDB"
+    },
+    {
+      "act_id": "a0004_0",
+      "topic_id": "t1",
+      "option": "Postgres"
+    },
+    {
+      "act_id": "a0005_0",
+      "topic_id": "t1",
+      "option": "Postgres"
+    },
+    {
+      "act_id": "a0006_0",
+      "topic_id": "t1",
+      "option": "Postgres"
+    },
+    {
+      "act_id": "a0007_0",
+      "topic_id": "t1",
+      "option": "Postgres"
+    },
+    {
+      "act_id": "a0013_0",
+      "topic_id": "t2",
+      "option": null
+    }
+  ]
+}

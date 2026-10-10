@@ -1,0 +1,32 @@
+[00:00:08] Quỳnh: Chào mọi người, hôm nay mình đánh giá hai ứng viên backend vừa phỏng vấn vòng hai, Bách và Hà.
+[00:00:30] Đạt: Bắt đầu với Bách nhé. Mỹ, em thấy sao?
+[00:00:50] Mỹ: Bách nền tảng CSDL rất chắc, giải bài thiết kế bảng đơn hàng gọn gàng, em cho điểm tám.
+[00:01:20] Trí: Em hỏi về hệ thống phân tán thì bạn trả lời khá chung chung.
+[00:01:45] Đạt: Ừ, nhưng vị trí này chủ yếu làm CSDL. Anh thấy nên mời Bách vào vòng ba.
+[00:02:05] Mỹ: Em đồng ý.
+[00:02:20] Đạt: Ok, chốt mời Bách vào vòng ba.
+[00:03:10] Trí: Khoan, em vừa kiểm tra lại, Bách ghi trong CV là làm ở công ty cũ ba năm, nhưng bạn ấy nói bốn năm.
+[00:03:35] Quỳnh: Chị đã gọi xác minh, thực ra là hai năm rưỡi, và có một tháng nghỉ không rõ lý do.
+[00:04:00] Đạt: Vậy thì anh đổi lại, chốt không mời Bách vào vòng ba.
+[00:04:20] Quỳnh: Ok, chị gửi email từ chối khéo Bách trong ngày mai.
+[00:05:00] Đạt: Qua Hà. Trí đánh giá giúp anh.
+[00:05:20] Trí: Hà giải thuật tốt, nhưng chưa có kinh nghiệm làm việc nhóm lớn. Em cho điểm bảy.
+[00:05:50] Mỹ: Em thấy Hà học rất nhanh, bạn ấy tự học Go trong hai tháng.
+[00:06:20] Đạt: Anh đề xuất offer cho Hà mức 30 triệu.
+[00:06:45] Quỳnh: Mặt bằng thị trường cho vị trí này khoảng 32 đến 35 triệu, 30 hơi thấp, chị sợ bạn ấy từ chối.
+[00:07:15] Đạt: Ừ, vậy offer 33 triệu, chốt 33 triệu.
+[00:07:30] Mỹ: Em ủng hộ.
+[00:08:00] Trí: Em hỏi, mình thử việc hai tháng hay một tháng?
+[00:08:25] Đạt: Cái này anh chưa chắc, để anh xin ý kiến chị giám đốc nhân sự rồi báo lại.
+[00:09:00] Quỳnh: Chị soạn thư mời nhận việc cho Hà, gửi anh Đạt duyệt trước thứ Hai.
+[00:09:15] Đạt: Ok.
+[00:09:50] Mỹ: Một lưu ý cho lần sau, bài test thiết kế bảng nên cho thêm thời gian, 45 phút hơi ngắn.
+[00:10:10] Quỳnh: Chị ghi nhận.
+[00:10:40] Trí: Bên mình cần cập nhật mô tả công việc cho vị trí backend vì ứng viên nào cũng hỏi về Go.
+[00:11:00] Quỳnh: Trí gửi chị nội dung, chị đăng lại.
+[00:11:15] Trí: Dạ, em gửi chị trong hôm nay.
+[00:11:50] Đạt: Còn quy trình, mình nên cho ứng viên làm bài test trước hay sau phỏng vấn?
+[00:12:10] Mỹ: Trước thì tiết kiệm thời gian phỏng vấn.
+[00:12:30] Trí: Nhưng nhiều ứng viên bỏ ngang nếu phải làm bài trước.
+[00:12:55] Đạt: Mình chưa chốt được, để họp sau.
+[00:13:10] Quỳnh: Ok, hôm nay mình dừng ở đây.

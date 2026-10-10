@@ -1,0 +1,34 @@
+[00:00:10] Phong: Cảm ơn chị Thủy đã dành thời gian. Hôm nay mình rà lại phạm vi triển khai hệ thống quản lý kho cho ACME.
+[00:00:35] Thủy: Cảm ơn anh. Bên chị muốn chốt hai việc là nơi đặt hệ thống và định dạng báo cáo.
+[00:01:00] Kiệt: Về nơi đặt, bên em đề xuất cloud, có sẵn sao lưu và cập nhật tự động.
+[00:01:30] Thủy: Bên chị có quy định dữ liệu kho không được rời khỏi công ty, nên chị nghiêng về on-premise.
+[00:02:00] Kiệt: Vậy thì cloud không phù hợp rồi. On-premise thì bên em cần server riêng của chị.
+[00:02:30] Thủy: Ok, vậy chị đồng ý on-premise, chốt vậy.
+[00:02:50] Phong: Dạ, bên em ghi nhận on-premise.
+[00:05:10] Thủy: Chị vừa nhắn ban giám đốc, họ đồng ý cloud nếu máy chủ đặt trong nước.
+[00:05:30] Kiệt: Bên em đặt ở trung tâm dữ liệu Hà Nội được ạ.
+[00:05:55] Thủy: Vậy đổi lại, chốt cloud đặt tại Hà Nội, không làm on-premise nữa.
+[00:06:10] Phong: Ok, bên em ghi nhận.
+[00:06:40] Kiệt: Bên em sẽ gửi chị bản mô tả bảo mật của trung tâm dữ liệu, trước thứ Sáu tuần này nhé.
+[00:07:00] Thủy: Cảm ơn, chị cần để trình ban giám đốc.
+[00:07:40] Thủy: Giờ đến báo cáo. Bên chị cần xuất báo cáo tồn kho ra Excel mỗi sáng.
+[00:08:05] Phong: Bên em đang định làm PDF trước, Excel làm sau.
+[00:08:30] Thủy: Kế toán bên chị chỉ dùng Excel, PDF thì họ không dùng được.
+[00:08:55] Ly: Vậy mình làm Excel trước nhé anh Phong?
+[00:09:15] Phong: Ok, chốt làm Excel trước, PDF để giai đoạn hai.
+[00:09:40] Kiệt: Em làm báo cáo Excel, giao bản thử trước ngày 30/10.
+[00:10:10] Thủy: Còn tiến độ, bên chị muốn chạy chính thức vào đầu tháng 12.
+[00:10:40] Phong: Với phạm vi này bên em chưa chắc kịp đầu tháng 12, cần xem lại nhân sự.
+[00:11:00] Thủy: Vâng, anh báo chị sớm nhé.
+[00:11:20] Phong: Để anh họp nội bộ rồi trả lời chị về tiến độ trong ngày mai.
+[00:12:00] Ly: Bên em có một lưu ý, hệ thống kho hiện chưa hỗ trợ mã vạch QR, chỉ hỗ trợ mã vạch 1D.
+[00:12:25] Thủy: Kho chị đang dán QR cho toàn bộ pallet đó.
+[00:12:50] Thủy: Vậy bên anh hỗ trợ QR được không?
+[00:13:10] Phong: Cái này anh chưa trả lời được ngay.
+[00:13:30] Kiệt: Để em kiểm tra khả năng hỗ trợ QR rồi báo anh Phong.
+[00:14:10] Thủy: Tuần trước bên chị thử bản demo, giao diện tìm kiếm sản phẩm rất mượt, nhân viên kho khen nhiều.
+[00:14:35] Phong: Cảm ơn chị, bên em sẽ chuyển lời tới team.
+[00:15:00] Thủy: Chị còn một đề nghị, bên anh cử người hướng dẫn nhân viên kho tại chỗ một buổi được không?
+[00:15:25] Phong: Anh ghi nhận, sẽ báo chị lịch cụ thể sau.
+[00:15:50] Thủy: Vậy hôm nay mình dừng ở đây, cảm ơn cả nhóm.
+[00:16:05] Phong: Cảm ơn chị, hẹn gặp lại.

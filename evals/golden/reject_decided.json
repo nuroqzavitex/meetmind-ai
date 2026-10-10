@@ -1,0 +1,42 @@
+{
+  "context": {
+    "meeting_id": "reject_decided",
+    "title": "Tách module giỏ hàng",
+    "meeting_date": "2026-10-08",
+    "participants": [
+      {
+        "name": "Đức",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Hà"
+      },
+      {
+        "name": "Thịnh"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/reject_decided.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Có tách module giỏ hàng thành dịch vụ riêng không?",
+      "final_option": null,
+      "match": [
+        "gio hang",
+        "dich vu rieng"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "open_question",
+      "content": "Có tách giỏ hàng thành dịch vụ riêng không?",
+      "match": [
+        "gio hang",
+        "dich vu rieng"
+      ]
+    }
+  ]
+}

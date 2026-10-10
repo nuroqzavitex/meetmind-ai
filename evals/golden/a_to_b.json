@@ -1,0 +1,57 @@
+{
+  "context": {
+    "meeting_id": "a_to_b",
+    "title": "Chọn dịch vụ gửi email",
+    "meeting_date": "2026-10-05",
+    "participants": [
+      {
+        "name": "Hạnh",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Tuấn"
+      },
+      {
+        "name": "Phương"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/a_to_b.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Dịch vụ gửi email thông báo",
+      "final_option": "Amazon SES",
+      "match": [
+        "email",
+        "amazon",
+        "sendgrid"
+      ],
+      "final_match": [
+        "ses"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Dịch vụ gửi email thông báo → Amazon SES",
+      "match": [
+        "amazon",
+        "ses"
+      ],
+      "owner": "Hạnh",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Cấu hình SES và verify domain gửi mail",
+      "match": [
+        "domain",
+        "cau hinh"
+      ],
+      "owner": "Tuấn",
+      "due_date": "2026-10-07"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+[00:00:08] An: Khách bên đối tác báo file xuất Excel bị lỗi font tiếng Việt.
+[00:00:30] Thu: Em thấy là do mình xuất UTF-8 mà không có BOM.
+[00:00:55] An: Cái này ai xử lý được?
+[00:01:10] Thu: Cái này để em lo.
+[00:01:35] An: Ok. Còn việc cập nhật tài liệu hướng dẫn cài đặt thì sao?
+[00:02:00] Bình: Để em, em làm trong hôm nay luôn.
+[00:02:25] An: Tốt. Thu nhớ báo lại cho khách khi sửa xong nhé.
+[00:02:40] Thu: Dạ.

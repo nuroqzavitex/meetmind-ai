@@ -1,0 +1,172 @@
+{
+  "context": {
+    "meeting_id": "customer_meeting_acme",
+    "title": "Họp khách hàng ACME",
+    "meeting_date": "2026-10-21",
+    "participants": [
+      {
+        "name": "Phong",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Thủy",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Kiệt"
+      },
+      {
+        "name": "Ly"
+      }
+    ]
+  },
+  "transcript": "datasets/transcripts/customer_meeting_acme.txt",
+  "kind": "realistic",
+  "topics": [
+    {
+      "question": "Nơi đặt hệ thống quản lý kho",
+      "final_option": "Cloud đặt tại Hà Nội",
+      "match": [
+        "noi dat",
+        "cloud",
+        "on-premise"
+      ],
+      "final_match": [
+        "cloud"
+      ]
+    },
+    {
+      "question": "Định dạng báo cáo làm trước",
+      "final_option": "Excel",
+      "match": [
+        "dinh dang",
+        "excel"
+      ],
+      "final_match": [
+        "excel"
+      ]
+    },
+    {
+      "question": "Có kịp chạy chính thức đầu tháng 12 không?",
+      "final_option": null,
+      "match": [
+        "dau thang 12"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Nơi đặt hệ thống → Cloud đặt tại Hà Nội",
+      "match": [
+        "cloud"
+      ],
+      "owner": "Thủy",
+      "status": "final"
+    },
+    {
+      "type": "decision",
+      "content": "Định dạng báo cáo làm trước → Excel",
+      "match": [
+        "excel"
+      ],
+      "owner": "Phong",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Gửi bản mô tả bảo mật của trung tâm dữ liệu cho ACME",
+      "match": [
+        "bao mat",
+        "mo ta"
+      ],
+      "owner": "Kiệt",
+      "due_date": "2026-10-23"
+    },
+    {
+      "type": "action_item",
+      "content": "Làm báo cáo Excel và giao bản thử",
+      "match": [
+        "excel",
+        "ban thu"
+      ],
+      "owner": "Kiệt",
+      "due_date": "2026-10-30"
+    },
+    {
+      "type": "action_item",
+      "content": "Trả lời ACME về tiến độ chạy chính thức",
+      "match": [
+        "tien do",
+        "tra loi"
+      ],
+      "owner": "Phong",
+      "due_date": "2026-10-22"
+    },
+    {
+      "type": "action_item",
+      "content": "Kiểm tra khả năng hỗ trợ mã vạch QR",
+      "match": [
+        "ho tro qr",
+        "ma vach"
+      ],
+      "owner": "Kiệt",
+      "due_date": null
+    },
+    {
+      "type": "knowledge",
+      "content": "Quy định của ACME: dữ liệu kho không được rời khỏi công ty",
+      "match": [
+        "du lieu kho",
+        "quy dinh"
+      ]
+    },
+    {
+      "type": "knowledge",
+      "content": "Hệ thống kho hiện chưa hỗ trợ mã vạch QR, chỉ hỗ trợ mã vạch 1D",
+      "match": [
+        "ho tro qr",
+        "ma vach"
+      ]
+    },
+    {
+      "type": "request",
+      "content": "ACME cần xuất báo cáo tồn kho ra Excel mỗi sáng",
+      "match": [
+        "excel"
+      ]
+    },
+    {
+      "type": "request",
+      "content": "ACME đề nghị cử người hướng dẫn nhân viên kho tại chỗ một buổi",
+      "match": [
+        "huong dan"
+      ]
+    },
+    {
+      "type": "feedback",
+      "content": "Giao diện tìm kiếm sản phẩm của bản demo rất mượt, nhân viên kho khen nhiều",
+      "match": [
+        "tim kiem",
+        "giao dien"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Có kịp chạy chính thức vào đầu tháng 12 không?",
+      "match": [
+        "dau thang 12",
+        "tien do"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Hệ thống có hỗ trợ mã vạch QR được không?",
+      "match": [
+        "ho tro qr",
+        "ma vach"
+      ]
+    }
+  ]
+}

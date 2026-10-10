@@ -1,0 +1,62 @@
+{
+  "context": {
+    "meeting_id": "implicit_assignment",
+    "title": "Lỗi font file Excel",
+    "meeting_date": "2026-10-15",
+    "participants": [
+      {
+        "name": "An",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Thu"
+      },
+      {
+        "name": "Bình"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/implicit_assignment.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Ai xử lý lỗi font khi xuất Excel",
+      "final_option": null,
+      "match": [
+        "font"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "action_item",
+      "content": "Sửa lỗi font tiếng Việt khi xuất file Excel",
+      "match": [
+        "font",
+        "excel"
+      ],
+      "owner": "Thu",
+      "due_date": null
+    },
+    {
+      "type": "action_item",
+      "content": "Cập nhật tài liệu hướng dẫn cài đặt",
+      "match": [
+        "tai lieu",
+        "huong dan"
+      ],
+      "owner": "Bình",
+      "due_date": "2026-10-15"
+    },
+    {
+      "type": "action_item",
+      "content": "Báo lại cho khách khi sửa xong lỗi font",
+      "match": [
+        "bao lai"
+      ],
+      "owner": "Thu",
+      "due_date": null
+    }
+  ]
+}

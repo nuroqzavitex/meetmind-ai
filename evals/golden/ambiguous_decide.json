@@ -1,0 +1,42 @@
+{
+  "context": {
+    "meeting_id": "ambiguous_decide",
+    "title": "Lưu trữ file đính kèm",
+    "meeting_date": "2026-10-09",
+    "participants": [
+      {
+        "name": "Vy",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Kiên"
+      },
+      {
+        "name": "Hiếu"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/ambiguous_decide.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Cách lưu file đính kèm của khách hàng",
+      "final_option": null,
+      "match": [
+        "dinh kem",
+        "luu file"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "open_question",
+      "content": "Cách lưu file đính kèm của khách hàng: S3 hay ổ đĩa server?",
+      "match": [
+        "dinh kem",
+        "luu file"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "context": {
+    "meeting_id": "wait_for_boss",
+    "title": "Mua license Figma",
+    "meeting_date": "2026-10-13",
+    "participants": [
+      {
+        "name": "Giang",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Nhi"
+      },
+      {
+        "name": "Long"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/wait_for_boss.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Có mua thêm license Figma cho team thiết kế không?",
+      "final_option": null,
+      "match": [
+        "license",
+        "figma"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "open_question",
+      "content": "Có mua thêm năm license Figma cho team thiết kế không?",
+      "match": [
+        "license",
+        "figma"
+      ]
+    },
+    {
+      "type": "action_item",
+      "content": "Xin ý kiến chị Thảo về việc mua license Figma",
+      "match": [
+        "xin y kien",
+        "thao"
+      ],
+      "owner": "Long",
+      "due_date": null
+    }
+  ]
+}

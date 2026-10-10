@@ -1,0 +1,56 @@
+{
+  "context": {
+    "meeting_id": "b_back_to_a",
+    "title": "Chọn framework trang quản trị",
+    "meeting_date": "2026-10-06",
+    "participants": [
+      {
+        "name": "Ngọc",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Bảo"
+      },
+      {
+        "name": "Quân"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/b_back_to_a.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Framework cho trang quản trị mới",
+      "final_option": "React",
+      "match": [
+        "framework",
+        "quan tri",
+        "react"
+      ],
+      "final_match": [
+        "react"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Framework cho trang quản trị mới → React",
+      "match": [
+        "react"
+      ],
+      "owner": "Ngọc",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Dựng khung dự án React và cấu hình lint",
+      "match": [
+        "khung du an",
+        "lint"
+      ],
+      "owner": "Quân",
+      "due_date": "2026-10-09"
+    }
+  ]
+}

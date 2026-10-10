@@ -1,0 +1,9 @@
+[00:00:08] Phúc: Mình bàn chuyện giải pháp tìm kiếm cho trang sản phẩm nhé.
+[00:00:28] Dũng: Em đề xuất dùng Elasticsearch, hỗ trợ tiếng Việt khá ổn.
+[00:00:55] Mai: Hay mình tự viết bộ tìm kiếm bằng Rust luôn cho ngầu, đùa thôi chứ ai rảnh.
+[00:01:20] Dũng: Ha ha, nếu có thêm ba tháng thì em cũng muốn thử.
+[00:01:45] Phúc: Giả sử ngân sách gấp đôi thì mình thuê dịch vụ Algolia, nhưng năm nay thì không có đâu.
+[00:02:10] Mai: Vâng, vậy Elasticsearch là hợp lý nhất.
+[00:02:30] Phúc: Ok, chốt Elasticsearch.
+[00:02:55] Phúc: Dũng dựng cụm Elasticsearch thử nghiệm giúp anh, xong trước cuối tuần này nhé.
+[00:03:10] Dũng: Dạ.

@@ -1,0 +1,8 @@
+[00:00:02] Trang: Sprint này mình có một việc hạ tầng cần chốt.
+[00:00:07] Trang: Mình bàn việc nâng cấp backend lên Python 3.13.
+[00:00:25] Đạt: Em đề xuất nâng cấp luôn, hiệu năng tốt hơn.
+[00:00:50] Khoa: Thư viện xử lý PDF của mình chưa chắc đã hỗ trợ bản 3.13.
+[00:01:20] Trang: Vậy chốt nâng lên Python 3.13, nhưng chỉ khi thư viện PDF hỗ trợ, nếu chưa thì giữ 3.12.
+[00:01:50] Đạt: Ok chị, em hiểu rồi.
+[00:02:15] Khoa: Em sẽ kiểm tra danh sách phiên bản mà thư viện PDF hỗ trợ và báo lại trước thứ Sáu.
+[00:02:30] Trang: Ok, cảm ơn Khoa.

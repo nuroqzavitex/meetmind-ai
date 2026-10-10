@@ -1,0 +1,174 @@
+{
+  "context": {
+    "meeting_id": "sprint_planning_q4",
+    "title": "Sprint planning sprint 21",
+    "meeting_date": "2026-10-19",
+    "participants": [
+      {
+        "name": "Hải",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Lam"
+      },
+      {
+        "name": "Yến"
+      },
+      {
+        "name": "Nam"
+      },
+      {
+        "name": "Oanh"
+      }
+    ]
+  },
+  "transcript": "datasets/transcripts/sprint_planning_q4.txt",
+  "kind": "realistic",
+  "topics": [
+    {
+      "question": "Gửi OTP qua kênh nào",
+      "final_option": "Zalo ZNS",
+      "match": [
+        "gui otp",
+        "otp qua",
+        "zalo"
+      ],
+      "final_match": [
+        "zalo",
+        "zns"
+      ]
+    },
+    {
+      "question": "Giảm thời gian tải báo cáo doanh thu",
+      "final_option": "Bảng tổng hợp theo ngày",
+      "match": [
+        "tong hop",
+        "thoi gian tai"
+      ],
+      "final_match": [
+        "tong hop"
+      ]
+    },
+    {
+      "question": "Có viết test tự động cho API đăng nhập không?",
+      "final_option": null,
+      "match": [
+        "test tu dong"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Gửi OTP qua kênh nào → Zalo ZNS",
+      "match": [
+        "zalo",
+        "zns"
+      ],
+      "owner": "Hải",
+      "status": "final"
+    },
+    {
+      "type": "decision",
+      "content": "Giảm thời gian tải báo cáo → Bảng tổng hợp theo ngày",
+      "match": [
+        "tong hop"
+      ],
+      "owner": "Hải",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Đăng ký template ZNS",
+      "match": [
+        "template"
+      ],
+      "owner": "Nam",
+      "due_date": "2026-10-21"
+    },
+    {
+      "type": "action_item",
+      "content": "Nhắn bên design gửi lại thiết kế màn hình nhập sai OTP",
+      "match": [
+        "design",
+        "thiet ke"
+      ],
+      "owner": "Hải",
+      "due_date": "2026-10-19"
+    },
+    {
+      "type": "action_item",
+      "content": "Làm API đăng nhập",
+      "match": [
+        "api dang nhap"
+      ],
+      "owner": "Lam",
+      "due_date": "2026-10-23"
+    },
+    {
+      "type": "action_item",
+      "content": "Hỏi bên kinh doanh tỷ lệ người dùng không có Zalo",
+      "match": [
+        "kinh doanh"
+      ],
+      "owner": "Yến",
+      "due_date": null
+    },
+    {
+      "type": "action_item",
+      "content": "Làm bảng tổng hợp doanh thu theo ngày",
+      "match": [
+        "tong hop"
+      ],
+      "owner": "Nam",
+      "due_date": "2026-10-26"
+    },
+    {
+      "type": "blocker",
+      "content": "Màn hình đăng nhập chưa có thiết kế cho trường hợp nhập sai OTP",
+      "match": [
+        "thiet ke",
+        "nhap sai"
+      ]
+    },
+    {
+      "type": "request",
+      "content": "CS nhờ thêm nút xuất CSV ở trang báo cáo",
+      "match": [
+        "xuat csv",
+        "nut xuat"
+      ]
+    },
+    {
+      "type": "knowledge",
+      "content": "Zalo ZNS chỉ gửi được cho số điện thoại đã đăng ký Zalo",
+      "match": [
+        "zalo"
+      ]
+    },
+    {
+      "type": "feedback",
+      "content": "Bản review code của Lam rất kỹ, bắt được hai lỗi nghiêm trọng",
+      "match": [
+        "review",
+        "code"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Người dùng không có Zalo thì xử lý thế nào?",
+      "match": [
+        "khong co zalo"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Có viết test tự động cho API đăng nhập không?",
+      "match": [
+        "test tu dong",
+        "viet test"
+      ]
+    }
+  ]
+}

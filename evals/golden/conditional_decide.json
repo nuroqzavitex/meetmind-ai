@@ -1,0 +1,62 @@
+{
+  "context": {
+    "meeting_id": "conditional_decide",
+    "title": "Nâng cấp Python 3.13",
+    "meeting_date": "2026-10-12",
+    "participants": [
+      {
+        "name": "Trang",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Đạt"
+      },
+      {
+        "name": "Khoa"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/conditional_decide.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Nâng cấp backend lên Python 3.13",
+      "final_option": "Nâng lên Python 3.13",
+      "match": [
+        "python"
+      ],
+      "final_match": [
+        "3.13"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Nâng cấp backend lên Python 3.13 (nếu thư viện PDF hỗ trợ)",
+      "match": [
+        "3.13"
+      ],
+      "owner": "Trang",
+      "status": "final"
+    },
+    {
+      "type": "open_question",
+      "content": "Theo dõi điều kiện: thư viện PDF có hỗ trợ Python 3.13 không",
+      "match": [
+        "theo doi dieu kien",
+        "dieu kien"
+      ]
+    },
+    {
+      "type": "action_item",
+      "content": "Kiểm tra phiên bản Python mà thư viện PDF hỗ trợ",
+      "match": [
+        "kiem tra",
+        "phien ban"
+      ],
+      "owner": "Khoa",
+      "due_date": "2026-10-16"
+    }
+  ]
+}

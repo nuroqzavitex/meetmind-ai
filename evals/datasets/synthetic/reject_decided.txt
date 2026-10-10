@@ -1,0 +1,8 @@
+[00:00:07] Đức: Có đề xuất tách module giỏ hàng ra thành dịch vụ riêng, mọi người nghĩ sao?
+[00:00:30] Hà: Em ủng hộ, tách ra thì scale độc lập được.
+[00:00:55] Đức: Ok, vậy chốt tách giỏ hàng thành dịch vụ riêng.
+[00:01:40] Thịnh: Anh ơi, tách ra thì mình phải làm thêm hàng đợi và giám sát, team chỉ có bốn người, em nghĩ không kham nổi.
+[00:02:20] Đức: Ừ, em nói đúng. Vậy thôi, không tách giỏ hàng nữa, quyết định lúc nãy huỷ.
+[00:02:45] Hà: Vậy là hiện giờ chưa có hướng nào cho giỏ hàng đúng không anh?
+[00:03:00] Đức: Ừ, vấn đề tải của giỏ hàng vẫn còn để ngỏ.
+[00:03:20] Thịnh: Dạ, em hiểu rồi.

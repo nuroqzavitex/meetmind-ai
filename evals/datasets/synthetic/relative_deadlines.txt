@@ -1,0 +1,13 @@
+[00:00:08] Hương: Đầu tiên, mình có cần dời ngày phát hành bản 2.0 không?
+[00:00:25] Quyên: Em nghĩ vẫn kịp nếu test xong sớm.
+[00:00:45] Hương: Vậy giữ nguyên lịch, chốt phát hành bản 2.0 đúng kế hoạch.
+[00:01:05] Hương: Tân viết release note giúp chị, xong ngày mai nhé.
+[00:01:15] Tân: Dạ vâng.
+[00:01:35] Hương: Quyên chạy test hồi quy toàn bộ, thứ Hai tuần sau là phải có kết quả.
+[00:01:50] Quyên: Vâng chị.
+[00:02:15] Hương: Việt gia hạn chứng chỉ SSL, trong vòng 5 ngày nữa nhé.
+[00:02:30] Việt: Em nhận.
+[00:03:00] Hương: Lộc chuẩn bị báo cáo tổng kết quý, hạn là cuối tháng.
+[00:03:15] Lộc: Vâng ạ.
+[00:03:40] Hương: Còn Tân chuẩn bị bản demo cho khách, hạn 20/10 nhé.
+[00:03:50] Tân: Dạ, em làm ạ.

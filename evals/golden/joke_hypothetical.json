@@ -1,0 +1,56 @@
+{
+  "context": {
+    "meeting_id": "joke_hypothetical",
+    "title": "Giải pháp tìm kiếm sản phẩm",
+    "meeting_date": "2026-10-14",
+    "participants": [
+      {
+        "name": "Phúc",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Dũng"
+      },
+      {
+        "name": "Mai"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/joke_hypothetical.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Giải pháp tìm kiếm cho trang sản phẩm",
+      "final_option": "Elasticsearch",
+      "match": [
+        "tim kiem",
+        "elasticsearch",
+        "algolia"
+      ],
+      "final_match": [
+        "elasticsearch"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Giải pháp tìm kiếm cho trang sản phẩm → Elasticsearch",
+      "match": [
+        "elasticsearch"
+      ],
+      "owner": "Phúc",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Dựng cụm Elasticsearch thử nghiệm",
+      "match": [
+        "cum elasticsearch",
+        "thu nghiem"
+      ],
+      "owner": "Dũng",
+      "due_date": "2026-10-16"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+[00:00:10] Sang: Chào mọi người, hôm nay mình làm post-mortem sự cố hôm thứ Ba, hệ thống đơn hàng sập khoảng bốn mươi phút. Mục tiêu là tìm nguyên nhân, không tìm người có lỗi.
+[00:00:45] Hiền: Em tóm tắt: 14 giờ 10 mình phát hành bản mới, 14 giờ 25 bắt đầu có lỗi timeout, đến 14 giờ 50 mới khôi phục.
+[00:01:15] Tùng: Nguyên nhân là bản mới mở thêm kết nối CSDL trong mỗi request nhưng không đóng, nên pool kết nối bị cạn.
+[00:01:50] Vân: Cảnh báo lúc đó chỉ bắn ở ngưỡng 95% nên đến khi mình biết thì đã muộn.
+[00:02:20] Sang: Giờ bàn cách chặn tái diễn trước, phần cảnh báo mình bàn sau.
+[00:02:45] Cường: Em đề xuất tăng kích thước pool từ 20 lên 100, nhanh nhất.
+[00:03:10] Sang: Ok, chốt tăng pool lên 100.
+[00:03:40] Tùng: Chị ơi, tăng pool chỉ trì hoãn thôi, CSDL có giới hạn kết nối tổng, lên 100 mà chạy ba bản sao thì vượt giới hạn.
+[00:04:10] Hiền: Em đồng ý với Tùng, nên dùng PgBouncer để gom kết nối.
+[00:04:35] Sang: Ừ, nghe có lý hơn. Vậy bỏ tăng pool, chốt PgBouncer.
+[00:05:00] Cường: Vậy em cài PgBouncer ở môi trường staging trước, xong trước thứ Hai tuần sau.
+[00:05:15] Sang: Ok Cường làm nhé.
+[00:06:00] Vân: Về cảnh báo, em đề xuất hạ ngưỡng xuống 70% và bắn vào kênh trực.
+[00:06:25] Sang: Chốt, hạ ngưỡng cảnh báo xuống 70%.
+[00:06:40] Vân: Em chỉnh luôn trong hôm nay.
+[00:07:20] Hiền: Hiện mình đang bị chặn ở chỗ migration không có script quay lui, nên chưa rollback an toàn được bản lỗi.
+[00:07:50] Tùng: Em sẽ viết script quay lui cho các migration, cái này để em.
+[00:08:30] Tùng: Hỏi chút, bản vá khẩn cấp lúc đó ai duyệt?
+[00:08:50] Sang: Chị duyệt, không có ai review thứ hai.
+[00:09:10] Sang: Chốt từ nay hotfix phải có hai người duyệt.
+[00:09:30] Hiền: Dạ, em ghi vào quy trình.
+[00:10:15] Sang: Còn một câu hỏi, có nên bắt buộc feature flag cho mọi tính năng lớn không?
+[00:10:40] Hiền: Em thấy nên, nhưng chi phí bảo trì flag cũng không nhỏ.
+[00:11:00] Cường: Để xem sau vài sprint rồi tính ạ.
+[00:11:20] Sang: Ok, để mở, chưa quyết.
+[00:12:00] Vân: Bài học là sau mỗi lần phát hành, mình cần có người trực theo dõi biểu đồ trong 30 phút đầu.
+[00:12:20] Sang: Đúng, chị đồng ý.
+[00:13:00] Hiền: Khoảng hai trăm đơn bị lỗi, bên CS nhờ mình xuất danh sách đơn lỗi để gọi lại khách.
+[00:13:25] Sang: Hiền xuất danh sách đơn lỗi gửi CS trong ngày mai nhé.
+[00:13:35] Hiền: Vâng.
+[00:14:10] Cường: Góp ý chút, báo cáo sự cố lần trước của Vân viết rất rõ ràng, lần này mình theo mẫu đó.
+[00:14:35] Vân: Cảm ơn anh, em sẽ viết báo cáo sự cố lần này luôn, gửi mọi người trước thứ Sáu.
+[00:15:00] Sang: Ok, cảm ơn cả nhóm, hôm nay dừng ở đây.

@@ -1,0 +1,55 @@
+{
+  "context": {
+    "meeting_id": "decide_a_then_b",
+    "title": "Chọn công cụ CI",
+    "meeting_date": "2026-10-07",
+    "participants": [
+      {
+        "name": "Mai",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Sơn"
+      },
+      {
+        "name": "Linh"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/decide_a_then_b.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Công cụ CI cho repo backend",
+      "final_option": "GitHub Actions",
+      "match": [
+        "cong cu ci",
+        "github",
+        "jenkins"
+      ],
+      "final_match": [
+        "github"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Công cụ CI cho repo backend → GitHub Actions",
+      "match": [
+        "github"
+      ],
+      "owner": "Mai",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Chuyển pipeline test sang GitHub Actions",
+      "match": [
+        "pipeline"
+      ],
+      "owner": "Linh",
+      "due_date": "2026-10-15"
+    }
+  ]
+}

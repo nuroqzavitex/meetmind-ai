@@ -1,0 +1,31 @@
+[00:00:10] Hải: Chào cả nhà, mình bắt đầu sprint planning cho sprint 21 nhé. Mục tiêu chính là ra tính năng đăng nhập bằng số điện thoại.
+[00:00:40] Lam: Về đăng nhập, mình gửi OTP qua SMS hay qua Zalo ạ?
+[00:01:05] Yến: Em đề xuất SMS qua nhà mạng, ai cũng nhận được.
+[00:01:30] Hải: Ok, chốt OTP qua SMS.
+[00:02:10] Nam: Chị ơi, em vừa hỏi nhà cung cấp, SMS brandname mất khoảng hai tuần mới đăng ký xong, mà sprint này chỉ có hai tuần.
+[00:02:40] Hải: Hừm, vậy thì kẹt thật. Zalo ZNS thì sao?
+[00:03:00] Nam: ZNS đăng ký template chỉ mất ba ngày, phí cũng rẻ hơn.
+[00:03:25] Yến: Vậy em đổi ý, ZNS hợp lý hơn cho sprint này.
+[00:03:50] Hải: Ok, vậy bỏ SMS, mình chốt dùng Zalo ZNS cho OTP.
+[00:04:20] Lam: Vậy ai đăng ký template ZNS ạ?
+[00:04:35] Nam: Em đăng ký, xong trước thứ Tư tuần này.
+[00:05:10] Oanh: Em đang bị kẹt vì màn hình đăng nhập mới chưa có thiết kế cho trường hợp nhập sai OTP.
+[00:05:40] Hải: Để chị nhắn bên design gửi lại thiết kế đó, chị làm trong hôm nay.
+[00:06:20] Lam: Còn phần API đăng nhập, em ước tính ba ngày.
+[00:06:45] Hải: Lam làm API đăng nhập nhé, xong trước thứ Sáu tuần này.
+[00:06:55] Lam: Vâng chị.
+[00:07:30] Yến: Em lưu ý là Zalo ZNS chỉ gửi được cho số điện thoại đã đăng ký Zalo.
+[00:08:00] Hải: Đúng, chị ghi nhận. Vậy người dùng không có Zalo thì sao nhỉ?
+[00:08:20] Yến: Cái đó mình chưa biết, cần xem tỷ lệ bao nhiêu. Em sẽ hỏi bên kinh doanh rồi báo lại.
+[00:09:00] Hải: Sang phần báo cáo doanh thu. Oanh, tuần trước khách phàn nàn tốc độ tải báo cáo chậm.
+[00:09:30] Oanh: Dạ, báo cáo tháng mất gần mười giây mới hiện.
+[00:09:50] Nam: Em đề xuất thêm bảng tổng hợp sẵn theo ngày, không tính trực tiếp từ bảng giao dịch nữa.
+[00:10:20] Hải: Ok, chốt làm bảng tổng hợp theo ngày.
+[00:10:45] Nam: Em làm luôn, thứ Hai tuần sau demo ạ.
+[00:11:20] Lam: Ngoài ra bên CS nhờ mình thêm nút xuất CSV ở trang báo cáo.
+[00:11:50] Hải: Ừ, chị ghi nhận yêu cầu này.
+[00:12:30] Yến: Góp ý chút, bản review code hôm qua của Lam rất kỹ, bắt được hai lỗi nghiêm trọng.
+[00:12:50] Hải: Cảm ơn Lam nhé.
+[00:13:20] Oanh: Phần test, mình có nên viết test tự động cho API đăng nhập luôn không chị?
+[00:13:45] Hải: Chị chưa chắc, để xem độ phủ test hiện tại đã rồi tính.
+[00:14:20] Hải: Ok, mình chốt sprint ở đây, hẹn mọi người sáng mai daily nhé.

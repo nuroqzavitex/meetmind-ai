@@ -1,0 +1,154 @@
+{
+  "context": {
+    "meeting_id": "hiring_review",
+    "title": "Họp đánh giá ứng viên backend",
+    "meeting_date": "2026-10-23",
+    "participants": [
+      {
+        "name": "Quỳnh"
+      },
+      {
+        "name": "Đạt",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Mỹ"
+      },
+      {
+        "name": "Trí"
+      }
+    ]
+  },
+  "transcript": "datasets/transcripts/hiring_review.txt",
+  "kind": "realistic",
+  "topics": [
+    {
+      "question": "Có mời Bách vào vòng ba không?",
+      "final_option": "Không mời Bách vào vòng ba",
+      "match": [
+        "bach",
+        "vong ba"
+      ],
+      "final_match": [
+        "khong moi"
+      ]
+    },
+    {
+      "question": "Mức offer cho Hà",
+      "final_option": "33 triệu",
+      "match": [
+        "offer",
+        "muc luong"
+      ],
+      "final_match": [
+        "33 trieu"
+      ]
+    },
+    {
+      "question": "Thời gian thử việc của Hà",
+      "final_option": null,
+      "match": [
+        "thu viec"
+      ],
+      "final_match": []
+    },
+    {
+      "question": "Cho ứng viên làm bài test trước hay sau phỏng vấn",
+      "final_option": null,
+      "match": [
+        "bai test"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Có mời Bách vào vòng ba không? → Không mời",
+      "match": [
+        "khong moi"
+      ],
+      "owner": "Đạt",
+      "status": "final"
+    },
+    {
+      "type": "decision",
+      "content": "Mức offer cho Hà → 33 triệu",
+      "match": [
+        "33 trieu"
+      ],
+      "owner": "Đạt",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Gửi email từ chối Bách",
+      "match": [
+        "tu choi"
+      ],
+      "owner": "Quỳnh",
+      "due_date": "2026-10-24"
+    },
+    {
+      "type": "action_item",
+      "content": "Xin ý kiến giám đốc nhân sự về thời gian thử việc",
+      "match": [
+        "xin y kien",
+        "giam doc nhan su"
+      ],
+      "owner": "Đạt",
+      "due_date": null
+    },
+    {
+      "type": "action_item",
+      "content": "Soạn thư mời nhận việc cho Hà",
+      "match": [
+        "thu moi"
+      ],
+      "owner": "Quỳnh",
+      "due_date": "2026-10-26"
+    },
+    {
+      "type": "action_item",
+      "content": "Gửi nội dung cập nhật mô tả công việc backend",
+      "match": [
+        "gui noi dung",
+        "dang lai"
+      ],
+      "owner": "Trí",
+      "due_date": "2026-10-23"
+    },
+    {
+      "type": "feedback",
+      "content": "Bài test thiết kế bảng nên cho thêm thời gian, 45 phút hơi ngắn",
+      "match": [
+        "thiet ke bang",
+        "45 phut"
+      ]
+    },
+    {
+      "type": "request",
+      "content": "Cần cập nhật mô tả công việc vị trí backend",
+      "match": [
+        "cap nhat mo ta",
+        "vi tri backend"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Thời gian thử việc của Hà là hai tháng hay một tháng?",
+      "match": [
+        "thu viec",
+        "hai thang"
+      ]
+    },
+    {
+      "type": "open_question",
+      "content": "Cho ứng viên làm bài test trước hay sau phỏng vấn?",
+      "match": [
+        "truoc hay sau",
+        "phong van"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "context": {
+    "meeting_id": "relative_deadlines",
+    "title": "Chuẩn bị phát hành 2.0",
+    "meeting_date": "2026-10-16",
+    "participants": [
+      {
+        "name": "Hương",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Tân"
+      },
+      {
+        "name": "Quyên"
+      },
+      {
+        "name": "Việt"
+      },
+      {
+        "name": "Lộc"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/relative_deadlines.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Có dời ngày phát hành bản 2.0 không?",
+      "final_option": "Giữ nguyên lịch phát hành",
+      "match": [
+        "phat hanh"
+      ],
+      "final_match": [
+        "giu nguyen",
+        "dung ke hoach"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Dời ngày phát hành bản 2.0? → Giữ nguyên lịch phát hành",
+      "match": [
+        "giu nguyen",
+        "dung ke hoach"
+      ],
+      "owner": "Hương",
+      "status": "final"
+    },
+    {
+      "type": "action_item",
+      "content": "Viết release note",
+      "match": [
+        "release note"
+      ],
+      "owner": "Tân",
+      "due_date": "2026-10-17"
+    },
+    {
+      "type": "action_item",
+      "content": "Chạy test hồi quy toàn bộ",
+      "match": [
+        "hoi quy"
+      ],
+      "owner": "Quyên",
+      "due_date": "2026-10-19"
+    },
+    {
+      "type": "action_item",
+      "content": "Gia hạn chứng chỉ SSL",
+      "match": [
+        "chung chi"
+      ],
+      "owner": "Việt",
+      "due_date": "2026-10-21"
+    },
+    {
+      "type": "action_item",
+      "content": "Chuẩn bị báo cáo tổng kết quý",
+      "match": [
+        "tong ket"
+      ],
+      "owner": "Lộc",
+      "due_date": "2026-10-31"
+    },
+    {
+      "type": "action_item",
+      "content": "Chuẩn bị bản demo cho khách",
+      "match": [
+        "ban demo",
+        "demo cho khach"
+      ],
+      "owner": "Tân",
+      "due_date": "2026-10-20"
+    }
+  ]
+}
