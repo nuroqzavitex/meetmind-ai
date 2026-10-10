@@ -1,38 +1,16 @@
-import json
 from datetime import date
-from pathlib import Path
 from typing import Any
 
 import pytest
+from tests.backend.pipeline_helpers import CTX_PAYMENT, PAYMENT, fake_from_fixtures, fx
 
 from app.ai.config import AISettings
 from app.ai.domain.enums import ItemType
-from app.ai.domain.models import MeetingContext, Participant
 from app.ai.errors import AnalysisError, LLMError, TranscriptParseError
 from app.ai.llm.fake import FakeLLM
 from app.ai.pipeline import analyze_transcript
 
-FIX = Path(__file__).resolve().parents[2] / "fixtures"
-PAYMENT = (FIX / "transcripts" / "payment_v2.txt").read_bytes()
-CTX_PAYMENT = MeetingContext(
-    meeting_id="m1",
-    title="Payment sprint planning",
-    meeting_date=date(2026, 10, 8),
-    participants=[
-        Participant(name="Lan", is_decision_maker=True),
-        Participant(name="Minh"),
-        Participant(name="Hoa"),
-    ],
-)
 CTX = CTX_PAYMENT.model_copy(update={"participants": []})
-
-
-def _fx(name: str) -> dict[str, Any]:
-    return json.loads((FIX / "llm" / "payment_v2" / name).read_text(encoding="utf-8"))
-
-
-def fake_from_fixtures() -> FakeLLM:
-    return FakeLLM({"extract": [_fx("extract.json")], "topics": [_fx("topics.json")]})
 
 
 def make_txt(n: int) -> bytes:
@@ -42,7 +20,7 @@ def make_txt(n: int) -> bytes:
 
 
 def bad_acts() -> dict[str, Any]:
-    acts = _fx("extract.json")["acts"]
+    acts = fx("extract.json")["acts"]
     return {"acts": [{**a, "quote": "hoàn toàn bịa đặt không có thật xyz"} for a in acts]}
 
 
@@ -67,7 +45,7 @@ async def test_payment_v2_end_to_end_with_fake_llm():
 
 async def test_retry_once_when_quotes_bad():
     llm = FakeLLM({
-        "extract": [bad_acts(), _fx("extract.json")], "topics": [_fx("topics.json")],
+        "extract": [bad_acts(), fx("extract.json")], "topics": [fx("topics.json")],
     })
     res = await analyze_transcript(
         ctx=CTX_PAYMENT, filename="p.txt", data=PAYMENT, llm=llm, settings=AISettings()
@@ -112,7 +90,7 @@ async def test_llm_error_wrapped_with_step():
     def boom(_: str) -> Any:
         raise LLMError("down")
 
-    llm = FakeLLM({"extract": [_fx("extract.json")], "topics": [boom]})
+    llm = FakeLLM({"extract": [fx("extract.json")], "topics": [boom]})
     with pytest.raises(AnalysisError) as ei:
         await analyze_transcript(
             ctx=CTX_PAYMENT, filename="p.txt", data=PAYMENT, llm=llm, settings=AISettings()
@@ -124,7 +102,7 @@ async def test_unexpected_node_error_wrapped_with_step():
     def boom(_: str) -> Any:
         raise RuntimeError("bug")
 
-    llm = FakeLLM({"extract": [_fx("extract.json")], "topics": [boom]})
+    llm = FakeLLM({"extract": [fx("extract.json")], "topics": [boom]})
     with pytest.raises(AnalysisError) as ei:
         await analyze_transcript(
             ctx=CTX_PAYMENT, filename="p.txt", data=PAYMENT, llm=llm, settings=AISettings()

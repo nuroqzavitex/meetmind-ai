@@ -2,8 +2,8 @@ import io
 import unicodedata
 
 import pytest
-from conftest import fixture_bytes
 from docx import Document
+from tests.backend.unit_helpers import fixture_bytes
 
 from app.ai.errors import TranscriptParseError
 from app.ai.parsing import parse_transcript

@@ -4,7 +4,6 @@ import pytest
 from evals.metrics.matching import Golden, contains_keyword, decision_label
 
 from app.ai.domain.enums import ItemType
-
 from app.ai.parsing import parse_transcript
 
 EVALS = Path(__file__).resolve().parents[3] / "evals"

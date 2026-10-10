@@ -1,4 +1,4 @@
-from conftest import utt
+from tests.backend.unit_helpers import utt
 
 from app.ai.agents.normalize import Chunk, apply_glossary, make_chunks
 

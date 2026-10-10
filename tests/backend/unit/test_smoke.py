@@ -1,4 +1,4 @@
-from app.ai.errors import AnalysisError, LLMRefusal, LLMError
+from app.ai.errors import AnalysisError, LLMError, LLMRefusal
 
 
 def test_error_hierarchy():
