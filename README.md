@@ -75,7 +75,7 @@ filter (LLM: dự án, ngày, người, loại mục, câu hỏi viết lại)
 
 ## Chạy nhanh
 
-**Yêu cầu:** Docker (kèm Docker Compose). Khi chạy không Docker hoặc chạy test: thêm [uv](https://docs.astral.sh/uv/) (tự cài Python 3.11 theo `backend/.python-version`) và Node 20. Cần tài khoản Clerk (xem [Cấu hình Clerk](#cấu-hình-clerk)) và `ANTHROPIC_API_KEY`.
+**Yêu cầu:** Docker (kèm Docker Compose). Khi chạy không Docker hoặc chạy test: thêm [uv](https://docs.astral.sh/uv/) (tự cài Python 3.11 theo `backend/.python-version`) và Node 22 (≥ 22.22, yêu cầu của jsdom trong Vitest). Cần tài khoản Clerk (xem [Cấu hình Clerk](#cấu-hình-clerk)) và `ANTHROPIC_API_KEY`.
 
 ```bash
 cp .env.example .env     # điền ANTHROPIC_API_KEY, CLERK_*, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
