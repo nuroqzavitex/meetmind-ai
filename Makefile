@@ -1,4 +1,4 @@
-.PHONY: up down db migrate api worker test lint
+.PHONY: up down db migrate api worker test lint fe-dev fe-test types
 
 up:
 	docker compose up -d --build
@@ -20,6 +20,16 @@ worker:
 
 test:
 	cd backend && REQUIRE_DB=1 uv run pytest
+	$(MAKE) fe-test
 
 lint:
 	cd backend && uv run ruff check app ../tests ../evals && uv run mypy
+
+fe-dev:
+	cd frontend && npm run dev
+
+fe-test:
+	cd frontend && npm run lint && npm run typecheck && npm test
+
+types:
+	cd frontend && npm run gen:types

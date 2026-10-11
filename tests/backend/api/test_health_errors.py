@@ -41,3 +41,11 @@ async def test_unhandled_error_is_enveloped_with_cors_headers() -> None:
     assert r.status_code == 500
     assert r.json() == {"error": {"code": "internal_error", "message": "Lỗi máy chủ"}}
     assert r.headers["access-control-allow-origin"] == origin
+
+
+def test_cors_exposes_content_disposition() -> None:
+    app = create_app()
+    origin = app.state.settings.cors_origins[0]
+    r = TestClient(app).get("/api/v1/health", headers={"Origin": origin})
+    exposed = r.headers.get("access-control-expose-headers", "").lower()
+    assert "content-disposition" in exposed
