@@ -45,12 +45,15 @@ async def update(session: AsyncSession, *, org_id: str, job_id: str, **fields: A
     )
 
 
-async def active_for_meeting(session: AsyncSession, *, org_id: str, meeting_id: str) -> Job | None:
+async def active_for_meeting(
+    session: AsyncSession, *, org_id: str, meeting_id: str, kind: str = "analyze"
+) -> Job | None:
     return await session.scalar(
         select(Job)
         .where(
             Job.org_id == org_id,
             Job.meeting_id == meeting_id,
+            Job.kind == kind,
             Job.status.in_(("queued", "running")),
         )
         .order_by(Job.created_at.desc())
@@ -58,10 +61,12 @@ async def active_for_meeting(session: AsyncSession, *, org_id: str, meeting_id: 
     )
 
 
-async def latest_for_meeting(session: AsyncSession, *, org_id: str, meeting_id: str) -> Job | None:
+async def latest_for_meeting(
+    session: AsyncSession, *, org_id: str, meeting_id: str, kind: str = "analyze"
+) -> Job | None:
     return await session.scalar(
         select(Job)
-        .where(Job.org_id == org_id, Job.meeting_id == meeting_id)
+        .where(Job.org_id == org_id, Job.meeting_id == meeting_id, Job.kind == kind)
         .order_by(Job.created_at.desc())
         .limit(1)
     )

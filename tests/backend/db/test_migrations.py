@@ -102,3 +102,45 @@ async def test_meeting_cascade_delete(sessionmaker: async_sessionmaker[AsyncSess
         await s.commit()
         for model in (Utterance, Item, ItemEvent, Job, Meeting):
             assert await s.scalar(select(func.count()).select_from(model)) == 0
+
+
+async def test_retrieval_columns_and_indexes(migrated_db_url: str) -> None:
+    engine = create_async_engine(migrated_db_url, poolclass=NullPool)
+    try:
+        async with engine.connect() as conn:
+            cols = {
+                r[0]
+                for r in await conn.execute(
+                    text(
+                        "SELECT column_name FROM information_schema.columns "
+                        "WHERE table_name='items'"
+                    )
+                )
+            }
+            chunk_tables = {
+                r[0]
+                for r in await conn.execute(
+                    text(
+                        "SELECT table_name FROM information_schema.tables "
+                        "WHERE table_schema='public'"
+                    )
+                )
+            }
+            defs = [
+                r[0]
+                for r in await conn.execute(text("SELECT indexdef FROM pg_indexes"))
+            ]
+    finally:
+        await engine.dispose()
+    assert {"search_text", "embedding", "indexed_at"} <= cols
+    assert "transcript_chunks" in chunk_tables
+
+    def has(table: str, using: str, column: str, ops: str) -> bool:
+        return any(
+            f"ON public.{table} USING {using}" in d and f"({column} {ops})" in d for d in defs
+        )
+
+    assert has("items", "hnsw", "embedding", "vector_cosine_ops")
+    assert has("transcript_chunks", "hnsw", "embedding", "vector_cosine_ops")
+    assert has("items", "gin", "search_text", "gin_trgm_ops")
+    assert has("transcript_chunks", "gin", "text", "gin_trgm_ops")

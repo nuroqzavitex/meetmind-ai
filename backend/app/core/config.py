@@ -1,7 +1,7 @@
 """Service settings, loaded from the environment / .env."""
 
 from functools import lru_cache
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     anthropic_api_key: SecretStr | None = None
     llm_model_default: str = "claude-sonnet-5-5"
     llm_model_arbitrate: str = "claude-opus-5-5"
+    embedding_provider: Literal["local", "hash"] = "local"
+    embedding_model: str = "BAAI/bge-m3"
+    embedding_dim: int = 1024
     prompt_version: str = "v1"
     max_upload_bytes: int = 5_000_000
     cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:3000"]

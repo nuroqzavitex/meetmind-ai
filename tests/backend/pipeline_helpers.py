@@ -63,3 +63,31 @@ async def seed_analyzed_meeting(
         sm, fake_from_fixtures(), AISettings(), org_id=org_id, meeting_id=meeting_id, job_id=job_id
     )
     return meeting_id
+
+
+async def seed_published_indexed_meeting(
+    sm: async_sessionmaker[AsyncSession],
+    embedder: Any,
+    org_id: str = "org_a",
+    meeting_id: str = "m1",
+    project: str | None = None,
+) -> str:
+    """Seed payment_v2, approve all items, publish, run the index job; return the meeting id."""
+    from sqlalchemy import update
+
+    from app.models import Item, Meeting
+    from app.services.indexing import run_index
+
+    await seed_analyzed_meeting(sm, org_id, meeting_id)
+    async with sm() as s:
+        await s.execute(
+            update(Item).where(Item.meeting_id == meeting_id).values(review_state="approved")
+        )
+        if project is not None:
+            await s.execute(update(Meeting).where(Meeting.id == meeting_id).values(project=project))
+        await meetings.set_status(s, org_id=org_id, meeting_id=meeting_id, status="published")
+        job = await jobs.create(s, org_id=org_id, meeting_id=meeting_id, kind="index")
+        await s.commit()
+        job_id = job.id
+    await run_index(sm, embedder, org_id=org_id, meeting_id=meeting_id, job_id=job_id)
+    return meeting_id

@@ -48,6 +48,27 @@ cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_pipeline
 Tuỳ chọn: `--only <tên>`, `--kind trap|realistic`. Ngưỡng nằm ở `evals/config.yaml`.
 Kiểm tra cấu trúc dataset (không cần khoá API): `cd backend && uv run pytest -c pyproject.toml ../tests/backend/unit/test_eval_datasets.py`.
 
+## Đánh giá hỏi đáp (QA)
+
+`datasets/qa/questions.json` gồm 18 câu hỏi tiếng Việt: `answer` (trích dẫn đúng câu nói), `latest` (phương án cuối sau khi đổi ý, lấy từ kịch bản bẫy và transcript thực tế) và `refusal` (thông tin không có trong cuộc họp, phải từ chối).
+
+Quy ước gán nhãn: `meetings` là tên golden (tên file trong `evals/golden/`, bỏ đuôi `.json`); runner lấy transcript và `MeetingContext` từ golden đó. `expect_quote_contains`: trích dẫn trả về phải chứa một trong các chuỗi này (không phân biệt hoa thường) và chuỗi phải có thật trong transcript. `expect_answer_contains` (chỉ `latest`): câu trả lời phải nêu phương án hiện hành. Câu `refusal` không có kỳ vọng và phải trả đúng câu từ chối, không kèm trích dẫn. Mọi câu hỏi dùng chung một tổ chức `eval_org` chứa các cuộc họp được liệt kê.
+
+Cần `ANTHROPIC_API_KEY` và Postgres (`TEST_DATABASE_URL`, tên DB phải kết thúc bằng `_test`; runner xoá và dựng lại schema):
+
+```
+docker compose up -d db
+cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_qa
+```
+
+Tuỳ chọn: `--only <id câu hỏi>`, `--embedder local|hash` (mặc định `local`, BAAI/bge-m3; `local` cần `uv sync --extra embeddings` trong `backend/`). Ngưỡng nằm ở mục `qa_thresholds` trong `evals/config.yaml`. Báo cáo ghi vào `evals/reports/qa-<thời gian>.json`.
+
+| Ngày | Prompt version | Embedder | Citation acc | Latest-state acc | Refusal acc |
+|---|---|---|---|---|---|
+| chưa chạy | | | | | |
+
+Ngưỡng cần đạt: citation ≥ 0.85, latest-state = 1.00, refusal = 1.00.
+
 ## Kết quả
 
 Trạng thái: **chưa chạy** (chưa có `ANTHROPIC_API_KEY`).

@@ -1,9 +1,10 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import health, items, jobs, meetings
+from app.api.v1.endpoints import health, items, jobs, meetings, qa
 
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(meetings.router)
 api_router.include_router(items.router)
 api_router.include_router(jobs.router)
+api_router.include_router(qa.router)

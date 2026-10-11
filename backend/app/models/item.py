@@ -1,11 +1,13 @@
 import datetime as dt
 from typing import Any
 
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
+from app.models.chunk import EMBEDDING_DIM
 
 
 class DialogueActRow(Base):
@@ -36,6 +38,20 @@ class TopicRow(Base):
 
 class Item(Base):
     __tablename__ = "items"
+    __table_args__ = (
+        Index(
+            "ix_items_embedding_hnsw",
+            "embedding",
+            postgresql_using="hnsw",
+            postgresql_ops={"embedding": "vector_cosine_ops"},
+        ),
+        Index(
+            "ix_items_search_text_trgm",
+            "search_text",
+            postgresql_using="gin",
+            postgresql_ops={"search_text": "gin_trgm_ops"},
+        ),
+    )
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
     org_id: Mapped[str] = mapped_column(String, index=True)
@@ -47,6 +63,9 @@ class Item(Base):
     review_state: Mapped[str] = mapped_column(String)
     data: Mapped[dict[str, Any]] = mapped_column(JSONB)
     position: Mapped[int] = mapped_column(Integer)
+    search_text: Mapped[str | None] = mapped_column(Text)
+    embedding: Mapped[list[float] | None] = mapped_column(Vector(EMBEDDING_DIM))
+    indexed_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[dt.datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

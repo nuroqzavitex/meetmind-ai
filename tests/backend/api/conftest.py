@@ -3,10 +3,12 @@ from pathlib import Path
 
 import httpx
 import pytest
+from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from tests.backend.api_helpers import MAX_UPLOAD, FakeQueue
 from tests.backend.auth_helpers import TEST_ISSUER, TEST_PARTY, make_jwks_cache
 
+from app.ai.retrieval.embedder import HashEmbedder
 from app.core.config import Settings
 from app.main import create_app
 
@@ -24,9 +26,7 @@ def queue() -> FakeQueue:
 
 
 @pytest.fixture
-async def client(
-    sessionmaker: async_sessionmaker[AsyncSession], queue: FakeQueue
-) -> AsyncIterator[httpx.AsyncClient]:
+def app(sessionmaker: async_sessionmaker[AsyncSession], queue: FakeQueue) -> FastAPI:
     settings = Settings(
         _env_file=None,
         clerk_issuer=TEST_ISSUER,
@@ -37,6 +37,12 @@ async def client(
     app.state.sessionmaker = sessionmaker
     app.state.jwks = make_jwks_cache()
     app.state.queue = queue
+    app.state.embedder = HashEmbedder(1024)
+    return app
+
+
+@pytest.fixture
+async def client(app: FastAPI) -> AsyncIterator[httpx.AsyncClient]:
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test/api/v1") as c:
         yield c

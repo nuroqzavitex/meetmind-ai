@@ -72,7 +72,6 @@ CLERK_SECRET_KEY=sk_test_dummy npm run build
 | `/meetings/new` | Tạo cuộc họp, upload transcript |
 | `/meetings/[id]/review` | Duyệt các item AI trích xuất |
 | `/meetings/[id]/minutes` | Biên bản đã phát hành / xuất |
+| `/qa` | Hỏi đáp trên các cuộc họp đã phát hành, kèm chip trích dẫn |
 | `/sign-in`, `/sign-up` | Đăng nhập / đăng ký (Clerk) |
 | `/select-org` | Chọn organization đang hoạt động |
-
-(`/qa` thuộc Plan 4, chưa có.)

@@ -103,8 +103,12 @@ async def approve_clean(
 
 
 @router.post("/{meeting_id}/publish")
-async def publish(meeting_id: str, session: SessionDep, principal: PrincipalDep) -> MeetingSummary:
-    return await publish_service.publish(session, principal=principal, meeting_id=meeting_id)
+async def publish(
+    meeting_id: str, session: SessionDep, queue: QueueDep, principal: PrincipalDep
+) -> MeetingSummary:
+    return await publish_service.publish(
+        session, queue, principal=principal, meeting_id=meeting_id
+    )
 
 
 @router.get("/{meeting_id}/export")

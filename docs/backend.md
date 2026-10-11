@@ -68,6 +68,26 @@ Token thiếu/sai → 401; không có organization đang active → 403.
 | POST | `/items/{item_id}/report` | Báo lỗi item (204) |
 | POST | `/items/{item_id}/reopen` | Mở lại item |
 | GET | `/jobs/{job_id}` | Trạng thái job phân tích |
+| POST | `/qa` | Hỏi đáp trên các cuộc họp đã phát hành của org, trả lời kèm trích dẫn |
 
 Lỗi luôn có dạng `{"error": {"code": "...", "message": "..."}}`: 401, 403, 404 (kể cả truy cập
 chéo org), 409, 413 (file quá lớn, `MAX_UPLOAD_BYTES`), 422.
+
+## Hỏi đáp (Q&A)
+
+`POST /api/v1/qa` trả lời câu hỏi chỉ dựa trên các cuộc họp **đã phát hành** của org hiện tại
+(mọi truy vấn lọc `org_id` và `status = 'published'`). Không đủ căn cứ thì trả đúng câu
+`Không đủ thông tin trong các cuộc họp đã phát hành.` với `citations = []`.
+
+- **Job index**: khi publish, backend tạo job `index` (arq) để lập chỉ mục: mỗi item đã
+  `approved`/`edited` thành một `search_text`, transcript được cắt thành cửa sổ 6 câu, chồng 2 câu.
+  Lỗi index không làm đổi trạng thái cuộc họp. Sửa/từ chối một mục sẽ xoá chỉ mục của mục đó; lần publish lại sẽ lập chỉ mục lại các mục đã đổi.
+- **Embedder** (`EMBEDDING_PROVIDER`): `local` (mặc định) dùng sentence-transformers với
+  `EMBEDDING_MODEL=BAAI/bge-m3`, `EMBEDDING_DIM=1024`; `hash` là embedder xác định, không tải model,
+  chất lượng thấp hơn (dùng cho test và kiểm tra nhanh).
+- **Bộ nhớ**: API và worker mỗi bên giữ một bản model trong RAM khi dùng `local` (nạp lười, một lần mỗi tiến trình).
+- **Lần chạy đầu tiên** với `local` phải tải model bge-m3 (~2 GB). Compose gắn volume `hf-cache`
+  (`/root/.cache/huggingface`) cho `backend` và `worker` nên chỉ tải một lần. Image cài torch bản CPU.
+- Truy hồi: vector + từ khoá (RRF), giữ 12 ngữ cảnh, sắp theo ngày họp tăng dần; cuộc họp mới nhất là
+  trạng thái hiện hành.
+- Đánh giá chất lượng: `make eval-qa` (xem `evals/README.md`; `--embedder local` cần `uv sync --extra embeddings`).

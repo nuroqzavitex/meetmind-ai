@@ -19,3 +19,7 @@ export type ApproveCleanOut = S["ApproveCleanOut"];
 
 export type ItemType = ItemOut["type"];
 export type ReviewState = NonNullable<ItemOut["review_state"]>;
+
+export type QARequest = S["QARequest"];
+export type QAResponse = S["QAResponse"];
+export type Citation = S["Citation"];

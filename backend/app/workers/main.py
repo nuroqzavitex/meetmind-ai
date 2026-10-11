@@ -5,14 +5,23 @@ from typing import Any
 from arq.connections import RedisSettings
 
 from app.ai.llm.factory import make_llm
+from app.ai.retrieval.embedder import make_embedder
 from app.core.config import JOB_TIMEOUT_SECONDS, get_settings
 from app.db.session import make_engine, make_sessionmaker
 from app.services.analysis import run_analysis
+from app.services.indexing import run_index
 
 
 async def analyze(ctx: dict[str, Any], *, org_id: str, meeting_id: str, job_id: str) -> None:
     await run_analysis(
         ctx["sessionmaker"], ctx["llm"], ctx["ai"],
+        org_id=org_id, meeting_id=meeting_id, job_id=job_id,
+    )
+
+
+async def index(ctx: dict[str, Any], *, org_id: str, meeting_id: str, job_id: str) -> None:
+    await run_index(
+        ctx["sessionmaker"], ctx["embedder"],
         org_id=org_id, meeting_id=meeting_id, job_id=job_id,
     )
 
@@ -24,6 +33,9 @@ async def startup(ctx: dict[str, Any]) -> None:
     ctx["ai"] = settings.ai_settings()
     key = settings.anthropic_api_key
     ctx["llm"] = make_llm(ctx["ai"], key.get_secret_value() if key else None)
+    ctx["embedder"] = make_embedder(
+        settings.embedding_provider, settings.embedding_model, settings.embedding_dim
+    )
 
 
 async def shutdown(ctx: dict[str, Any]) -> None:
@@ -31,7 +43,7 @@ async def shutdown(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [analyze]  # noqa: RUF012
+    functions = [analyze, index]  # noqa: RUF012
     on_startup = startup
     on_shutdown = shutdown
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)

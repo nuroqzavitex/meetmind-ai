@@ -1,6 +1,7 @@
 """Publish, export, report and reopen use-cases."""
 
 import json
+import logging
 import re
 import unicodedata
 from datetime import UTC, datetime
@@ -15,8 +16,12 @@ from app.core.errors import Conflict, NotFound
 from app.models import Item, Meeting
 from app.repositories import items as items_repo
 from app.repositories import jobs, meetings
+from app.repositories import retrieval as retrieval_repo
 from app.schemas.meetings import MeetingSummary
 from app.services.export import render_json, render_markdown
+from app.workers.queue import JobQueue
+
+logger = logging.getLogger(__name__)
 
 _NOT_FOUND_MEETING = "Không tìm thấy cuộc họp"
 _NOT_FOUND_ITEM = "Không tìm thấy mục"
@@ -38,8 +43,34 @@ async def _meeting(session: AsyncSession, principal: Principal, meeting_id: str)
     return row
 
 
+async def _enqueue_index(
+    session: AsyncSession, queue: JobQueue, *, org_id: str, meeting_id: str
+) -> None:
+    """Create and enqueue the index job; failures never undo the publish."""
+    try:
+        job = await jobs.create(session, org_id=org_id, meeting_id=meeting_id, kind="index")
+        job_id = job.id
+        await session.commit()
+    except Exception:
+        logger.exception("Failed to create index job for meeting %s", meeting_id)
+        await session.rollback()
+        return
+    try:
+        await queue.enqueue("index", org_id=org_id, meeting_id=meeting_id, job_id=job_id)
+    except Exception:
+        logger.exception("Failed to enqueue index job %s", job_id)
+        try:
+            await jobs.update(
+                session, org_id=org_id, job_id=job_id, status="failed",
+                error="Không đưa được job vào hàng đợi",
+            )
+            await session.commit()
+        except Exception:
+            logger.exception("Failed to mark index job %s as failed", job_id)
+
+
 async def publish(
-    session: AsyncSession, *, principal: Principal, meeting_id: str
+    session: AsyncSession, queue: JobQueue, *, principal: Principal, meeting_id: str
 ) -> MeetingSummary:
     org_id = principal.org_id
     row = await _meeting(session, principal, meeting_id)
@@ -68,6 +99,7 @@ async def publish(
         published_at=datetime.now(UTC),
     )
     await session.commit()
+    await _enqueue_index(session, queue, org_id=org_id, meeting_id=meeting_id)
     session.expire_all()
     row = await _meeting(session, principal, meeting_id)
     return MeetingSummary.model_validate(row)
@@ -127,6 +159,7 @@ async def reopen_item(
     if not moved:
         raise Conflict(_NOT_PUBLISHED, "not_published")
     await items_repo.save(session, item=row, model=after)
+    await retrieval_repo.clear_item_index(session, item=row)
     await items_repo.add_event(
         session,
         item=row,

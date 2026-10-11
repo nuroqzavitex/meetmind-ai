@@ -20,7 +20,11 @@ dependencies = [
     "arq>=0.28.0",
     "httpx>=0.28.1",
     "python-multipart>=0.0.32",
+    "pgvector>=0.5.1",
 ]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers", "torch"]
 
 [dependency-groups]
 dev = [
@@ -30,6 +34,14 @@ dev = [
     "mypy",
     "types-pyyaml",
 ]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [build-system]
 requires = ["hatchling"]
@@ -51,3 +63,7 @@ line-length = 100
 [tool.mypy]
 strict = true
 files = ["app", "../evals"]
+
+[[tool.mypy.overrides]]
+module = ["sentence_transformers.*"]
+ignore_missing_imports = true

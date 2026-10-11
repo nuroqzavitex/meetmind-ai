@@ -10,6 +10,7 @@ from app.core.auth import Principal
 from app.core.errors import Conflict, NotFound, Unprocessable
 from app.repositories import items as items_repo
 from app.repositories import meetings
+from app.repositories import retrieval as retrieval_repo
 from app.schemas.items import ItemAction, ItemEventOut
 
 _NOT_FOUND_MEETING = "Không tìm thấy cuộc họp"
@@ -94,6 +95,8 @@ async def act_on_item(
         after = _edit(before, action)
         event = "edited"
     await items_repo.save(session, item=row, model=after)
+    if action.action in ("edit", "reject"):
+        await retrieval_repo.clear_item_index(session, item=row)
     await items_repo.add_event(
         session,
         item=row,

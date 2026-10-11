@@ -27,3 +27,7 @@ class AnalysisError(MeetMindError):
     def __init__(self, message: str, *, step: str) -> None:
         super().__init__(message)
         self.step = step
+
+
+class EmbeddingError(MeetMindError):
+    """Raised when text cannot be embedded."""

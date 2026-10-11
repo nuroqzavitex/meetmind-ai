@@ -19,6 +19,9 @@ export function AppHeader() {
           >
             Tải lên
           </Link>
+          <Link href="/qa" className="text-muted-foreground hover:text-foreground">
+            Hỏi đáp
+          </Link>
         </nav>
         <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/" />
         <UserButton />

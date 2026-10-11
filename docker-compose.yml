@@ -30,8 +30,11 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://app:app@db:5432/meeting
       REDIS_URL: redis://redis:6379
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-local}
     ports:
       - "8000:8000"
+    volumes:
+      - hf-cache:/root/.cache/huggingface
     depends_on:
       db:
         condition: service_healthy
@@ -47,6 +50,9 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://app:app@db:5432/meeting
       REDIS_URL: redis://redis:6379
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-local}
+    volumes:
+      - hf-cache:/root/.cache/huggingface
     depends_on:
       db:
         condition: service_healthy
@@ -68,3 +74,4 @@ services:
 
 volumes:
   pgdata:
+  hf-cache:

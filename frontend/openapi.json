@@ -650,6 +650,44 @@
           }
         }
       }
+    },
+    "/api/v1/qa": {
+      "post": {
+        "summary": "Ask",
+        "operationId": "ask_api_v1_qa_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QARequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QAResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -707,6 +745,55 @@
           "context"
         ],
         "title": "Body_create_meeting_api_v1_meetings_post"
+      },
+      "Citation": {
+        "properties": {
+          "ref": {
+            "type": "integer",
+            "title": "Ref"
+          },
+          "meeting_id": {
+            "type": "string",
+            "title": "Meeting Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "ts": {
+            "type": "string",
+            "title": "Ts"
+          },
+          "speaker": {
+            "type": "string",
+            "title": "Speaker"
+          },
+          "quote": {
+            "type": "string",
+            "title": "Quote"
+          },
+          "utterance_id": {
+            "type": "string",
+            "title": "Utterance Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref",
+          "meeting_id",
+          "title",
+          "date",
+          "ts",
+          "speaker",
+          "quote",
+          "utterance_id"
+        ],
+        "title": "Citation"
       },
       "DialogueAct": {
         "properties": {
@@ -1628,6 +1715,54 @@
           "name"
         ],
         "title": "Participant"
+      },
+      "QARequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Question"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "QARequest"
+      },
+      "QAResponse": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "type": "array",
+            "title": "Citations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "citations"
+        ],
+        "title": "QAResponse"
       },
       "ReopenIn": {
         "properties": {

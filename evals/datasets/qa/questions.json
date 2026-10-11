@@ -1,0 +1,243 @@
+[
+  {
+    "id": "qa_latest_a_to_b",
+    "question": "Cuối cùng nhóm đã chốt dịch vụ gửi email thông báo cho khách hàng là gì?",
+    "kind": "latest",
+    "meetings": [
+      "a_to_b"
+    ],
+    "expect_quote_contains": [
+      "chốt Amazon SES"
+    ],
+    "expect_answer_contains": [
+      "Amazon SES"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_latest_b_back_to_a",
+    "question": "Trang quản trị mới cuối cùng dùng framework nào?",
+    "kind": "latest",
+    "meetings": [
+      "b_back_to_a"
+    ],
+    "expect_quote_contains": [
+      "chốt React"
+    ],
+    "expect_answer_contains": [
+      "React"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_latest_decide_a_then_b",
+    "question": "Repo backend hiện đang dùng công cụ CI nào?",
+    "kind": "latest",
+    "meetings": [
+      "decide_a_then_b"
+    ],
+    "expect_quote_contains": [
+      "chốt luôn GitHub Actions"
+    ],
+    "expect_answer_contains": [
+      "GitHub Actions"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_latest_hiring_offer",
+    "question": "Mức offer cuối cùng cho ứng viên Hà là bao nhiêu?",
+    "kind": "latest",
+    "meetings": [
+      "hiring_review"
+    ],
+    "expect_quote_contains": [
+      "chốt 33 triệu"
+    ],
+    "expect_answer_contains": [
+      "33 triệu",
+      "33tr"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_latest_acme_hosting",
+    "question": "Hệ thống kho của ACME cuối cùng được đặt ở đâu?",
+    "kind": "latest",
+    "meetings": [
+      "customer_meeting_acme"
+    ],
+    "expect_quote_contains": [
+      "chốt cloud đặt tại Hà Nội"
+    ],
+    "expect_answer_contains": [
+      "Hà Nội"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_latest_incident_pool",
+    "question": "Cách xử lý việc cạn pool kết nối CSDL cuối cùng được chốt là gì?",
+    "kind": "latest",
+    "meetings": [
+      "incident_postmortem"
+    ],
+    "expect_quote_contains": [
+      "chốt PgBouncer"
+    ],
+    "expect_answer_contains": [
+      "PgBouncer"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_latest_otp",
+    "question": "Mã OTP đăng nhập sprint 21 gửi qua kênh nào?",
+    "kind": "latest",
+    "meetings": [
+      "sprint_planning_q4"
+    ],
+    "expect_quote_contains": [
+      "chốt dùng Zalo ZNS"
+    ],
+    "expect_answer_contains": [
+      "ZNS"
+    ],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_answer_schema_owner",
+    "question": "Ai được giao dựng schema Postgres cho dịch vụ thanh toán?",
+    "kind": "answer",
+    "meetings": [
+      "payment_v2"
+    ],
+    "expect_quote_contains": [
+      "Minh dựng schema Postgres"
+    ],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_answer_alert_threshold",
+    "question": "Ngưỡng cảnh báo kết nối CSDL được hạ xuống còn bao nhiêu?",
+    "kind": "answer",
+    "meetings": [
+      "incident_postmortem"
+    ],
+    "expect_quote_contains": [
+      "hạ ngưỡng cảnh báo xuống 70%"
+    ],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_answer_acme_onprem_reason",
+    "question": "Vì sao ban đầu ACME nghiêng về phương án on-premise?",
+    "kind": "answer",
+    "meetings": [
+      "customer_meeting_acme"
+    ],
+    "expect_quote_contains": [
+      "dữ liệu kho không được rời khỏi công ty"
+    ],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_answer_sms_to_zns",
+    "question": "Vì sao nhóm bỏ SMS để chuyển sang Zalo ZNS cho OTP?",
+    "kind": "answer",
+    "meetings": [
+      "sprint_planning_q4"
+    ],
+    "expect_quote_contains": [
+      "SMS brandname mất khoảng hai tuần",
+      "ZNS đăng ký template chỉ mất ba ngày"
+    ],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_answer_bach_rejected",
+    "question": "Vì sao không mời ứng viên Bách vào vòng ba?",
+    "kind": "answer",
+    "meetings": [
+      "hiring_review"
+    ],
+    "expect_quote_contains": [
+      "hai năm rưỡi",
+      "chốt không mời Bách"
+    ],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_answer_ci_deadline",
+    "question": "Hạn chuyển pipeline test sang công cụ CI mới là khi nào?",
+    "kind": "answer",
+    "meetings": [
+      "decide_a_then_b"
+    ],
+    "expect_quote_contains": [
+      "hạn là 15/10"
+    ],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_refusal_marketing",
+    "question": "Ngân sách marketing quý 4 của công ty là bao nhiêu?",
+    "kind": "refusal",
+    "meetings": [
+      "payment_v2"
+    ],
+    "expect_quote_contains": [],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_refusal_contract",
+    "question": "Hợp đồng với ACME đã ký chưa và giá trị hợp đồng là bao nhiêu?",
+    "kind": "refusal",
+    "meetings": [
+      "customer_meeting_acme"
+    ],
+    "expect_quote_contains": [],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_refusal_vingroup",
+    "question": "Kết quả buổi demo với khách hàng Vingroup thế nào?",
+    "kind": "refusal",
+    "meetings": [
+      "sprint_planning_q4"
+    ],
+    "expect_quote_contains": [],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_refusal_ceo",
+    "question": "Ai là giám đốc điều hành của công ty và nhiệm kỳ bao lâu?",
+    "kind": "refusal",
+    "meetings": [
+      "hiring_review"
+    ],
+    "expect_quote_contains": [],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  },
+  {
+    "id": "qa_refusal_k8s",
+    "question": "Nhóm đã quyết định chuyển hệ thống lên Kubernetes vào tháng nào?",
+    "kind": "refusal",
+    "meetings": [
+      "incident_postmortem"
+    ],
+    "expect_quote_contains": [],
+    "expect_answer_contains": [],
+    "forbid_answer_contains": []
+  }
+]
