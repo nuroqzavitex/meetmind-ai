@@ -1,4 +1,4 @@
-.PHONY: up down db migrate api worker test lint fe-dev fe-test types eval-qa
+.PHONY: up down db migrate api worker test lint fe-dev fe-test types eval-qa e2e eval
 
 up:
 	docker compose up -d --build
@@ -34,5 +34,12 @@ fe-test:
 types:
 	cd frontend && npm run gen:types
 
+eval:
+	cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_pipeline
+	cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_qa
+
 eval-qa:
 	cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_qa
+
+e2e:
+	cd frontend && npx playwright test

@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: bash -c "cd backend && uv run ruff check app ../tests ../evals"
+        language: system
+        pass_filenames: false
+        files: ^(backend|tests|evals)/.*\.py$
+      - id: frontend-lint
+        name: frontend lint
+        entry: bash -c "cd frontend && npm run lint"
+        language: system
+        pass_filenames: false
+        files: ^(frontend|tests/e2e)/

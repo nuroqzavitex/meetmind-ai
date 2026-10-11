@@ -4,9 +4,9 @@ from typing import Any
 
 from arq.connections import RedisSettings
 
-from app.ai.llm.factory import make_llm
 from app.ai.retrieval.embedder import make_embedder
 from app.core.config import JOB_TIMEOUT_SECONDS, get_settings
+from app.core.llm import build_llm
 from app.db.session import make_engine, make_sessionmaker
 from app.services.analysis import run_analysis
 from app.services.indexing import run_index
@@ -31,8 +31,7 @@ async def startup(ctx: dict[str, Any]) -> None:
     ctx["engine"] = make_engine(settings.database_url)
     ctx["sessionmaker"] = make_sessionmaker(ctx["engine"])
     ctx["ai"] = settings.ai_settings()
-    key = settings.anthropic_api_key
-    ctx["llm"] = make_llm(ctx["ai"], key.get_secret_value() if key else None)
+    ctx["llm"] = build_llm(settings)
     ctx["embedder"] = make_embedder(
         settings.embedding_provider, settings.embedding_model, settings.embedding_dim
     )

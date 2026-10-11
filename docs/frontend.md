@@ -23,12 +23,8 @@ Backend phải đang chạy (`make up` hoặc `make db && make api`); `CORS_ORIG
 
 ## Cấu hình Clerk
 
-Giống backend, xem [docs/backend.md](backend.md#cấu-hình-clerk):
-
-1. Bật **Organizations**, tắt **Personal accounts** (người dùng phải thuộc một organization;
-   nếu chưa active org, app chuyển tới `/select-org`).
-2. Sessions → **Customize session token**, thêm claim `{"name": "{{user.full_name}}"}`.
-3. Đặt `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` và `CLERK_SECRET_KEY` từ Clerk Dashboard.
+Xem [README → Cấu hình Clerk](../README.md#cấu-hình-clerk). Frontend cần `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+và `CLERK_SECRET_KEY`; người dùng chưa có organization đang active bị chuyển tới `/select-org`.
 
 ## Sinh lại type API
 

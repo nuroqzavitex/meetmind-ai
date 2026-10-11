@@ -38,16 +38,16 @@ Test không gọi LLM hay Clerk thật.
 
 ## Cấu hình Clerk
 
-1. Tạo application trên Clerk Dashboard, bật **Organizations**; tắt **Personal accounts**
-   (người dùng bắt buộc thuộc một organization).
-2. Lấy **Frontend API URL**, đặt:
-   - `CLERK_JWKS_URL=https://<frontend-api>/.well-known/jwks.json`
-   - `CLERK_ISSUER=https://<frontend-api>`
-   - `CLERK_AUTHORIZED_PARTIES=http://localhost:3000` (origin của frontend, phân tách bằng dấu phẩy)
-3. Sessions → **Customize session token**, thêm claim: `{"name": "{{user.full_name}}"}`
-   (backend lưu tên người thao tác vào `item_events`).
-
+Xem [README → Cấu hình Clerk](../README.md#cấu-hình-clerk) (Organizations, claim `name` trong session token,
+`CLERK_JWKS_URL`, `CLERK_ISSUER`, `CLERK_AUTHORIZED_PARTIES`, user test cho e2e).
 Token thiếu/sai → 401; không có organization đang active → 403.
+
+## LLM giả cho e2e (`LLM_PROVIDER=fake`)
+
+`LLM_PROVIDER=fake` thay Anthropic bằng `FixtureLLM`: mỗi lời gọi của agent `<agent>` trả nội dung file
+`<FAKE_LLM_DIR>/<agent>.json` (mặc định `../tests/fixtures/llm/payment_v2`, tính từ `backend/`), không gọi mạng.
+Chỉ dùng cho e2e (Playwright tự đặt biến này cho backend và worker, xem [tests/e2e/README.md](../tests/e2e/README.md));
+không dùng khi chạy thật hay eval. Unit/integration test dùng `FakeLLM` trong code, không cần biến này.
 
 ## API (`/api/v1`, mọi route trừ health cần Bearer token)
 
