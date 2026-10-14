@@ -79,3 +79,25 @@ test("title input is capped at 200 characters", () => {
   renderForm()
   expect(screen.getByLabelText("Tiêu đề")).toHaveAttribute("maxlength", "200")
 })
+
+test("audio file hides participants and sends none; transcription progress is shown", async () => {
+  api.postForm.mockResolvedValue({ meeting_id: "m1", job_id: "j1" })
+  api.get.mockResolvedValue({
+    id: "j1", kind: "transcribe", meeting_id: "m1", status: "running", step: "transcribe", progress: 0.1, error: null,
+  })
+  renderForm()
+  await userEvent.type(screen.getByLabelText("Tiêu đề"), "Họp ghi âm")
+  await userEvent.type(screen.getByLabelText("Người tham gia"), "Lan | *")
+  await userEvent.upload(
+    screen.getByLabelText("File transcript"),
+    new File(["ID3"], "hop.m4a", { type: "audio/mp4" }),
+  )
+  expect(screen.queryByLabelText("Người tham gia")).toBeNull()
+  expect(screen.getByText(/gán tên và người quyết định/)).toBeInTheDocument()
+  await userEvent.click(screen.getByRole("button", { name: "Phân tích" }))
+  await waitFor(() => expect(api.postForm).toHaveBeenCalledTimes(1))
+  const form = api.postForm.mock.calls[0][1] as FormData
+  expect(JSON.parse(form.get("context") as string).participants).toEqual([])
+  expect(await screen.findByText("Đang chuyển giọng nói thành văn bản")).toBeInTheDocument()
+  expect(await screen.findByText("Chuyển giọng nói thành văn bản")).toBeInTheDocument()
+})

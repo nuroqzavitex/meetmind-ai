@@ -73,6 +73,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/meetings/{meeting_id}/speakers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Speakers */
+        get: operations["get_speakers_api_v1_meetings__meeting_id__speakers_get"];
+        put?: never;
+        /** Assign Speakers */
+        post: operations["assign_speakers_api_v1_meetings__meeting_id__speakers_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/meetings/{meeting_id}/items": {
         parameters: {
             query?: never;
@@ -628,6 +646,32 @@ export interface components {
          * @enum {string}
          */
         ReviewState: "pending" | "approved" | "edited" | "rejected";
+        /** SpeakerAssignment */
+        SpeakerAssignment: {
+            /** Label */
+            label: string;
+            /** Name */
+            name: string;
+            /**
+             * Is Decision Maker
+             * @default false
+             */
+            is_decision_maker: boolean;
+        };
+        /** SpeakerOut */
+        SpeakerOut: {
+            /** Label */
+            label: string;
+            /** Count */
+            count: number;
+            /** Samples */
+            samples: string[];
+        };
+        /** SpeakersIn */
+        SpeakersIn: {
+            /** Speakers */
+            speakers: components["schemas"]["SpeakerAssignment"][];
+        };
         /**
          * TopicOut
          * @description Mirrors the domain `Topic`.
@@ -843,6 +887,72 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeetingCreated"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_speakers_api_v1_meetings__meeting_id__speakers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                meeting_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpeakerOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    assign_speakers_api_v1_meetings__meeting_id__speakers_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                meeting_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpeakersIn"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             202: {

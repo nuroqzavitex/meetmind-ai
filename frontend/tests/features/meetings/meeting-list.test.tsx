@@ -112,3 +112,17 @@ test("project filter is debounced and keeps the previous list visible", async ()
   expect(screen.getByRole("link", { name: /Họp r1/ })).toBeInTheDocument()
   expect(await screen.findByRole("link", { name: /Họp n1/ })).toBeInTheDocument()
 })
+test("audio meetings: awaiting speakers links to naming page, transcribing shows its label", async () => {
+  api.get.mockImplementation((path: string) => {
+    if (path.startsWith("/meetings?") || path === "/meetings") {
+      return Promise.resolve([m("s1", "awaiting_speakers"), m("t1", "transcribing")])
+    }
+    return Promise.resolve({ ...m("t1", "transcribing"), active_job_id: null, utterances: [], context: {} })
+  })
+  renderIt()
+  const link = await screen.findByRole("link", { name: /Họp s1/ })
+  expect(link).toHaveAttribute("href", "/meetings/s1/speakers")
+  const list = within(screen.getByRole("list"))
+  expect(list.getByText("Chờ gán người nói")).toBeInTheDocument()
+  expect(list.getByText("Đang chuyển giọng nói")).toBeInTheDocument()
+})

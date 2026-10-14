@@ -22,6 +22,8 @@ export const ITEM_TYPE_LABEL: Record<ItemType, string> = {
 
 export const MEETING_STATUS_LABEL: Record<string, string> = {
   draft: "Nháp",
+  transcribing: "Đang chuyển giọng nói",
+  awaiting_speakers: "Chờ gán người nói",
   analyzing: "Đang phân tích",
   in_review: "Đang duyệt",
   published: "Đã phát hành",
@@ -37,6 +39,7 @@ export const REVIEW_STATE_LABEL: Record<ReviewState, string> = {
 
 export const STEP_LABEL: Record<string, string> = {
   start: "Bắt đầu",
+  transcribe: "Chuyển giọng nói thành văn bản",
   normalize: "Chuẩn hoá transcript",
   extract: "Trích xuất hành vi",
   check_quotes: "Kiểm tra trích dẫn",
@@ -49,6 +52,15 @@ export const STEP_LABEL: Record<string, string> = {
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
+
+/** Audio files are transcribed (with speaker separation) before analysis. */
+export const AUDIO_EXTENSIONS = [".mp3", ".m4a", ".wav", ".webm", ".mp4", ".mpeg", ".mpga"];
+export const TRANSCRIPT_EXTENSIONS = [".txt", ".srt", ".vtt", ".docx"];
+
+export function isAudioFile(name: string): boolean {
+  const lower = name.toLowerCase();
+  return AUDIO_EXTENSIONS.some((ext) => lower.endsWith(ext));
+}
 
 export function fmtDate(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);

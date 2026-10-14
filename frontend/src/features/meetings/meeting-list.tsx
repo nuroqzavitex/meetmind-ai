@@ -65,7 +65,9 @@ function MeetingRow({ m }: { m: MeetingSummary }) {
       ? `/meetings/${m.id}/review`
       : m.status === "published"
         ? `/meetings/${m.id}/minutes`
-        : null
+        : m.status === "awaiting_speakers"
+          ? `/meetings/${m.id}/speakers`
+          : null
   const title = <span className="font-semibold">{m.title}</span>
   return (
     <li className="group space-y-3 rounded-xl border bg-card p-4 shadow-xs transition-shadow hover:shadow-md">
@@ -109,7 +111,7 @@ function MeetingRow({ m }: { m: MeetingSummary }) {
           </Link>
         )}
       </div>
-      {m.status === "analyzing" && <AnalyzingInfo id={m.id} />}
+      {(m.status === "analyzing" || m.status === "transcribing") && <AnalyzingInfo id={m.id} />}
       {m.status === "failed" && <FailedInfo id={m.id} />}
     </li>
   )

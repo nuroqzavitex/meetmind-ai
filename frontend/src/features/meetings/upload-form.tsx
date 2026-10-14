@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { AUDIO_EXTENSIONS, TRANSCRIPT_EXTENSIONS, isAudioFile } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import { useCreateMeeting } from "./hooks"
 import { buildContext, validateDraft, type ContextDraft } from "./context-form"
@@ -30,6 +31,7 @@ export function UploadForm() {
   const [file, setFile] = useState<File | null>(null)
   const [errors, setErrors] = useState<string[]>([])
   const create = useCreateMeeting()
+  const audio = file !== null && isAudioFile(file.name)
 
   const set = (k: keyof ContextDraft) => (e: { target: { value: string } }) =>
     setDraft((d) => ({ ...d, [k]: e.target.value }))
@@ -42,7 +44,9 @@ export function UploadForm() {
     if (errs.length || !file) return
     const form = new FormData()
     form.append("file", file)
-    form.append("context", JSON.stringify(buildContext(draft)))
+    // Audio speakers are named after transcription, so typed participants would be discarded.
+    const ctx = buildContext(audio ? { ...draft, participantsText: "" } : draft)
+    form.append("context", JSON.stringify(ctx))
     create.mutate(form)
   }
 
@@ -54,8 +58,14 @@ export function UploadForm() {
             <Sparkles className="size-5" aria-hidden />
           </span>
           <div>
-            <h2 className="text-lg font-semibold">Đang phân tích transcript</h2>
-            <p className="text-sm text-muted-foreground">Xong sẽ tự chuyển sang màn hình duyệt.</p>
+            <h2 className="text-lg font-semibold">
+              {audio ? "Đang chuyển giọng nói thành văn bản" : "Đang phân tích transcript"}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {audio
+                ? "Xong sẽ tự chuyển sang bước gán tên người nói."
+                : "Xong sẽ tự chuyển sang màn hình duyệt."}
+            </p>
           </div>
         </div>
         <JobProgress
@@ -82,12 +92,14 @@ export function UploadForm() {
             {file ? <FileCheck2 className="size-5" aria-hidden /> : <UploadCloud className="size-5" aria-hidden />}
           </span>
           <span className="font-medium">{file ? file.name : "Bấm để chọn file"}</span>
-          <span className="text-xs text-muted-foreground">Hỗ trợ .txt, .srt, .vtt, .docx · tối đa 5 MB</span>
+          <span className="text-xs text-muted-foreground">
+            Transcript .txt, .srt, .vtt, .docx (tối đa 5 MB) · Ghi âm .mp3, .m4a, .wav, .webm, .mp4 (tối đa 25 MB)
+          </span>
         </label>
         <Input
           id="file"
           type="file"
-          accept=".txt,.srt,.vtt,.docx"
+          accept={[...TRANSCRIPT_EXTENSIONS, ...AUDIO_EXTENSIONS].join(",")}
           className="sr-only"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
         />
@@ -122,6 +134,11 @@ export function UploadForm() {
             Giúp xác định ai có quyền chốt quyết định và nhận đúng thuật ngữ của nhóm.
           </p>
         </div>
+        {audio ? (
+          <p className="rounded-lg border border-dashed bg-muted/50 p-3 text-sm text-muted-foreground">
+            File ghi âm: sau khi chuyển giọng nói, bạn sẽ gán tên và người quyết định cho từng người nói.
+          </p>
+        ) : (
         <div className="space-y-1.5">
           <Label htmlFor="participants">Người tham gia</Label>
           <Textarea
@@ -132,6 +149,7 @@ export function UploadForm() {
             onChange={set("participantsText")}
           />
         </div>
+        )}
         <div className="space-y-1.5">
           <Label htmlFor="glossary">Thuật ngữ</Label>
           <Textarea

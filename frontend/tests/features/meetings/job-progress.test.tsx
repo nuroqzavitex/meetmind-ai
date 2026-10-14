@@ -119,3 +119,12 @@ test("success invalidates items and topics", async () => {
   expect(keys).toContain('["items","m1"]')
   expect(keys).toContain('["topics","m1"]')
 })
+
+test("finished transcription links to speaker naming and auto-navigates there", async () => {
+  api.get.mockResolvedValue(job({ kind: "transcribe", status: "succeeded", step: "done", progress: 1 }))
+  renderIt()
+  const link = await screen.findByRole("link", { name: "Gán tên người nói" })
+  expect(link).toHaveAttribute("href", "/meetings/m1/speakers")
+  expect(screen.getByText("Đã chuyển giọng nói thành văn bản")).toBeInTheDocument()
+  expect(push).toHaveBeenCalledWith("/meetings/m1/speakers")
+})

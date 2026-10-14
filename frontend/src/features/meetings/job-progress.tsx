@@ -24,7 +24,9 @@ export function JobProgress({
   const { data: job, error: jobError, refetch } = useJob(currentId)
   const reanalyze = useReanalyze(meetingId)
   const status = job?.status
-  const reviewHref = `/meetings/${meetingId}/review`
+  // A finished transcription continues with speaker naming; a finished analysis with review.
+  const transcribing = job?.kind === "transcribe"
+  const nextHref = transcribing ? `/meetings/${meetingId}/speakers` : `/meetings/${meetingId}/review`
 
   useEffect(() => {
     setCurrentId(jobId)
@@ -39,8 +41,8 @@ export function JobProgress({
       qc.invalidateQueries({ queryKey: ["items", meetingId] })
       qc.invalidateQueries({ queryKey: ["topics", meetingId] })
     }
-    if (status === "succeeded" && autoNavigate) router.push(reviewHref)
-  }, [status, qc, meetingId, router, reviewHref, autoNavigate])
+    if (status === "succeeded" && autoNavigate) router.push(nextHref)
+  }, [status, qc, meetingId, router, nextHref, autoNavigate])
 
   if (!job && jobError) {
     return (
@@ -83,12 +85,12 @@ export function JobProgress({
   if (job.status === "succeeded") {
     return (
       <div className="space-y-2 text-sm">
-        <p>Phân tích hoàn tất</p>
+        <p>{transcribing ? "Đã chuyển giọng nói thành văn bản" : "Phân tích hoàn tất"}</p>
         <Link
-          href={reviewHref}
+          href={nextHref}
           className="font-medium text-primary underline-offset-4 hover:underline"
         >
-          Bắt đầu duyệt
+          {transcribing ? "Gán tên người nói" : "Bắt đầu duyệt"}
         </Link>
       </div>
     )

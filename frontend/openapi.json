@@ -207,6 +207,96 @@
         }
       }
     },
+    "/api/v1/meetings/{meeting_id}/speakers": {
+      "get": {
+        "summary": "Get Speakers",
+        "operationId": "get_speakers_api_v1_meetings__meeting_id__speakers_get",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Meeting Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpeakerOut"
+                  },
+                  "title": "Response Get Speakers Api V1 Meetings  Meeting Id  Speakers Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign Speakers",
+        "operationId": "assign_speakers_api_v1_meetings__meeting_id__speakers_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Meeting Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpeakersIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeetingCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/meetings/{meeting_id}/items": {
       "get": {
         "summary": "List Items",
@@ -1806,6 +1896,73 @@
           "rejected"
         ],
         "title": "ReviewState"
+      },
+      "SpeakerAssignment": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "is_decision_maker": {
+            "type": "boolean",
+            "title": "Is Decision Maker",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "name"
+        ],
+        "title": "SpeakerAssignment"
+      },
+      "SpeakerOut": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "samples": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Samples"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "count",
+          "samples"
+        ],
+        "title": "SpeakerOut"
+      },
+      "SpeakersIn": {
+        "properties": {
+          "speakers": {
+            "items": {
+              "$ref": "#/components/schemas/SpeakerAssignment"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Speakers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "speakers"
+        ],
+        "title": "SpeakersIn"
       },
       "TopicOut": {
         "properties": {
