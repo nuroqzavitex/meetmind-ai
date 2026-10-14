@@ -41,7 +41,7 @@ export function ItemCard({
   }
   const superseded = item.status === "superseded"
   const meta: [string, string | null | undefined][] = [
-    ["Người phụ trách", item.owner],
+    [item.type === "decision" ? "Người chốt" : "Người phụ trách", item.owner],
     ["Người yêu cầu", item.requester],
     ["Hạn chót", item.due_date ? fmtDate(item.due_date) : null],
     ["Điều kiện", item.condition],
@@ -91,7 +91,7 @@ export function ItemCard({
         )}
         {item.evidence.length > 0 && (
           <ul className="space-y-1.5">
-            {item.evidence.map((e, i) => (
+            {[...item.evidence].sort((a, b) => a.ts.localeCompare(b.ts)).map((e, i) => (
               <li key={`${e.utterance_id}-${i}`}>
                 <button
                   type="button"

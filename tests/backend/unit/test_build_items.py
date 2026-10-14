@@ -1,6 +1,8 @@
 from datetime import date
 
-from app.ai.agents.build_items import build_items, decision_confidence
+import pytest
+
+from app.ai.agents.build_items import build_items, decision_confidence, decision_content
 from app.ai.agents.topics import TopicSpec
 from app.ai.domain.enums import Act, ItemStatus, ItemType, OptState
 from app.ai.domain.models import DialogueAct, MeetingContext, Participant
@@ -265,3 +267,16 @@ def test_items_ordered_by_first_evidence_and_inputs_not_mutated():
     assert types(items) == [ItemType.KNOWLEDGE, ItemType.DECISION, ItemType.FEEDBACK]
     assert items[2].confidence == 0.5
     assert (t.model_dump(), [a.model_dump() for a in acts]) == before
+
+
+@pytest.mark.parametrize(
+    ("question", "label", "expected"),
+    [
+        ("Dùng DB nào?", "Postgres", "Dùng DB nào? → Postgres"),
+        ("Mời Bách vào vòng ba?", "Mời Bách vào vòng ba", "Mời Bách vào vòng ba"),
+        ("  mời bách vào  vòng ba ? ", "Mời Bách vào vòng ba", "Mời Bách vào vòng ba"),
+        ("", "Postgres", "Postgres"),
+    ],
+)
+def test_decision_content_drops_yes_no_question(question: str, label: str, expected: str) -> None:
+    assert decision_content(question, label) == expected

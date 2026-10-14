@@ -51,6 +51,14 @@ def _mean_conf(acts: list[DialogueAct]) -> float:
     return round(mean(a.confidence for a in acts), 2) if acts else 0.7
 
 
+def decision_content(question: str, label: str) -> str:
+    """`question → label`, or just `label` when the question is that option asked as yes/no."""
+    q = norm_name(question.strip().rstrip("?").strip())
+    if not q or q == norm_name(label):
+        return label
+    return f"{question} → {label}"
+
+
 def _ask_permission(text: str) -> str:
     """Prefix "Xin ý kiến: " unless the text already starts with it (any case)."""
     body = text.strip()
@@ -133,7 +141,7 @@ def build_items(
             add(
                 da,
                 type=ItemType.DECISION, topic_id=topic.topic_id,
-                content=f"{question} → {opt.label}",
+                content=decision_content(question, opt.label),
                 status=ItemStatus.FINAL,
                 supersedes=[o.label for o in topic.options.values() if o.superseded_by == opt.label],
                 rationale="; ".join(quotes) or None,
