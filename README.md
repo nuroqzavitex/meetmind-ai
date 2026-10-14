@@ -23,6 +23,7 @@ Theo danh sách "MVP xong khi" ở mục 0 của spec:
 - **Discord.** Mỗi org gắn một webhook Discord ở trang **Cài đặt**. Khi phát hành, kênh nhận tóm tắt (quyết định, việc cần làm, link biên bản); mỗi sáng 8h có bản tin việc quá hạn, đến hạn và sắp đến hạn (GitHub Actions gọi `POST /api/v1/internal/digest`).
 - **Hỏi đáp.** Hỏi trên các cuộc họp đã phát hành của org, câu trả lời có trích dẫn `[cuộc họp · hh:mm:ss · người nói]`. Câu hỏi ngoài dữ liệu nhận câu từ chối cố định.
 - **Đánh giá.** `evals/` gồm 15 transcript (10 kịch bản bẫy, 5 transcript thực tế) và 18 câu hỏi QA, có ngưỡng ở mục 13.2 của spec.
+- **Bộ kiểm thử Mission 2.** [docs/test-cases.md](docs/test-cases.md): 7 tình huống chạy thật (làm tốt, dữ liệu mơ hồ, thất bại) theo format Kỳ vọng → Thực tế → Đạt/Chưa đạt → Điều học được.
 - **CI.** Lint, type check, test, e2e, và eval khi prompt hoặc agent thay đổi.
 
 ## Kiến trúc

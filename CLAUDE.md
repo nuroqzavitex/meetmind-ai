@@ -49,11 +49,12 @@ Frontend (run from `frontend/`, Next.js 15 App Router, React 19, Clerk, TanStack
   - The suite needs Clerk keys and a test user. Without them it skips.
   - It starts its own backend and worker with `LLM_PROVIDER=fake EMBEDDING_PROVIDER=hash`.
 
-Evals (call the real Claude API; need `ANTHROPIC_API_KEY`):
+Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they need that provider's key):
 - `cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_pipeline`. Options: `--only <name>`, `--kind trap|realistic`.
 - `... -m evals.runners.run_qa` also needs Postgres via `TEST_DATABASE_URL`.
 - Thresholds live in `evals/config.yaml`. The runners exit 1 below threshold.
 - Golden files in `evals/golden/` need human confirmation.
+- Reports go to the gitignored `evals/reports/`; copy a run worth keeping to `evals/results/`. `docs/test-cases.md` is the Mission 2 write-up of the 14/10/2026 run.
 
 ## Architecture
 

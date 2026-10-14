@@ -39,7 +39,7 @@ Golden phải được người xác nhận trước khi dùng làm chuẩn (spe
 
 ## Chạy đánh giá
 
-Cần `ANTHROPIC_API_KEY`.
+Dùng đúng provider và model của app (`LLM_PROVIDER`, `LLM_MODEL_*` trong `.env`): `anthropic` cần `ANTHROPIC_API_KEY`, `openai` cần `OPENAI_API_KEY`.
 
 ```
 cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_pipeline
@@ -71,10 +71,10 @@ Ngưỡng cần đạt: citation ≥ 0.85, latest-state = 1.00, refusal = 1.00.
 
 ## Kết quả
 
-Trạng thái: **chưa chạy** (chưa có `ANTHROPIC_API_KEY`).
+Phân tích từng tình huống: [docs/test-cases.md](../docs/test-cases.md). Báo cáo đầy đủ: `evals/results/`.
 
 | Ngày | Prompt version | Model | Final-decision acc | P | R | Owner+due | Evidence | Trap |
 |---|---|---|---|---|---|---|---|---|
-| chưa chạy | | | | | | | | |
+| 14/10/2026 | v1 | gpt-4o-mini (arbitrate: gpt-5-mini) | 0.73 | 0.61 | 0.63 | 0.78 | 1.00 | 0.70 |
 
 Ngưỡng cần đạt: P ≥ 0.85, R ≥ 0.75, final-decision ≥ 0.90, owner+due ≥ 0.85, evidence = 1.00, trap = 1.00.

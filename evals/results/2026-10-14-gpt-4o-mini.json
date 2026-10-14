@@ -1,0 +1,3283 @@
+{
+  "prompt_version": "v1",
+  "aggregate": {
+    "precision": 0.6091954022988506,
+    "recall": 0.6309523809523809,
+    "final_decision_accuracy": 0.7307692307692307,
+    "owner_due_accuracy": 0.7777777777777778,
+    "evidence_faithfulness": 1.0,
+    "trap_accuracy": 0.7,
+    "thresholds": {
+      "precision": 0.85,
+      "recall": 0.75,
+      "final_decision_accuracy": 0.9,
+      "owner_due_accuracy": 0.85,
+      "evidence_faithfulness": 1.0,
+      "trap_accuracy": 1.0
+    },
+    "notes": [],
+    "pass": false
+  },
+  "meetings": {
+    "a_to_b": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            1,
+            1
+          ],
+          "action_item": [
+            1,
+            1,
+            1
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            0
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 1,
+        "evidence_ok": 3,
+        "evidence_total": 3,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "a_to_b-i001",
+          "meeting_id": "a_to_b",
+          "type": "decision",
+          "topic_id": "t2",
+          "content": "Sử dụng dịch vụ nào giữa SendGrid và Amazon SES? → Amazon SES",
+          "status": "final",
+          "supersedes": [
+            "SendGrid"
+          ],
+          "superseded_by": null,
+          "rationale": "Ừ, em tính lại thì Amazon SES rẻ hơn gần ba lần, mà hạ tầng mình đã nằm trên AWS rồi.; Vậy SES hợp lý hơn, em ủng hộ.; Dạ, em đồng ý.",
+          "owner": "Hạnh",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0005",
+              "speaker": "Hạnh",
+              "ts": "00:02:05",
+              "quote": "Ok, vậy bỏ SendGrid, mình chốt Amazon SES."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "a_to_b-i002",
+          "meeting_id": "a_to_b",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "cấu hình SES và verify domain gửi mail",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Tuấn",
+          "requester": null,
+          "due_date": "2026-10-07",
+          "due_text": "trước thứ Tư tuần này",
+          "condition": null,
+          "confidence": 0.95,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Hạnh",
+              "ts": "00:02:50",
+              "quote": "Tuấn cấu hình SES và verify domain gửi mail giúp chị, xong trước thứ Tư tuần này nhé."
+            },
+            {
+              "utterance_id": "u0008",
+              "speaker": "Tuấn",
+              "ts": "00:03:05",
+              "quote": "Vâng, em làm ạ."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "ambiguous_decide": {
+      "score": {
+        "per_type": {
+          "decision": [
+            0,
+            1,
+            0
+          ],
+          "action_item": [
+            0,
+            0,
+            0
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            1,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            1
+          ],
+          "knowledge": [
+            0,
+            1,
+            0
+          ]
+        },
+        "final_decision_correct": 0,
+        "final_decision_total": 1,
+        "owner_due_correct": 0,
+        "owner_due_total": 0,
+        "evidence_ok": 4,
+        "evidence_total": 4,
+        "trap_correct": false
+      },
+      "items": [
+        {
+          "id": "ambiguous_decide-i001",
+          "meeting_id": "ambiguous_decide",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Nhận xét về lợi ích của S3 và ổ đĩa server.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0003",
+              "speaker": "Hiếu",
+              "ts": "00:01:05",
+              "quote": "S3 thì dễ mở rộng, ổ đĩa thì nhanh hơn lúc đầu nhưng mất công backup."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "ambiguous_decide-i002",
+          "meeting_id": "ambiguous_decide",
+          "type": "knowledge",
+          "topic_id": null,
+          "content": "Cần phải tự viết script để backup ổ đĩa.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0004",
+              "speaker": "Kiên",
+              "ts": "00:01:20",
+              "quote": "Backup ổ đĩa thì mình phải tự viết script."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "ambiguous_decide-i003",
+          "meeting_id": "ambiguous_decide",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Lưu trữ file đính kèm ở đâu? → Amazon S3",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": "Em nghiêng về S3 nhưng cũng chưa chắc lắm.",
+          "owner": "Vy",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.95,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Vy",
+              "ts": "00:02:15",
+              "quote": "Ok chốt vậy nhé."
+            },
+            {
+              "utterance_id": "u0001",
+              "speaker": "Kiên",
+              "ts": "00:00:30",
+              "quote": "Một là lưu thẳng vào S3, hai là lưu trên ổ đĩa server rồi đồng bộ lên S3 sau."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "b_back_to_a": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            1,
+            1
+          ],
+          "action_item": [
+            1,
+            1,
+            1
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            0
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 1,
+        "evidence_ok": 4,
+        "evidence_total": 4,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "b_back_to_a-i001",
+          "meeting_id": "b_back_to_a",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Chọn framework cho trang quản trị? → React",
+          "status": "final",
+          "supersedes": [
+            "",
+            "Vue"
+          ],
+          "superseded_by": null,
+          "rationale": "Ừ, đúng rồi, em cũng thấy quay lại React thì an toàn hơn.",
+          "owner": "Ngọc",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Ngọc",
+              "ts": "00:03:35",
+              "quote": "Ok, vậy quay lại React, chốt React, quên Vue đi."
+            },
+            {
+              "utterance_id": "u0001",
+              "speaker": "Bảo",
+              "ts": "00:00:30",
+              "quote": "Em đề xuất React, vì cả team đã dùng ở dự án cũ."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "b_back_to_a-i002",
+          "meeting_id": "b_back_to_a",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "dựng khung dự án React và cấu hình lint",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Quân",
+          "requester": null,
+          "due_date": "2026-10-09",
+          "due_text": "trước thứ Sáu tuần này",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0008",
+              "speaker": "Ngọc",
+              "ts": "00:04:00",
+              "quote": "Quân dựng khung dự án React và cấu hình lint giúp chị, xong trước thứ Sáu tuần này."
+            },
+            {
+              "utterance_id": "u0009",
+              "speaker": "Quân",
+              "ts": "00:04:15",
+              "quote": "Dạ vâng."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "conditional_decide": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            1,
+            1
+          ],
+          "action_item": [
+            1,
+            1,
+            1
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            1,
+            1,
+            1
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 1,
+        "evidence_ok": 4,
+        "evidence_total": 4,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "conditional_decide-i001",
+          "meeting_id": "conditional_decide",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Nâng cấp Python 3.13? → Python 3.13",
+          "status": "final",
+          "supersedes": [
+            "nâng cấp Python 3.13"
+          ],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Trang",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": "nếu thư viện PDF hỗ trợ",
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0004",
+              "speaker": "Trang",
+              "ts": "00:01:20",
+              "quote": "Vậy chốt nâng lên Python 3.13, nhưng chỉ khi thư viện PDF hỗ trợ, nếu chưa thì giữ 3.12."
+            },
+            {
+              "utterance_id": "u0001",
+              "speaker": "Trang",
+              "ts": "00:00:07",
+              "quote": "Mình bàn việc nâng cấp backend lên Python 3.13."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "conditional_decide-i002",
+          "meeting_id": "conditional_decide",
+          "type": "open_question",
+          "topic_id": "t1",
+          "content": "Theo dõi điều kiện: nếu thư viện PDF hỗ trợ",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": "nếu thư viện PDF hỗ trợ",
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0004",
+              "speaker": "Trang",
+              "ts": "00:01:20",
+              "quote": "Vậy chốt nâng lên Python 3.13, nhưng chỉ khi thư viện PDF hỗ trợ, nếu chưa thì giữ 3.12."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "conditional_decide-i003",
+          "meeting_id": "conditional_decide",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "kiểm tra danh sách phiên bản mà thư viện PDF hỗ trợ",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Khoa",
+          "requester": null,
+          "due_date": "2026-10-16",
+          "due_text": "trước thứ Sáu",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "Khoa",
+              "ts": "00:02:15",
+              "quote": "Em sẽ kiểm tra danh sách phiên bản mà thư viện PDF hỗ trợ và báo lại trước thứ Sáu."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "customer_meeting_acme": {
+      "score": {
+        "per_type": {
+          "decision": [
+            2,
+            2,
+            2
+          ],
+          "action_item": [
+            3,
+            4,
+            4
+          ],
+          "blocker": [
+            0,
+            2,
+            0
+          ],
+          "request": [
+            2,
+            3,
+            2
+          ],
+          "feedback": [
+            1,
+            1,
+            1
+          ],
+          "open_question": [
+            1,
+            1,
+            2
+          ],
+          "knowledge": [
+            0,
+            1,
+            2
+          ]
+        },
+        "final_decision_correct": 3,
+        "final_decision_total": 3,
+        "owner_due_correct": 2,
+        "owner_due_total": 3,
+        "evidence_ok": 16,
+        "evidence_total": 16,
+        "trap_correct": null
+      },
+      "items": [
+        {
+          "id": "customer_meeting_acme-i002",
+          "meeting_id": "customer_meeting_acme",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Nơi đặt hệ thống? (Cloud hay On-premise)? → Cloud",
+          "status": "final",
+          "supersedes": [
+            "On-premise"
+          ],
+          "superseded_by": null,
+          "rationale": "họ đồng ý cloud nếu máy chủ đặt trong nước.",
+          "owner": "Thủy",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "needs_confirmation"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0009",
+              "speaker": "Thủy",
+              "ts": "00:05:55",
+              "quote": "Vậy đổi lại, chốt cloud đặt tại Hà Nội, không làm on-premise nữa."
+            },
+            {
+              "utterance_id": "u0002",
+              "speaker": "Kiệt",
+              "ts": "00:01:00",
+              "quote": "bên em đề xuất cloud, có sẵn sao lưu và cập nhật tự động."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i011",
+          "meeting_id": "customer_meeting_acme",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "kiểm tra khả năng hỗ trợ QR",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Kiệt",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0027",
+              "speaker": "Kiệt",
+              "ts": "00:13:30",
+              "quote": "Để em kiểm tra khả năng hỗ trợ QR rồi báo anh Phong."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i014",
+          "meeting_id": "customer_meeting_acme",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "báo lịch cụ thể sau",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Phong",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0031",
+              "speaker": "Phong",
+              "ts": "00:15:25",
+              "quote": "Anh ghi nhận, sẽ báo chị lịch cụ thể sau."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i001",
+          "meeting_id": "customer_meeting_acme",
+          "type": "knowledge",
+          "topic_id": null,
+          "content": "Hôm nay mình rà lại phạm vi triển khai hệ thống quản lý kho cho ACME.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0000",
+              "speaker": "Phong",
+              "ts": "00:00:10",
+              "quote": "Hôm nay mình rà lại phạm vi triển khai hệ thống quản lý kho cho ACME."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i003",
+          "meeting_id": "customer_meeting_acme",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "gửi bản mô tả bảo mật của trung tâm dữ liệu",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Thủy",
+          "requester": null,
+          "due_date": "2026-10-23",
+          "due_text": "trước thứ Sáu tuần này",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0011",
+              "speaker": "Kiệt",
+              "ts": "00:06:40",
+              "quote": "Bên em sẽ gửi chị bản mô tả bảo mật của trung tâm dữ liệu, trước thứ Sáu tuần này nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i004",
+          "meeting_id": "customer_meeting_acme",
+          "type": "request",
+          "topic_id": null,
+          "content": "xuất báo cáo tồn kho ra Excel",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "Phong",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0013",
+              "speaker": "Thủy",
+              "ts": "00:07:40",
+              "quote": "Bên chị cần xuất báo cáo tồn kho ra Excel mỗi sáng."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i005",
+          "meeting_id": "customer_meeting_acme",
+          "type": "decision",
+          "topic_id": "t2",
+          "content": "Định dạng báo cáo nào sử dụng (Excel hay PDF)? → Excel",
+          "status": "final",
+          "supersedes": [
+            "PDF"
+          ],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Phong",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0017",
+              "speaker": "Phong",
+              "ts": "00:09:15",
+              "quote": "Ok, chốt làm Excel trước, PDF để giai đoạn hai."
+            },
+            {
+              "utterance_id": "u0016",
+              "speaker": "Ly",
+              "ts": "00:08:55",
+              "quote": "Vậy mình làm Excel trước nhé anh Phong?"
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i006",
+          "meeting_id": "customer_meeting_acme",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "làm báo cáo Excel, giao bản thử",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Kiệt",
+          "requester": null,
+          "due_date": "2026-10-30",
+          "due_text": "trước ngày 30/10",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0018",
+              "speaker": "Kiệt",
+              "ts": "00:09:40",
+              "quote": "Em làm báo cáo Excel, giao bản thử trước ngày 30/10."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i007",
+          "meeting_id": "customer_meeting_acme",
+          "type": "request",
+          "topic_id": null,
+          "content": "chạy chính thức vào đầu tháng 12",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "Phong",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0019",
+              "speaker": "Thủy",
+              "ts": "00:10:10",
+              "quote": "bên chị muốn chạy chính thức vào đầu tháng 12."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i008",
+          "meeting_id": "customer_meeting_acme",
+          "type": "blocker",
+          "topic_id": null,
+          "content": "khó kịp tiến độ đầu tháng 12",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0020",
+              "speaker": "Phong",
+              "ts": "00:10:40",
+              "quote": "Với phạm vi này bên em chưa chắc kịp đầu tháng 12, cần xem lại nhân sự."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i009",
+          "meeting_id": "customer_meeting_acme",
+          "type": "blocker",
+          "topic_id": null,
+          "content": "không hỗ trợ mã vạch QR",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0023",
+              "speaker": "Ly",
+              "ts": "00:12:00",
+              "quote": "Bên em có một lưu ý, hệ thống kho hiện chưa hỗ trợ mã vạch QR, chỉ hỗ trợ mã vạch 1D."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i010",
+          "meeting_id": "customer_meeting_acme",
+          "type": "open_question",
+          "topic_id": null,
+          "content": "Vậy bên anh hỗ trợ QR được không?",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.7,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0025",
+              "speaker": "Thủy",
+              "ts": "00:12:50",
+              "quote": "Vậy bên anh hỗ trợ QR được không?"
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i012",
+          "meeting_id": "customer_meeting_acme",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Tuần trước bên chị thử bản demo, giao diện tìm kiếm sản phẩm rất mượt, nhân viên kho khen nhiều.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0028",
+              "speaker": "Thủy",
+              "ts": "00:14:10",
+              "quote": "Tuần trước bên chị thử bản demo, giao diện tìm kiếm sản phẩm rất mượt, nhân viên kho khen nhiều."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "customer_meeting_acme-i013",
+          "meeting_id": "customer_meeting_acme",
+          "type": "request",
+          "topic_id": null,
+          "content": "cử người hướng dẫn nhân viên kho tại chỗ",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "Phong",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0030",
+              "speaker": "Thủy",
+              "ts": "00:15:00",
+              "quote": "Chị còn một đề nghị, bên anh cử người hướng dẫn nhân viên kho tại chỗ một buổi được không?"
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "decide_a_then_b": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            1,
+            1
+          ],
+          "action_item": [
+            1,
+            2,
+            1
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            1,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            0
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 1,
+        "evidence_ok": 5,
+        "evidence_total": 5,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "decide_a_then_b-i001",
+          "meeting_id": "decide_a_then_b",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Dạ, vậy em ghi nhận là dùng Jenkins.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Sơn",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.7,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0003",
+              "speaker": "Sơn",
+              "ts": "00:01:20",
+              "quote": "Dạ, vậy em ghi nhận là dùng Jenkins."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "decide_a_then_b-i002",
+          "meeting_id": "decide_a_then_b",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Chị Mai ơi, em vừa thử GitHub Actions, chạy test nhanh hơn Jenkins gấp đôi mà không phải bảo trì server.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0004",
+              "speaker": "Linh",
+              "ts": "00:03:10",
+              "quote": "Chị Mai ơi, em vừa thử GitHub Actions, chạy test nhanh hơn Jenkins gấp đôi mà không phải bảo trì server."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "decide_a_then_b-i003",
+          "meeting_id": "decide_a_then_b",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Chọn công cụ CI cho repo backend? → GitHub Actions",
+          "status": "final",
+          "supersedes": [
+            "CI cho repo backend",
+            "Jenkins"
+          ],
+          "superseded_by": null,
+          "rationale": "Dạ, em đồng ý.",
+          "owner": "Mai",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0005",
+              "speaker": "Mai",
+              "ts": "00:03:40",
+              "quote": "Vậy à, vậy thì chị đổi ý, chốt luôn GitHub Actions, không dùng Jenkins nữa."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "decide_a_then_b-i004",
+          "meeting_id": "decide_a_then_b",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "chuyển pipeline test sang GitHub Actions",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Linh",
+          "requester": null,
+          "due_date": "2026-10-15",
+          "due_text": "15/10",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Mai",
+              "ts": "00:04:30",
+              "quote": "Linh chuyển pipeline test sang GitHub Actions giúp chị, hạn là 15/10."
+            },
+            {
+              "utterance_id": "u0008",
+              "speaker": "Linh",
+              "ts": "00:04:45",
+              "quote": "Vâng, em nhận."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "hiring_review": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            2,
+            2
+          ],
+          "action_item": [
+            0,
+            1,
+            4
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            1,
+            1
+          ],
+          "feedback": [
+            0,
+            0,
+            1
+          ],
+          "open_question": [
+            1,
+            1,
+            2
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 3,
+        "final_decision_total": 4,
+        "owner_due_correct": 0,
+        "owner_due_total": 0,
+        "evidence_ok": 6,
+        "evidence_total": 6,
+        "trap_correct": null
+      },
+      "items": [
+        {
+          "id": "hiring_review-i001",
+          "meeting_id": "hiring_review",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "mời Bách vào vòng ba",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": "Em đồng ý.",
+          "owner": "Đạt",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "Đạt",
+              "ts": "00:02:20",
+              "quote": "Ok, chốt mời Bách vào vòng ba."
+            },
+            {
+              "utterance_id": "u0004",
+              "speaker": "Đạt",
+              "ts": "00:01:45",
+              "quote": "Anh thấy nên mời Bách vào vòng ba."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "hiring_review-i002",
+          "meeting_id": "hiring_review",
+          "type": "request",
+          "topic_id": null,
+          "content": "gửi email từ chối khéo",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "Quỳnh",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0010",
+              "speaker": "Quỳnh",
+              "ts": "00:04:20",
+              "quote": "Ok, chị gửi email từ chối khéo Bách trong ngày mai."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "hiring_review-i003",
+          "meeting_id": "hiring_review",
+          "type": "decision",
+          "topic_id": "t2",
+          "content": "Offer cho Hà mức bao nhiêu? → offer 33 triệu",
+          "status": "final",
+          "supersedes": [
+            "offer 30 triệu"
+          ],
+          "superseded_by": null,
+          "rationale": "Em ủng hộ.",
+          "owner": "Đạt",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0016",
+              "speaker": "Đạt",
+              "ts": "00:07:15",
+              "quote": "Ừ, vậy offer 33 triệu, chốt 33 triệu."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "hiring_review-i004",
+          "meeting_id": "hiring_review",
+          "type": "open_question",
+          "topic_id": null,
+          "content": "Em hỏi, mình thử việc hai tháng hay một tháng?",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.7,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0018",
+              "speaker": "Trí",
+              "ts": "00:08:00",
+              "quote": "Em hỏi, mình thử việc hai tháng hay một tháng?"
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "hiring_review-i005",
+          "meeting_id": "hiring_review",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "cập nhật nội dung mô tả công việc",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Trí",
+          "requester": null,
+          "due_date": "2026-10-23",
+          "due_text": "hôm nay",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0026",
+              "speaker": "Trí",
+              "ts": "00:11:15",
+              "quote": "Dạ, em gửi chị trong hôm nay."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "implicit_assignment": {
+      "score": {
+        "per_type": {
+          "decision": [
+            0,
+            0,
+            0
+          ],
+          "action_item": [
+            2,
+            3,
+            3
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            1,
+            0
+          ],
+          "open_question": [
+            0,
+            1,
+            0
+          ],
+          "knowledge": [
+            0,
+            1,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 2,
+        "evidence_ok": 6,
+        "evidence_total": 6,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "implicit_assignment-i003",
+          "meeting_id": "implicit_assignment",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Em sẽ xử lý file lỗi",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Thu",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0003",
+              "speaker": "Thu",
+              "ts": "00:01:10",
+              "quote": "Cái này để em lo."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "implicit_assignment-i004",
+          "meeting_id": "implicit_assignment",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Em sẽ cập nhật tài liệu hướng dẫn cài đặt",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Bình",
+          "requester": null,
+          "due_date": null,
+          "due_text": "trong hôm nay",
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0005",
+              "speaker": "Bình",
+              "ts": "00:02:00",
+              "quote": "Để em, em làm trong hôm nay luôn."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "implicit_assignment-i005",
+          "meeting_id": "implicit_assignment",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Báo lại cho khách hàng khi xong",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Thu",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "An",
+              "ts": "00:02:25",
+              "quote": "Thu nhớ báo lại cho khách khi sửa xong nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "implicit_assignment-i001",
+          "meeting_id": "implicit_assignment",
+          "type": "knowledge",
+          "topic_id": null,
+          "content": "Khách bên đối tác báo file xuất Excel bị lỗi font tiếng Việt.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0000",
+              "speaker": "An",
+              "ts": "00:00:08",
+              "quote": "Khách bên đối tác báo file xuất Excel bị lỗi font tiếng Việt."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "implicit_assignment-i002",
+          "meeting_id": "implicit_assignment",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Lỗi do không có BOM trong xuất UTF-8",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0001",
+              "speaker": "Thu",
+              "ts": "00:00:30",
+              "quote": "Em thấy là do mình xuất UTF-8 mà không có BOM."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "implicit_assignment-i006",
+          "meeting_id": "implicit_assignment",
+          "type": "open_question",
+          "topic_id": "t1",
+          "content": "Lỗi font file Excel",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Thu",
+              "ts": "00:02:40",
+              "quote": "Dạ."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "incident_postmortem": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            3,
+            3
+          ],
+          "action_item": [
+            5,
+            8,
+            5
+          ],
+          "blocker": [
+            1,
+            1,
+            1
+          ],
+          "request": [
+            1,
+            1,
+            1
+          ],
+          "feedback": [
+            1,
+            2,
+            1
+          ],
+          "open_question": [
+            0,
+            1,
+            1
+          ],
+          "knowledge": [
+            1,
+            2,
+            2
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 4,
+        "owner_due_correct": 3,
+        "owner_due_total": 5,
+        "evidence_ok": 21,
+        "evidence_total": 21,
+        "trap_correct": null
+      },
+      "items": [
+        {
+          "id": "incident_postmortem-i004",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Ok Cường làm nhé.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Cường",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0011",
+              "speaker": "Sang",
+              "ts": "00:05:15",
+              "quote": "Ok Cường làm nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i006",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "chỉnh ngưỡng cảnh báo",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Vân",
+          "requester": null,
+          "due_date": null,
+          "due_text": "trong hôm nay",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0014",
+              "speaker": "Vân",
+              "ts": "00:06:40",
+              "quote": "Em chỉnh luôn trong hôm nay."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i008",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "viết script quay lui cho các migration",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Tùng",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0016",
+              "speaker": "Tùng",
+              "ts": "00:07:50",
+              "quote": "Em sẽ viết script quay lui cho các migration, cái này để em."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i010",
+          "meeting_id": "incident_postmortem",
+          "type": "open_question",
+          "topic_id": "t4",
+          "content": "Quy định về hotfix cần bao nhiêu người duyệt?",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "needs_confirmation"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0019",
+              "speaker": "Sang",
+              "ts": "00:09:10",
+              "quote": "Chốt từ nay hotfix phải có hai người duyệt."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i011",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "ghi vào quy trình hai người duyệt",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hiền",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0020",
+              "speaker": "Hiền",
+              "ts": "00:09:30",
+              "quote": "Dạ, em ghi vào quy trình."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i012",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": "t4",
+          "content": "Xin ý kiến: quyết định về feature flag",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Sang",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0024",
+              "speaker": "Sang",
+              "ts": "00:11:20",
+              "quote": "Ok, để mở, chưa quyết."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i015",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "xuất danh sách đơn lỗi",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hiền",
+          "requester": null,
+          "due_date": null,
+          "due_text": "trong ngày mai",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0028",
+              "speaker": "Sang",
+              "ts": "00:13:25",
+              "quote": "Hiền xuất danh sách đơn lỗi gửi CS trong ngày mai nhé."
+            },
+            {
+              "utterance_id": "u0029",
+              "speaker": "Hiền",
+              "ts": "00:13:35",
+              "quote": "Vâng."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i001",
+          "meeting_id": "incident_postmortem",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Có nên tăng kích thước pool kết nối? → tăng kích thước pool",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Sang",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "Sang",
+              "ts": "00:03:10",
+              "quote": "Ok, chốt tăng pool lên 100."
+            },
+            {
+              "utterance_id": "u0005",
+              "speaker": "Cường",
+              "ts": "00:02:45",
+              "quote": "Em đề xuất tăng kích thước pool từ 20 lên 100, nhanh nhất."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i002",
+          "meeting_id": "incident_postmortem",
+          "type": "decision",
+          "topic_id": "t2",
+          "content": "Có nên sử dụng PgBouncer cho việc gom kết nối? → PgBouncer",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": "Em đồng ý với Tùng, nên dùng PgBouncer để gom kết nối.",
+          "owner": "Sang",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0009",
+              "speaker": "Sang",
+              "ts": "00:04:35",
+              "quote": "Vậy bỏ tăng pool, chốt PgBouncer."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i003",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "cài PgBouncer ở môi trường staging",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Cường",
+          "requester": null,
+          "due_date": "2026-10-26",
+          "due_text": "trước thứ Hai tuần sau",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0010",
+              "speaker": "Cường",
+              "ts": "00:05:00",
+              "quote": "Vậy em cài PgBouncer ở môi trường staging trước, xong trước thứ Hai tuần sau."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i005",
+          "meeting_id": "incident_postmortem",
+          "type": "decision",
+          "topic_id": "t3",
+          "content": "Có nên hạ ngưỡng cảnh báo xuống 70%? → hạ ngưỡng cảnh báo",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Sang",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0013",
+              "speaker": "Sang",
+              "ts": "00:06:25",
+              "quote": "Chốt, hạ ngưỡng cảnh báo xuống 70%."
+            },
+            {
+              "utterance_id": "u0012",
+              "speaker": "Vân",
+              "ts": "00:06:00",
+              "quote": "Về cảnh báo, em đề xuất hạ ngưỡng xuống 70% và bắn vào kênh trực."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i007",
+          "meeting_id": "incident_postmortem",
+          "type": "blocker",
+          "topic_id": null,
+          "content": "không có script quay lui cho migration",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0015",
+              "speaker": "Hiền",
+              "ts": "00:07:20",
+              "quote": "Hiện mình đang bị chặn ở chỗ migration không có script quay lui, nên chưa rollback an toàn được bản lỗi."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i009",
+          "meeting_id": "incident_postmortem",
+          "type": "knowledge",
+          "topic_id": null,
+          "content": "bản vá khẩn cấp cần hai người duyệt",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0018",
+              "speaker": "Sang",
+              "ts": "00:08:50",
+              "quote": "Chị duyệt, không có ai review thứ hai."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i013",
+          "meeting_id": "incident_postmortem",
+          "type": "knowledge",
+          "topic_id": null,
+          "content": "cần có người theo dõi hệ thống sau phát hành",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0025",
+              "speaker": "Vân",
+              "ts": "00:12:00",
+              "quote": "Bài học là sau mỗi lần phát hành, mình cần có người trực theo dõi biểu đồ trong 30 phút đầu."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i014",
+          "meeting_id": "incident_postmortem",
+          "type": "request",
+          "topic_id": null,
+          "content": "xuất danh sách đơn lỗi",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "CS",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0027",
+              "speaker": "Hiền",
+              "ts": "00:13:00",
+              "quote": "Khoảng hai trăm đơn bị lỗi, bên CS nhờ mình xuất danh sách đơn lỗi để gọi lại khách."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i016",
+          "meeting_id": "incident_postmortem",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Góp ý chút, báo cáo sự cố lần trước của Vân viết rất rõ ràng, lần này mình theo mẫu đó.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0030",
+              "speaker": "Cường",
+              "ts": "00:14:10",
+              "quote": "Góp ý chút, báo cáo sự cố lần trước của Vân viết rất rõ ràng, lần này mình theo mẫu đó."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i017",
+          "meeting_id": "incident_postmortem",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "viết báo cáo sự cố",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Vân",
+          "requester": null,
+          "due_date": "2026-10-23",
+          "due_text": "trước thứ Sáu",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0031",
+              "speaker": "Vân",
+              "ts": "00:14:35",
+              "quote": "Cảm ơn anh, em sẽ viết báo cáo sự cố lần này luôn, gửi mọi người trước thứ Sáu."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "incident_postmortem-i018",
+          "meeting_id": "incident_postmortem",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Ok, cảm ơn cả nhóm, hôm nay dừng ở đây.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0032",
+              "speaker": "Sang",
+              "ts": "00:15:00",
+              "quote": "Ok, cảm ơn cả nhóm, hôm nay dừng ở đây."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "joke_hypothetical": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            1,
+            1
+          ],
+          "action_item": [
+            1,
+            1,
+            1
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            0
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 1,
+        "evidence_ok": 4,
+        "evidence_total": 4,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "joke_hypothetical-i001",
+          "meeting_id": "joke_hypothetical",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Dùng CSDL nào cho giải pháp tìm kiếm sản phẩm? → Elasticsearch",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": "Vâng, vậy Elasticsearch là hợp lý nhất.",
+          "owner": "Phúc",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "Phúc",
+              "ts": "00:02:30",
+              "quote": "Ok, chốt Elasticsearch."
+            },
+            {
+              "utterance_id": "u0001",
+              "speaker": "Dũng",
+              "ts": "00:00:28",
+              "quote": "Em đề xuất dùng Elasticsearch, hỗ trợ tiếng Việt khá ổn."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "joke_hypothetical-i002",
+          "meeting_id": "joke_hypothetical",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "dựng cụm Elasticsearch thử nghiệm",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Dũng",
+          "requester": null,
+          "due_date": "2026-10-16",
+          "due_text": "cuối tuần này",
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Phúc",
+              "ts": "00:02:55",
+              "quote": "Dũng dựng cụm Elasticsearch thử nghiệm giúp anh, xong trước cuối tuần này nhé."
+            },
+            {
+              "utterance_id": "u0008",
+              "speaker": "Dũng",
+              "ts": "00:03:10",
+              "quote": "Dạ."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "payment_v2": {
+      "score": {
+        "per_type": {
+          "decision": [
+            1,
+            1,
+            1
+          ],
+          "action_item": [
+            3,
+            3,
+            4
+          ],
+          "blocker": [
+            1,
+            1,
+            1
+          ],
+          "request": [
+            1,
+            1,
+            1
+          ],
+          "feedback": [
+            0,
+            0,
+            1
+          ],
+          "open_question": [
+            0,
+            0,
+            1
+          ],
+          "knowledge": [
+            0,
+            0,
+            1
+          ]
+        },
+        "final_decision_correct": 2,
+        "final_decision_total": 2,
+        "owner_due_correct": 3,
+        "owner_due_total": 3,
+        "evidence_ok": 7,
+        "evidence_total": 7,
+        "trap_correct": null
+      },
+      "items": [
+        {
+          "id": "payment_v2-i004",
+          "meeting_id": "payment_v2",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "nhận việc lo môi trường staging",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Minh",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0011",
+              "speaker": "Minh",
+              "ts": "00:05:10",
+              "quote": "Cái staging để em lo luôn."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "payment_v2-i006",
+          "meeting_id": "payment_v2",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "giao việc làm báo cáo giao dịch cho Hoa",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hoa",
+          "requester": null,
+          "due_date": null,
+          "due_text": "bắt đầu từ tuần sau",
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0015",
+              "speaker": "Lan",
+              "ts": "00:07:00",
+              "quote": "Ok, Hoa làm báo cáo đó, bắt đầu từ tuần sau. Tài liệu API đợt này viết rõ hơn hẳn, tốt lắm."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "payment_v2-i001",
+          "meeting_id": "payment_v2",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "CSDL cho dịch vụ thanh toán → PostgreSQL",
+          "status": "final",
+          "supersedes": [
+            "CSDL cho dịch vụ thanh toán",
+            "MongoDB"
+          ],
+          "superseded_by": null,
+          "rationale": "Postgres cũng ổn, em đồng ý.; Em cũng thấy Postgres hợp hơn.",
+          "owner": "Lan",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Lan",
+              "ts": "00:03:30",
+              "quote": "Vậy mình chốt Postgres nhé. Lưu ý chung: dịch vụ thanh toán bắt buộc giao dịch ACID."
+            },
+            {
+              "utterance_id": "u0004",
+              "speaker": "Lan",
+              "ts": "00:02:15",
+              "quote": "Hay mình dùng Postgres? Team đã quen rồi."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "payment_v2-i002",
+          "meeting_id": "payment_v2",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "giao việc dựng schema Postgres",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Minh",
+          "requester": null,
+          "due_date": "2026-10-16",
+          "due_text": "trước thứ Sáu tuần sau",
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0008",
+              "speaker": "Lan",
+              "ts": "00:04:10",
+              "quote": "Minh dựng schema Postgres, xong trước thứ Sáu tuần sau nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "payment_v2-i003",
+          "meeting_id": "payment_v2",
+          "type": "blocker",
+          "topic_id": null,
+          "content": "nêu vật cản môi trường staging hỏng",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0010",
+              "speaker": "Hoa",
+              "ts": "00:04:45",
+              "quote": "Môi trường staging đang hỏng, em chưa test được API cũ."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "payment_v2-i005",
+          "meeting_id": "payment_v2",
+          "type": "request",
+          "topic_id": null,
+          "content": " yêu cầu xuất báo cáo giao dịch lỗi hằng tuần",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "CS",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0014",
+              "speaker": "Hoa",
+              "ts": "00:06:30",
+              "quote": "Bên CS nhờ mình xuất báo cáo giao dịch lỗi hằng tuần."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "reject_decided": {
+      "score": {
+        "per_type": {
+          "decision": [
+            0,
+            0,
+            0
+          ],
+          "action_item": [
+            0,
+            0,
+            0
+          ],
+          "blocker": [
+            0,
+            1,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            1,
+            1,
+            1
+          ],
+          "knowledge": [
+            0,
+            1,
+            0
+          ]
+        },
+        "final_decision_correct": 1,
+        "final_decision_total": 1,
+        "owner_due_correct": 0,
+        "owner_due_total": 0,
+        "evidence_ok": 3,
+        "evidence_total": 3,
+        "trap_correct": true
+      },
+      "items": [
+        {
+          "id": "reject_decided-i001",
+          "meeting_id": "reject_decided",
+          "type": "open_question",
+          "topic_id": "t1",
+          "content": "Tách module giỏ hàng ra thành dịch vụ riêng?",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "needs_confirmation"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0000",
+              "speaker": "Đức",
+              "ts": "00:00:07",
+              "quote": "Có đề xuất tách module giỏ hàng ra thành dịch vụ riêng, mọi người nghĩ sao?"
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "reject_decided-i002",
+          "meeting_id": "reject_decided",
+          "type": "blocker",
+          "topic_id": null,
+          "content": "Ừ, vấn đề tải của giỏ hàng vẫn còn để ngỏ.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.8,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "Đức",
+              "ts": "00:03:00",
+              "quote": "Ừ, vấn đề tải của giỏ hàng vẫn còn để ngỏ."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "reject_decided-i003",
+          "meeting_id": "reject_decided",
+          "type": "knowledge",
+          "topic_id": null,
+          "content": "Dạ, em hiểu rồi.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.7,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Thịnh",
+              "ts": "00:03:20",
+              "quote": "Dạ, em hiểu rồi."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "relative_deadlines": {
+      "score": {
+        "per_type": {
+          "decision": [
+            0,
+            1,
+            1
+          ],
+          "action_item": [
+            5,
+            5,
+            5
+          ],
+          "blocker": [
+            0,
+            0,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            0
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 0,
+        "final_decision_total": 1,
+        "owner_due_correct": 4,
+        "owner_due_total": 5,
+        "evidence_ok": 6,
+        "evidence_total": 6,
+        "trap_correct": false
+      },
+      "items": [
+        {
+          "id": "relative_deadlines-i004",
+          "meeting_id": "relative_deadlines",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "gia hạn chứng chỉ SSL",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Việt",
+          "requester": null,
+          "due_date": null,
+          "due_text": "5 ngày",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Hương",
+              "ts": "00:02:15",
+              "quote": "Việt gia hạn chứng chỉ SSL, trong vòng 5 ngày nữa nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "relative_deadlines-i001",
+          "meeting_id": "relative_deadlines",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Phát hành bản 2.0 có đúng theo kế hoạch không? → phát hành bản 2.0",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hương",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0002",
+              "speaker": "Hương",
+              "ts": "00:00:45",
+              "quote": "Vậy giữ nguyên lịch, chốt phát hành bản 2.0 đúng kế hoạch."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "relative_deadlines-i002",
+          "meeting_id": "relative_deadlines",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "viết release note",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Tân",
+          "requester": null,
+          "due_date": "2026-10-17",
+          "due_text": "ngày mai",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0003",
+              "speaker": "Hương",
+              "ts": "00:01:05",
+              "quote": "Tân viết release note giúp chị, xong ngày mai nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "relative_deadlines-i003",
+          "meeting_id": "relative_deadlines",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "chạy test hồi quy",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Quyên",
+          "requester": null,
+          "due_date": "2026-10-19",
+          "due_text": "thứ Hai tuần sau",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0005",
+              "speaker": "Hương",
+              "ts": "00:01:35",
+              "quote": "Quyên chạy test hồi quy toàn bộ, thứ Hai tuần sau là phải có kết quả."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "relative_deadlines-i005",
+          "meeting_id": "relative_deadlines",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "chuẩn bị báo cáo tổng kết quý",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Lộc",
+          "requester": null,
+          "due_date": "2026-10-31",
+          "due_text": "cuối tháng",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0009",
+              "speaker": "Hương",
+              "ts": "00:03:00",
+              "quote": "Lộc chuẩn bị báo cáo tổng kết quý, hạn là cuối tháng."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "relative_deadlines-i006",
+          "meeting_id": "relative_deadlines",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "chuẩn bị bản demo cho khách",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Tân",
+          "requester": null,
+          "due_date": "2026-10-20",
+          "due_text": "20/10",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0011",
+              "speaker": "Hương",
+              "ts": "00:03:40",
+              "quote": "Còn Tân chuẩn bị bản demo cho khách, hạn 20/10 nhé."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "sprint_planning_q4": {
+      "score": {
+        "per_type": {
+          "decision": [
+            2,
+            2,
+            2
+          ],
+          "action_item": [
+            3,
+            3,
+            5
+          ],
+          "blocker": [
+            0,
+            0,
+            1
+          ],
+          "request": [
+            0,
+            1,
+            1
+          ],
+          "feedback": [
+            1,
+            2,
+            1
+          ],
+          "open_question": [
+            0,
+            1,
+            2
+          ],
+          "knowledge": [
+            0,
+            0,
+            1
+          ]
+        },
+        "final_decision_correct": 3,
+        "final_decision_total": 3,
+        "owner_due_correct": 2,
+        "owner_due_total": 3,
+        "evidence_ok": 9,
+        "evidence_total": 9,
+        "trap_correct": null
+      },
+      "items": [
+        {
+          "id": "sprint_planning_q4-i003",
+          "meeting_id": "sprint_planning_q4",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Gửi lại thiết kế cho trường hợp nhập sai OTP",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hải",
+          "requester": null,
+          "due_date": null,
+          "due_text": "trong hôm nay",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0012",
+              "speaker": "Hải",
+              "ts": "00:05:40",
+              "quote": "Để chị nhắn bên design gửi lại thiết kế đó, chị làm trong hôm nay."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i009",
+          "meeting_id": "sprint_planning_q4",
+          "type": "open_question",
+          "topic_id": null,
+          "content": "Cần xác nhận quyết định: Ok, mình chốt sprint ở đây, hẹn mọi người sáng mai daily nhé.",
+          "status": "open",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "needs_confirmation"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0030",
+              "speaker": "Hải",
+              "ts": "00:14:20",
+              "quote": "Ok, mình chốt sprint ở đây, hẹn mọi người sáng mai daily nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i001",
+          "meeting_id": "sprint_planning_q4",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Dùng phương thức nào cho OTP? → Zalo",
+          "status": "final",
+          "supersedes": [
+            "SMS"
+          ],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hải",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0008",
+              "speaker": "Hải",
+              "ts": "00:03:50",
+              "quote": "Ok, vậy bỏ SMS, mình chốt dùng Zalo ZNS cho OTP."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i002",
+          "meeting_id": "sprint_planning_q4",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Đăng ký template ZNS",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Nam",
+          "requester": null,
+          "due_date": "2026-10-21",
+          "due_text": "trước thứ Tư tuần này",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0010",
+              "speaker": "Nam",
+              "ts": "00:04:35",
+              "quote": "Em đăng ký, xong trước thứ Tư tuần này."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i004",
+          "meeting_id": "sprint_planning_q4",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Làm API đăng nhập",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Lam",
+          "requester": null,
+          "due_date": "2026-10-23",
+          "due_text": "trước thứ Sáu tuần này",
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0014",
+              "speaker": "Hải",
+              "ts": "00:06:45",
+              "quote": "Lam làm API đăng nhập nhé, xong trước thứ Sáu tuần này."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i005",
+          "meeting_id": "sprint_planning_q4",
+          "type": "request",
+          "topic_id": null,
+          "content": "Hỏi tỷ lệ người dùng không có Zalo",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": "Yến",
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0018",
+              "speaker": "Yến",
+              "ts": "00:08:20",
+              "quote": "Cái đó mình chưa biết, cần xem tỷ lệ bao nhiêu. Em sẽ hỏi bên kinh doanh rồi báo lại."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i006",
+          "meeting_id": "sprint_planning_q4",
+          "type": "decision",
+          "topic_id": "t2",
+          "content": "Có nên làm bảng tổng hợp theo ngày không? → bảng tổng hợp theo ngày",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Hải",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0022",
+              "speaker": "Hải",
+              "ts": "00:10:20",
+              "quote": "Ok, chốt làm bảng tổng hợp theo ngày."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i007",
+          "meeting_id": "sprint_planning_q4",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Ừ, chị ghi nhận yêu cầu này.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0025",
+              "speaker": "Hải",
+              "ts": "00:11:50",
+              "quote": "Ừ, chị ghi nhận yêu cầu này."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "sprint_planning_q4-i008",
+          "meeting_id": "sprint_planning_q4",
+          "type": "feedback",
+          "topic_id": null,
+          "content": "Góp ý chút, bản review code hôm qua của Lam rất kỹ, bắt được hai lỗi nghiêm trọng.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0026",
+              "speaker": "Yến",
+              "ts": "00:12:30",
+              "quote": "Góp ý chút, bản review code hôm qua của Lam rất kỹ, bắt được hai lỗi nghiêm trọng."
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    },
+    "wait_for_boss": {
+      "score": {
+        "per_type": {
+          "decision": [
+            0,
+            1,
+            0
+          ],
+          "action_item": [
+            1,
+            2,
+            1
+          ],
+          "blocker": [
+            0,
+            1,
+            0
+          ],
+          "request": [
+            0,
+            0,
+            0
+          ],
+          "feedback": [
+            0,
+            0,
+            0
+          ],
+          "open_question": [
+            0,
+            0,
+            1
+          ],
+          "knowledge": [
+            0,
+            0,
+            0
+          ]
+        },
+        "final_decision_correct": 0,
+        "final_decision_total": 1,
+        "owner_due_correct": 1,
+        "owner_due_total": 1,
+        "evidence_ok": 5,
+        "evidence_total": 5,
+        "trap_correct": false
+      },
+      "items": [
+        {
+          "id": "wait_for_boss-i002",
+          "meeting_id": "wait_for_boss",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "giao việc xin ý kiến chị Thảo",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Long",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0005",
+              "speaker": "Giang",
+              "ts": "00:02:10",
+              "quote": "Ok, Long nhận nhé."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "wait_for_boss-i003",
+          "meeting_id": "wait_for_boss",
+          "type": "action_item",
+          "topic_id": null,
+          "content": "Dạ, vậy em chờ tin từ Long.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": "Nhi",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.9,
+          "flags": [
+            "missing_due_date"
+          ],
+          "evidence": [
+            {
+              "utterance_id": "u0006",
+              "speaker": "Nhi",
+              "ts": "00:02:30",
+              "quote": "Dạ, vậy em chờ tin từ Long."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "wait_for_boss-i001",
+          "meeting_id": "wait_for_boss",
+          "type": "blocker",
+          "topic_id": null,
+          "content": "Team em đang dùng chung tài khoản nên hơi bất tiện.",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": null,
+          "owner": null,
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 0.7,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0001",
+              "speaker": "Nhi",
+              "ts": "00:00:30",
+              "quote": "Team em đang dùng chung tài khoản nên hơi bất tiện."
+            }
+          ],
+          "review_state": "pending"
+        },
+        {
+          "id": "wait_for_boss-i004",
+          "meeting_id": "wait_for_boss",
+          "type": "decision",
+          "topic_id": "t1",
+          "content": "Có nên mua thêm năm license Figma cho team thiết kế không? → Figma",
+          "status": "final",
+          "supersedes": [],
+          "superseded_by": null,
+          "rationale": "Em thấy mua thì tốt, nhưng ngân sách quý này do chị Thảo duyệt.",
+          "owner": "Giang",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "condition": null,
+          "confidence": 1.0,
+          "flags": [],
+          "evidence": [
+            {
+              "utterance_id": "u0007",
+              "speaker": "Giang",
+              "ts": "00:02:50",
+              "quote": "Ok, họp tới đây thôi."
+            },
+            {
+              "utterance_id": "u0000",
+              "speaker": "Giang",
+              "ts": "00:00:08",
+              "quote": "Còn một việc nữa, có nên mua thêm năm license Figma cho team thiết kế không?"
+            }
+          ],
+          "review_state": "pending"
+        }
+      ]
+    }
+  }
+}

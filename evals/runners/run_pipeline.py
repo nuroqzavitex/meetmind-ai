@@ -3,7 +3,6 @@
 import argparse
 import asyncio
 import json
-import os
 import sys
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -11,17 +10,15 @@ from pathlib import Path
 from typing import Any
 
 from app.ai.config import AISettings
-from app.ai.llm.client import AnthropicLLM, LLMClient
+from app.ai.llm.client import LLMClient
 from app.ai.pipeline import analyze_transcript
+from app.core.config import get_settings
+from app.core.llm import UnconfiguredLLM, build_llm
 from evals.metrics.matching import Golden
 from evals.metrics.scores import MeetingScore, aggregate, load_thresholds, score_meeting
 
 EVALS_DIR = Path(__file__).resolve().parents[1]
 LLMFactory = Callable[[AISettings], LLMClient]
-
-
-def _anthropic(settings: AISettings) -> LLMClient:
-    return AnthropicLLM(settings)
 
 
 def _load_goldens(only: str | None, kind: str | None) -> dict[str, Golden]:
@@ -63,18 +60,26 @@ def main(argv: list[str] | None = None, llm_factory: LLMFactory | None = None) -
     ap.add_argument("--report-dir", type=Path, default=EVALS_DIR / "reports")
     args = ap.parse_args(argv)
 
-    if llm_factory is None:
-        if not os.environ.get("ANTHROPIC_API_KEY"):
-            print("ANTHROPIC_API_KEY is not set: export it to run the real eval.", file=sys.stderr)
-            return 2
-        llm_factory = _anthropic
-
     goldens = _load_goldens(args.only, args.kind)
     if not goldens:
         print("No golden files matched.", file=sys.stderr)
         return 2
-    settings = AISettings(prompt_version=args.prompt_version)
-    scores, details = asyncio.run(_run(goldens, llm_factory(settings), settings))
+    if llm_factory is None:
+        # Real run: the same provider and models as the app (LLM_PROVIDER, LLM_MODEL_* in .env).
+        app_settings = get_settings()
+        llm = build_llm(app_settings)
+        if isinstance(llm, UnconfiguredLLM) or app_settings.llm_provider == "fake":
+            print("Set LLM_PROVIDER=anthropic|openai and its API key to run the real eval.",
+                  file=sys.stderr)
+            return 2
+        settings = app_settings.ai_settings().model_copy(
+            update={"prompt_version": args.prompt_version}
+        )
+        print(f"provider={app_settings.llm_provider} models={settings.models}")
+    else:
+        settings = AISettings(prompt_version=args.prompt_version)
+        llm = llm_factory(settings)
+    scores, details = asyncio.run(_run(goldens, llm, settings))
     agg = aggregate(list(scores.values()))
     th = load_thresholds()
 

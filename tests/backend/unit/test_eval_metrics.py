@@ -188,10 +188,15 @@ def test_thresholds_loaded_from_config():
 
 
 def test_runner_exits_2_without_api_key(monkeypatch, capsys):
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    from evals.runners import run_pipeline
+
+    from app.core.config import Settings
+
+    unconfigured = Settings(_env_file=None, llm_provider="openai", openai_api_key=None)
+    monkeypatch.setattr(run_pipeline, "get_settings", lambda: unconfigured)
     assert main(["--only", "payment_v2"]) == 2
     err = capsys.readouterr().err
-    assert "ANTHROPIC_API_KEY" in err and len(err.strip().splitlines()) == 1
+    assert "API key" in err and len(err.strip().splitlines()) == 1
 
 
 def test_runner_scores_with_fake_llm(tmp_path, capsys):
