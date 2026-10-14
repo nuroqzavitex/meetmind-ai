@@ -31,3 +31,7 @@ class AnalysisError(MeetMindError):
 
 class EmbeddingError(MeetMindError):
     """Raised when text cannot be embedded."""
+
+
+class STTError(MeetMindError):
+    """Raised when audio cannot be transcribed."""
