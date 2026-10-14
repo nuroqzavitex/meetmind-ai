@@ -116,6 +116,11 @@ cd backend; uv run arq app.workers.main.WorkerSettings         # make worker
 cd frontend; npm run dev                                       # make fe-dev
 ```
 
+## Deploy
+
+Frontend lên Vercel, backend và worker lên Render (một web service miễn phí), Postgres trên Neon, Redis trên Upstash.
+Cấu hình Render nằm sẵn trong [render.yaml](render.yaml); hướng dẫn từng bước: [docs/deploy.md](docs/deploy.md).
+
 ## Cấu hình Clerk
 
 1. Tạo application trên [Clerk Dashboard](https://dashboard.clerk.com) (instance **development**).

@@ -10,9 +10,14 @@ ENV UV_COMPILE_BYTECODE=1 \
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
-# false = skip torch/sentence-transformers (~3 GB) when EMBEDDING_PROVIDER is gemini or hash
-ARG INSTALL_EMBEDDINGS=true
-RUN if [ "$INSTALL_EMBEDDINGS" = "true" ]; then       uv sync --frozen --no-dev --no-install-project --extra embeddings;     else       uv sync --frozen --no-dev --no-install-project;     fi
+# true = also install torch/sentence-transformers (~3 GB) for EMBEDDING_PROVIDER=local.
+# Default false keeps hosted builds (Render) slim; docker compose passes INSTALL_EMBEDDINGS explicitly.
+ARG INSTALL_EMBEDDINGS=false
+RUN if [ "$INSTALL_EMBEDDINGS" = "true" ]; then \
+      uv sync --frozen --no-dev --no-install-project --extra embeddings; \
+    else \
+      uv sync --frozen --no-dev --no-install-project; \
+    fi
 
 COPY app ./app
 COPY alembic ./alembic

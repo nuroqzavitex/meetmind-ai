@@ -1,0 +1,52 @@
+# Render Blueprint: backend API + Arq worker in ONE free web service.
+# Render's free plan has no background workers, so the worker runs as a second process
+# in the same container. Postgres = Neon, Redis = Upstash (both external, free tier).
+# Values marked `sync: false` are asked for when the Blueprint is created.
+services:
+  - type: web
+    name: meetmind-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    dockerCommand: >-
+      sh -c 'alembic upgrade head &&
+      { arq app.workers.main.WorkerSettings &
+      exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}; }'
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      # Paste Neon's connection string as-is (postgresql://...?sslmode=require); the app converts it.
+      - key: DATABASE_URL
+        sync: false
+      # Upstash: rediss://default:<password>@<host>:6379
+      - key: REDIS_URL
+        sync: false
+      - key: CLERK_JWKS_URL
+        sync: false
+      - key: CLERK_ISSUER
+        sync: false
+      # Your Vercel URL, e.g. https://meetmind-ai.vercel.app (comma-separated if several)
+      - key: CLERK_AUTHORIZED_PARTIES
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: LLM_PROVIDER
+        value: openai
+      - key: LLM_MODEL_DEFAULT
+        value: gpt-4o-mini
+      - key: LLM_MODEL_ARBITRATE
+        value: gpt-5-mini
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: EMBEDDING_PROVIDER
+        value: gemini
+      - key: EMBEDDING_MODEL
+        value: gemini-embedding-001
+      - key: EMBEDDING_DIM
+        value: "1024"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PROMPT_VERSION
+        value: v1

@@ -11,6 +11,28 @@ from app.ai.config import AISettings
 JOB_TIMEOUT_SECONDS = 900
 STALE_JOB_SECONDS = JOB_TIMEOUT_SECONDS + 120
 
+# libpq-only query params that asyncpg.connect() rejects as unknown keyword arguments.
+_LIBPQ_ONLY_PARAMS = {"channel_binding"}
+
+
+def normalize_database_url(url: str) -> str:
+    """Accept hosted-Postgres URLs (Neon, Supabase, Render) as pasted.
+
+    They use the plain `postgres(ql)://` scheme and libpq's `sslmode`; SQLAlchemy's asyncpg
+    dialect needs `postgresql+asyncpg://` and asyncpg's `ssl`.
+    """
+    scheme, sep, rest = url.partition("://")
+    if not sep or scheme not in ("postgres", "postgresql"):
+        return url
+    base, _, query = rest.partition("?")
+    params = []
+    for pair in filter(None, query.split("&")):
+        key, _, value = pair.partition("=")
+        if key in _LIBPQ_ONLY_PARAMS:
+            continue
+        params.append(f"ssl={value}" if key == "sslmode" else pair)
+    return f"postgresql+asyncpg://{base}" + (f"?{'&'.join(params)}" if params else "")
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=(".env", "../.env"), extra="ignore")
@@ -33,6 +55,11 @@ class Settings(BaseSettings):
     prompt_version: str = "v1"
     max_upload_bytes: int = 5_000_000
     cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:3000"]
+
+    @field_validator("database_url")
+    @classmethod
+    def _normalize_database_url(cls, value: str) -> str:
+        return normalize_database_url(value)
 
     @field_validator("clerk_authorized_parties", "cors_origins", mode="before")
     @classmethod
