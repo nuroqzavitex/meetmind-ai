@@ -20,6 +20,7 @@ export type SpeakerOut = S["SpeakerOut"];
 export type SpeakerAssignment = S["SpeakerAssignment"];
 export type DiscordSettingsOut = S["DiscordSettingsOut"];
 export type DiscordSettingsIn = S["DiscordSettingsIn"];
+export type DiscordBotOut = S["DiscordBotOut"];
 export type JoinCodeOut = S["JoinCodeOut"];
 export type JoinRequestOut = S["JoinRequestOut"];
 

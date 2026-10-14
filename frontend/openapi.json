@@ -1069,6 +1069,60 @@
           }
         }
       }
+    },
+    "/api/v1/settings/discord-bot": {
+      "get": {
+        "summary": "Get Bot",
+        "operationId": "get_bot_api_v1_settings_discord_bot_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordBotOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/settings/discord-bot/rotate-code": {
+      "post": {
+        "summary": "Rotate Code",
+        "operationId": "rotate_code_api_v1_settings_discord_bot_rotate_code_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordBotOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/settings/discord-bot/unlink": {
+      "post": {
+        "summary": "Unlink",
+        "operationId": "unlink_api_v1_settings_discord_bot_unlink_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordBotOut"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1313,6 +1367,40 @@
           "quote"
         ],
         "title": "DialogueAct"
+      },
+      "DiscordBotOut": {
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "linked": {
+            "type": "boolean",
+            "title": "Linked"
+          },
+          "link_code": {
+            "type": "string",
+            "title": "Link Code"
+          },
+          "install_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Install Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "available",
+          "linked",
+          "link_code"
+        ],
+        "title": "DiscordBotOut"
       },
       "DiscordSettingsIn": {
         "properties": {

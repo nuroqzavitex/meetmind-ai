@@ -88,6 +88,27 @@ Nên chọn cùng khu vực Singapore cho Render, Neon và Upstash để giảm 
    - Chạy thử: tab **Actions** → **Daily digest** → **Run workflow**.
    GitHub tự tắt workflow theo lịch nếu repo không có hoạt động trong 60 ngày.
 
+## 7. Bot hỏi đáp Discord (tuỳ chọn)
+
+Bot trả lời lệnh `/hoi <câu hỏi>` trong server Discord giống trang Hỏi đáp. Discord gọi thẳng backend qua
+Interactions Endpoint, nên không cần máy chạy bot riêng.
+
+1. [discord.com/developers/applications](https://discord.com/developers/applications) → **New Application**, đặt tên "MeetMind".
+2. Trang **General Information**: chép **Application ID** và **Public Key**.
+3. Render → Environment: thêm `DISCORD_APP_ID` và `DISCORD_PUBLIC_KEY`, lưu, đợi deploy xong.
+4. Vẫn trang General Information, ô **Interactions Endpoint URL** điền
+   `https://<service>.onrender.com/api/v1/discord/interactions` → **Save Changes**. Discord gửi thử một request;
+   lưu được nghĩa là chữ ký đã khớp. (Render đang ngủ thì lần lưu đầu có thể báo lỗi, đợi 1 phút rồi lưu lại.)
+5. Trang **Bot** → **Reset Token** → chép token. Ở máy: thêm `DISCORD_APP_ID` và `DISCORD_BOT_TOKEN` vào `.env`, rồi
+   `cd backend && uv run python scripts/register_discord_commands.py` (in ra `Registered: /hoi, /ketnoi`). Token không
+   cần đưa lên Render.
+6. MeetMind → **Cài đặt** → thẻ **Bot hỏi đáp Discord** (admin): bấm **Mời bot MeetMind**, chọn server.
+7. Trong server, người có quyền quản lý server gõ `/ketnoi ma:DC-XXXX-XXXX` (mã ở thẻ trên). Sau đó ai trong server
+   cũng gõ được `/hoi`.
+
+Mọi người trong server đã liên kết đều đọc được nội dung các cuộc họp đã phát hành qua bot: chỉ liên kết server dành
+riêng cho nhóm. Render Free đang ngủ thì lệnh đầu tiên có thể báo "ứng dụng không phản hồi"; gõ lại sau ít giây.
+
 ## Kiểm tra sau khi deploy
 
 1. Mở URL Vercel, đăng ký, tạo tổ chức.

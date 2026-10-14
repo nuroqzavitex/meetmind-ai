@@ -20,7 +20,7 @@ Theo danh sách "MVP xong khi" ở mục 0 của spec:
 - **Upload ghi âm.** File `.mp3`, `.m4a`, `.wav`, `.webm`, `.mp4` (≤ 25 MB) được chuyển thành văn bản và tách người nói bằng OpenAI `gpt-4o-transcribe-diarize`. Người dùng gán tên thật và người quyết định cho từng "Người nói A/B…", sau đó luồng phân tích chạy như với transcript.
 - **Kịch bản bẫy.** Các trường hợp A→B, chốt A rồi đổi B, quay lại A, mở lại, bác phương án đã chốt, chốt không rõ phương án và chờ cấp trên đều phải ra đúng trạng thái cuối.
 - **Phát hành.** Duyệt xong thì phát hành, tải biên bản `.md` và `.json`. Sau phát hành có thể "Báo sai", mở lại mục, sửa rồi phát hành lại.
-- **Discord.** Mỗi org gắn một webhook Discord ở trang **Cài đặt**. Khi phát hành, kênh nhận tóm tắt (quyết định, việc cần làm, link biên bản); mỗi sáng 8h có bản tin việc quá hạn, đến hạn và sắp đến hạn (GitHub Actions gọi `POST /api/v1/internal/digest`).
+- **Discord.** Mỗi org gắn một webhook Discord ở trang **Cài đặt**. Khi phát hành, kênh nhận tóm tắt (quyết định, việc cần làm, link biên bản); mỗi sáng 8h có bản tin việc quá hạn, đến hạn và sắp đến hạn (GitHub Actions gọi `POST /api/v1/internal/digest`). Bot Discord: gõ `/hoi <câu hỏi>` trong server đã liên kết (`/ketnoi <mã>`) để hỏi đáp như trang Hỏi đáp, có trích dẫn.
 - **Hỏi đáp.** Hỏi trên các cuộc họp đã phát hành của org, câu trả lời có trích dẫn `[cuộc họp · hh:mm:ss · người nói]`. Câu hỏi ngoài dữ liệu nhận câu từ chối cố định.
 - **Đánh giá.** `evals/` gồm 15 transcript (10 kịch bản bẫy, 5 transcript thực tế) và 18 câu hỏi QA, có ngưỡng ở mục 13.2 của spec.
 - **Bộ kiểm thử Mission 2.** [docs/test-cases.md](docs/test-cases.md): 7 tình huống chạy thật (làm tốt, dữ liệu mơ hồ, thất bại) theo format Kỳ vọng → Thực tế → Đạt/Chưa đạt → Điều học được.
@@ -161,6 +161,7 @@ Danh sách đầy đủ và giá trị mặc định nằm ở [.env.example](.e
 | `INSTALL_EMBEDDINGS` | Build arg của Compose: `false` thì image backend/worker không cài torch |
 | `CORS_ORIGINS`, `MAX_UPLOAD_BYTES` | Origin được phép gọi API, kích thước transcript tối đa |
 | `MAX_AUDIO_BYTES`, `STT_MODEL` | Kích thước file ghi âm tối đa (mặc định 25 MB) và model chuyển giọng nói (dùng `OPENAI_API_KEY`) |
+| `DISCORD_APP_ID`, `DISCORD_PUBLIC_KEY`, `DISCORD_BOT_TOKEN` | Bot hỏi đáp Discord (`/hoi`); token chỉ dùng cho script đăng ký lệnh. Hướng dẫn: [docs/deploy.md](docs/deploy.md#7-bot-hỏi-đáp-discord-tuỳ-chọn) |
 | `FRONTEND_URL`, `CRON_SECRET` | URL frontend dùng cho link trong tin Discord; secret bảo vệ endpoint bản tin hằng ngày (rỗng = tắt) |
 | `TEST_DATABASE_URL` | DB cho test và eval QA (tên phải kết thúc bằng `_test`) |
 | `NEXT_PUBLIC_API_URL` | URL backend mà trình duyệt gọi, mặc định `http://localhost:8000` |

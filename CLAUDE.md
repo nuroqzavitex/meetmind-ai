@@ -94,6 +94,8 @@ Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they nee
 
 **Discord** (`notify/`, `services/notifications.py`): per-org webhook in `org_settings` (`/settings/discord`: everyone reads, only admins write or send a test (`core/auth.py::require_admin`), URL never returned, only Discord webhook hosts accepted). The daily digest is `POST /internal/digest` guarded by `X-Cron-Secret` = `CRON_SECRET`, called by `.github/workflows/digest.yml` at 01:00 UTC.
 
+**Discord bot** (`api/v1/endpoints/discord.py`, `services/discord_bot.py`, `notify/discord_bot.py`): `POST /discord/interactions` is Discord's Interactions Endpoint (Ed25519 signature with `DISCORD_PUBLIC_KEY`, no Clerk). `/ketnoi <code>` (needs Manage Server) links a guild to an org (`org_settings.discord_guild_id`, code `discord_link_code`); `/hoi` replies deferred, then a background task runs `services/qa.ask` for that org and PATCHes `@original`. Commands are registered with `backend/scripts/register_discord_commands.py` (needs `DISCORD_BOT_TOKEN`). Admin card: `/settings/discord-bot`.
+
 Job rules:
 - Only `queued` jobs run.
 - Progress is written in short sessions.

@@ -1,5 +1,6 @@
 import { PageHeader, PageShell } from "@/components/page-header"
 import { JoinSettings } from "@/features/orgs/join-settings"
+import { DiscordBotSettings } from "@/features/settings/discord-bot"
 import { DiscordSettings } from "@/features/settings/discord-settings"
 
 export default function SettingsPage() {
@@ -12,6 +13,7 @@ export default function SettingsPage() {
       <div className="space-y-6">
         <JoinSettings />
         <DiscordSettings />
+        <DiscordBotSettings />
       </div>
     </PageShell>
   )
