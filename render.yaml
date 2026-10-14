@@ -10,10 +10,9 @@ services:
     region: singapore
     dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
-    dockerCommand: >-
-      sh -c 'alembic upgrade head &&
-      { arq app.workers.main.WorkerSettings &
-      exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}; }'
+    # Render does not run dockerCommand through a shell (quotes stay literal), so the
+    # migrate + worker + API sequence lives in backend/start.sh.
+    dockerCommand: sh start.sh
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
