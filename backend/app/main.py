@@ -10,6 +10,7 @@ from app.api.v1.router import api_router
 from app.core.auth import JWKSCache, http_jwks_fetcher
 from app.core.config import Settings, get_settings
 from app.core.errors import CatchAllMiddleware, install_error_handlers
+from app.notify.discord import DiscordClient
 from app.workers.queue import ArqQueue
 
 
@@ -27,6 +28,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.state.jwks = JWKSCache(http_jwks_fetcher(settings.clerk_jwks_url))
     app.state.queue = ArqQueue(settings.redis_url)
+    app.state.discord = DiscordClient()
     app.add_middleware(CatchAllMiddleware)  # inside CORS, so 500s keep CORS headers
     app.add_middleware(
         CORSMiddleware,

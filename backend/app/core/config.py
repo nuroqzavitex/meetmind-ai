@@ -60,6 +60,10 @@ class Settings(BaseSettings):
     # Seconds between Arq queue polls. Raise it on metered Redis (Upstash free: 500k commands/month).
     worker_poll_delay: float = 0.5
     cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:3000"]
+    # Public frontend URL, used for links in Discord messages.
+    frontend_url: str = "http://localhost:3000"
+    # Shared secret for POST /internal/digest (the scheduled daily reminder); empty disables it.
+    cron_secret: SecretStr | None = None
 
     @field_validator("database_url")
     @classmethod

@@ -116,3 +116,18 @@ async def test_org_a_list_is_empty_and_org_b_untouched(
     assert r.status_code == 200 and r.json() == []
     assert before[2] == "published"
     assert len((await client.get("/meetings", headers=auth(org="org_b"))).json()) == 1
+
+
+async def test_discord_settings_are_per_org(client: httpx.AsyncClient) -> None:
+    """Settings have no id in the URL: org isolation means org_a never sees org_b's webhook."""
+    hook = "https://discord.com/api/webhooks/1/org-b-token"
+    r = await client.put(
+        "/settings/discord",
+        json={"webhook_url": hook, "digest_enabled": True},
+        headers=auth(org="org_b"),
+    )
+    assert r.status_code == 200 and r.json()["configured"] is True
+    mine = await client.get("/settings/discord", headers=auth(org="org_a"))
+    assert mine.json() == {"configured": False, "webhook_hint": None, "digest_enabled": False}
+    test = await client.post("/settings/discord/test", headers=auth(org="org_a"))
+    assert test.status_code == 409 and test.json()["error"]["code"] == "not_configured"

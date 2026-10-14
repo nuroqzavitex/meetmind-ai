@@ -63,6 +63,13 @@ class ServiceUnavailable(AppError):
         super().__init__(message, code)
 
 
+class BadGateway(AppError):
+    status = 502
+
+    def __init__(self, message: str, code: str) -> None:
+        super().__init__(message, code)
+
+
 class Unauthorized(AppError):
     status = 401
     code = "unauthorized"

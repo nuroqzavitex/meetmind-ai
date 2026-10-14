@@ -4,6 +4,7 @@ import json
 import logging
 import re
 import unicodedata
+import uuid
 from datetime import UTC, datetime
 from typing import Literal
 
@@ -19,6 +20,7 @@ from app.repositories import jobs, meetings
 from app.repositories import retrieval as retrieval_repo
 from app.schemas.meetings import MeetingSummary
 from app.services.export import render_json, render_markdown
+from app.services.notifications import has_webhook
 from app.workers.queue import JobQueue
 
 logger = logging.getLogger(__name__)
@@ -69,6 +71,19 @@ async def _enqueue_index(
             logger.exception("Failed to mark index job %s as failed", job_id)
 
 
+async def _enqueue_notify(
+    session: AsyncSession, queue: JobQueue, *, org_id: str, meeting_id: str
+) -> None:
+    """Queue the Discord summary when the org has a webhook; never undoes the publish."""
+    try:
+        if not await has_webhook(session, org_id=org_id):
+            return
+        job_id = f"notify-{meeting_id}-{uuid.uuid4().hex[:8]}"
+        await queue.enqueue("notify", org_id=org_id, meeting_id=meeting_id, job_id=job_id)
+    except Exception:
+        logger.exception("Failed to enqueue Discord notification for meeting %s", meeting_id)
+
+
 async def publish(
     session: AsyncSession, queue: JobQueue, *, principal: Principal, meeting_id: str
 ) -> MeetingSummary:
@@ -100,6 +115,7 @@ async def publish(
     )
     await session.commit()
     await _enqueue_index(session, queue, org_id=org_id, meeting_id=meeting_id)
+    await _enqueue_notify(session, queue, org_id=org_id, meeting_id=meeting_id)
     session.expire_all()
     row = await _meeting(session, principal, meeting_id)
     return MeetingSummary.model_validate(row)

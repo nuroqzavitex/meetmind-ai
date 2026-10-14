@@ -1,9 +1,10 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from typing import Any
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.ai.domain.enums import ItemStatus, ItemType, ReviewState
 from app.ai.domain.models import MeetingItem
 from app.core.auth import Principal
 from app.models import Item, ItemEvent, Meeting
@@ -94,3 +95,26 @@ async def events(session: AsyncSession, *, org_id: str, item_id: str) -> list[It
         .order_by(ItemEvent.pk)
     )
     return list((await session.scalars(stmt)).all())
+
+
+async def due_action_items(
+    session: AsyncSession, *, org_id: str, start: date, end: date
+) -> list[tuple[Item, Meeting]]:
+    """Kept action items of published meetings with `start <= due_date <= end`."""
+    due = Item.data["due_date"].astext  # ISO dates compare correctly as strings
+    stmt = (
+        select(Item, Meeting)
+        .join(Meeting, Meeting.id == Item.meeting_id)
+        .where(
+            Item.org_id == org_id,
+            Meeting.org_id == org_id,
+            Meeting.status == "published",
+            Item.type == ItemType.ACTION_ITEM.value,
+            Item.review_state.in_([ReviewState.APPROVED.value, ReviewState.EDITED.value]),
+            Item.status != ItemStatus.SUPERSEDED.value,
+            due >= start.isoformat(),
+            due <= end.isoformat(),
+        )
+        .order_by(due, Item.position)
+    )
+    return [(i, m) for i, m in (await session.execute(stmt)).all()]

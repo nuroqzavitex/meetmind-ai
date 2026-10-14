@@ -9,8 +9,10 @@ from app.core.embedding import build_embedder
 from app.core.llm import build_llm
 from app.core.stt import build_stt
 from app.db.session import make_engine, make_sessionmaker
+from app.notify.discord import DiscordClient
 from app.services.analysis import run_analysis
 from app.services.indexing import run_index
+from app.services.notifications import notify_published
 from app.services.transcription import run_transcription
 
 
@@ -35,6 +37,13 @@ async def index(ctx: dict[str, Any], *, org_id: str, meeting_id: str, job_id: st
     )
 
 
+async def notify(ctx: dict[str, Any], *, org_id: str, meeting_id: str, job_id: str) -> None:
+    await notify_published(
+        ctx["sessionmaker"], ctx["discord"],
+        org_id=org_id, meeting_id=meeting_id, app_url=ctx["frontend_url"],
+    )
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     settings = get_settings()
     ctx["engine"] = make_engine(settings.database_url)
@@ -43,6 +52,8 @@ async def startup(ctx: dict[str, Any]) -> None:
     ctx["llm"] = build_llm(settings)
     ctx["stt"] = build_stt(settings)
     ctx["embedder"] = build_embedder(settings)
+    ctx["discord"] = DiscordClient()
+    ctx["frontend_url"] = settings.frontend_url.rstrip("/")
 
 
 async def shutdown(ctx: dict[str, Any]) -> None:
@@ -50,7 +61,7 @@ async def shutdown(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [analyze, index, transcribe]  # noqa: RUF012
+    functions = [analyze, index, notify, transcribe]  # noqa: RUF012
     on_startup = startup
     on_shutdown = shutdown
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)

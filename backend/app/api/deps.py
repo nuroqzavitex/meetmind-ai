@@ -6,9 +6,17 @@ from app.core.auth import get_principal
 from app.core.embedding import build_embedder
 from app.core.llm import UnconfiguredLLM, build_llm
 from app.db.session import get_session
+from app.notify.discord import DiscordClient
 from app.workers.queue import get_queue
 
-__all__ = ["get_embedder", "get_llm", "get_principal", "get_queue", "get_session"]
+__all__ = [
+    "get_discord",
+    "get_embedder",
+    "get_llm",
+    "get_principal",
+    "get_queue",
+    "get_session",
+]
 
 
 def get_llm(request: Request) -> LLMClient:
@@ -28,3 +36,8 @@ def get_embedder(request: Request) -> Embedder:
         state.embedder = build_embedder(state.settings)
     embedder: Embedder = state.embedder
     return embedder
+
+
+def get_discord(request: Request) -> DiscordClient:
+    client: DiscordClient = request.app.state.discord
+    return client

@@ -17,7 +17,7 @@ _SECTIONS: list[tuple[ItemType, str]] = [
 ]
 
 
-def _publishable(items: list[MeetingItem]) -> list[MeetingItem]:
+def publishable(items: list[MeetingItem]) -> list[MeetingItem]:
     return [
         i
         for i in items
@@ -51,7 +51,7 @@ def _bullet(item: MeetingItem) -> str:
 def render_markdown(
     ctx: MeetingContext, items: list[MeetingItem], published_at: datetime | None
 ) -> str:
-    kept = _publishable(items)
+    kept = publishable(items)
     lines = [f"# {ctx.title}", "", f"Ngày: {_fmt(ctx.meeting_date)} · Dự án: {ctx.project or '—'}"]
     for type_, heading in _SECTIONS:
         group = [i for i in kept if i.type == type_]
@@ -67,5 +67,5 @@ def render_markdown(
 def render_json(ctx: MeetingContext, items: list[MeetingItem]) -> dict[str, Any]:
     return {
         "meeting": ctx.model_dump(mode="json"),
-        "items": [i.model_dump(mode="json") for i in _publishable(items)],
+        "items": [i.model_dump(mode="json") for i in publishable(items)],
     }

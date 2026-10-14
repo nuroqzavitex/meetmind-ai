@@ -1,0 +1,1 @@
+"""Outbound notifications (Discord webhooks)."""
