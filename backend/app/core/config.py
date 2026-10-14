@@ -54,6 +54,9 @@ class Settings(BaseSettings):
     embedding_dim: int = 1024
     prompt_version: str = "v1"
     max_upload_bytes: int = 5_000_000
+    # Audio uploads (diarized transcription). OpenAI's transcription endpoint caps files at 25 MB.
+    max_audio_bytes: int = 25_000_000
+    stt_model: str = "gpt-4o-transcribe-diarize"
     # Seconds between Arq queue polls. Raise it on metered Redis (Upstash free: 500k commands/month).
     worker_poll_delay: float = 0.5
     cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:3000"]

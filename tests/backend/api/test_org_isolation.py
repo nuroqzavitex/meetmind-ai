@@ -59,6 +59,8 @@ CASES: list[tuple[str, str, dict[str, object] | None]] = [
     ("POST", "/meetings/{m}/items/approve-clean", None),
     ("POST", "/meetings/{m}/publish", None),
     ("GET", "/meetings/{m}/export?format=md", None),
+    ("GET", "/meetings/{m}/speakers", None),
+    ("POST", "/meetings/{m}/speakers", {"speakers": [{"label": "Người nói A", "name": "Lan"}]}),
     ("GET", "/jobs/{j}", None),
     ("PATCH", "/items/{i}", {"action": "approve"}),
     ("GET", "/items/{i}/events", None),
@@ -84,7 +86,9 @@ async def test_cross_org_access_is_404(
     assert await _snapshot(sessionmaker, org_b) == before
 
 
-GET_CASES = [c for c in CASES if c[0] == "GET"]
+# The seeded meeting is published, so /speakers answers 409 for its owner; the owner's 200 for
+# that endpoint is covered by test_audio_flow.
+GET_CASES = [c for c in CASES if c[0] == "GET" and "/speakers" not in c[1]]
 
 
 @pytest.mark.parametrize(

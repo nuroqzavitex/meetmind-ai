@@ -34,7 +34,7 @@ async def _fail(
         await session.commit()
 
 
-async def _safe_fail(
+async def safe_fail(
     sm: async_sessionmaker[AsyncSession],
     *,
     org_id: str,
@@ -119,26 +119,26 @@ async def run_analysis(
             )
             await session.commit()
     except AnalysisError as e:
-        await _safe_fail(
+        await safe_fail(
             sm, org_id=org_id, meeting_id=meeting_id, job_id=job_id,
             error=f"Bước {e.step} lỗi: {e}", step=e.step,
         )
     except TranscriptParseError as e:
-        await _safe_fail(
+        await safe_fail(
             sm, org_id=org_id, meeting_id=meeting_id, job_id=job_id,
             error=f"Không đọc được transcript: {e}",
         )
     except asyncio.CancelledError:
         # arq job_timeout / abort: record the interruption, then let the cancellation propagate.
         log.warning("analysis of meeting %s was cancelled", meeting_id)
-        await _safe_fail(
+        await safe_fail(
             sm, org_id=org_id, meeting_id=meeting_id, job_id=job_id,
             error="Phân tích bị gián đoạn hoặc quá thời gian",
         )
         raise
     except Exception:
         log.exception("unexpected error analysing meeting %s", meeting_id)
-        await _safe_fail(
+        await safe_fail(
             sm, org_id=org_id, meeting_id=meeting_id, job_id=job_id,
             error="Lỗi không mong muốn khi phân tích",
         )

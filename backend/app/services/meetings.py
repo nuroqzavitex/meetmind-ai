@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.ai.domain.models import MeetingContext
 from app.ai.errors import TranscriptParseError
 from app.ai.parsing import parse_transcript
+from app.ai.stt import is_audio
 from app.core.auth import Principal
 from app.core.config import STALE_JOB_SECONDS
 from app.core.errors import Conflict, NotFound, PayloadTooLarge, ServiceUnavailable, Unprocessable
@@ -24,12 +25,23 @@ from app.workers.queue import JobQueue
 logger = logging.getLogger(__name__)
 
 
+def job_kind_for(source_filename: str) -> str:
+    """An audio source still needs transcription; anything else is a transcript to analyse."""
+    return "transcribe" if is_audio(source_filename) else "analyze"
+
+
 async def _enqueue(
-    session: AsyncSession, queue: JobQueue, *, org_id: str, meeting_id: str, job_id: str
+    session: AsyncSession,
+    queue: JobQueue,
+    *,
+    org_id: str,
+    meeting_id: str,
+    job_id: str,
+    kind: str = "analyze",
 ) -> None:
     """Enqueue after commit; on failure mark job and meeting failed and raise 503."""
     try:
-        await queue.enqueue("analyze", org_id=org_id, meeting_id=meeting_id, job_id=job_id)
+        await queue.enqueue(kind, org_id=org_id, meeting_id=meeting_id, job_id=job_id)
     except Exception:
         logger.exception("Failed to enqueue job %s", job_id)
         message = "Không đưa được job vào hàng đợi"
@@ -53,17 +65,20 @@ async def create_meeting(
     filename: str,
     data: bytes,
     max_bytes: int,
+    max_audio_bytes: int = 0,
 ) -> MeetingCreated:
-    if len(data) > max_bytes:
+    audio = is_audio(filename)
+    if len(data) > (max_audio_bytes if audio else max_bytes):
         raise PayloadTooLarge("Tệp vượt quá dung lượng cho phép")
     if not data:
         raise Unprocessable("Tệp rỗng", "transcript_parse_error")
-    try:
-        utterances = parse_transcript(filename, data)
-    except TranscriptParseError as exc:
-        raise Unprocessable(str(exc), "transcript_parse_error") from exc
-    if not utterances:
-        raise Unprocessable("Không tìm thấy câu thoại nào", "transcript_parse_error")
+    if not audio:
+        try:
+            utterances = parse_transcript(filename, data)
+        except TranscriptParseError as exc:
+            raise Unprocessable(str(exc), "transcript_parse_error") from exc
+        if not utterances:
+            raise Unprocessable("Không tìm thấy câu thoại nào", "transcript_parse_error")
 
     meeting_id = str(uuid.uuid4())
     ctx = MeetingContext(meeting_id=meeting_id, **ctx_in.model_dump())
@@ -71,10 +86,12 @@ async def create_meeting(
     await meetings.create(
         session, org_id=org_id, created_by=principal.user_id, ctx=ctx, filename=filename, data=data
     )
-    await meetings.set_status(session, org_id=org_id, meeting_id=meeting_id, status="analyzing")
-    job = await jobs.create(session, org_id=org_id, meeting_id=meeting_id, kind="analyze")
+    kind = job_kind_for(filename)
+    status = "transcribing" if kind == "transcribe" else "analyzing"
+    await meetings.set_status(session, org_id=org_id, meeting_id=meeting_id, status=status)
+    job = await jobs.create(session, org_id=org_id, meeting_id=meeting_id, kind=kind)
     await session.commit()
-    await _enqueue(session, queue, org_id=org_id, meeting_id=meeting_id, job_id=job.id)
+    await _enqueue(session, queue, org_id=org_id, meeting_id=meeting_id, job_id=job.id, kind=kind)
     return MeetingCreated(meeting_id=meeting_id, job_id=job.id)
 
 
@@ -97,8 +114,14 @@ async def get_meeting(
     if row is None:
         raise NotFound("Không tìm thấy cuộc họp")
     utterances = await meetings.get_utterances(session, org_id=org_id, meeting_id=meeting_id)
-    active = await jobs.active_for_meeting(session, org_id=org_id, meeting_id=meeting_id)
-    latest = await jobs.latest_for_meeting(session, org_id=org_id, meeting_id=meeting_id)
+    # While the source is still audio, progress belongs to the transcription job.
+    kind = "transcribe" if row.status == "awaiting_speakers" else job_kind_for(row.source_filename)
+    active = await jobs.active_for_meeting(
+        session, org_id=org_id, meeting_id=meeting_id, kind=kind
+    )
+    latest = await jobs.latest_for_meeting(
+        session, org_id=org_id, meeting_id=meeting_id, kind=kind
+    )
     summary = MeetingSummary.model_validate(row)
     return MeetingDetail(
         **summary.model_dump(),
@@ -123,14 +146,16 @@ async def reanalyze(
     row = await meetings.get(session, org_id=org_id, meeting_id=meeting_id)
     if row is None:
         raise NotFound("Không tìm thấy cuộc họp")
+    kind = job_kind_for(row.source_filename)
+    running_status = "transcribing" if kind == "transcribe" else "analyzing"
     moved = await meetings.transition_status(
         session,
         org_id=org_id,
         meeting_id=meeting_id,
         from_status="failed",
-        to_status="analyzing",
+        to_status=running_status,
     )
-    if not moved and row.status == "analyzing":
+    if not moved and row.status == running_status:
         # A job that outlived the worker timeout is dead: fail it and allow a retry.
         moved = bool(
             await jobs.fail_stale(
@@ -143,7 +168,7 @@ async def reanalyze(
         )
     if not moved:
         raise Conflict("Chỉ có thể phân tích lại cuộc họp bị lỗi", "not_failed")
-    job = await jobs.create(session, org_id=org_id, meeting_id=meeting_id, kind="analyze")
+    job = await jobs.create(session, org_id=org_id, meeting_id=meeting_id, kind=kind)
     await session.commit()
-    await _enqueue(session, queue, org_id=org_id, meeting_id=meeting_id, job_id=job.id)
+    await _enqueue(session, queue, org_id=org_id, meeting_id=meeting_id, job_id=job.id, kind=kind)
     return MeetingCreated(meeting_id=meeting_id, job_id=job.id)

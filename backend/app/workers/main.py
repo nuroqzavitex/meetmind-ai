@@ -7,14 +7,23 @@ from arq.connections import RedisSettings
 from app.core.config import JOB_TIMEOUT_SECONDS, get_settings
 from app.core.embedding import build_embedder
 from app.core.llm import build_llm
+from app.core.stt import build_stt
 from app.db.session import make_engine, make_sessionmaker
 from app.services.analysis import run_analysis
 from app.services.indexing import run_index
+from app.services.transcription import run_transcription
 
 
 async def analyze(ctx: dict[str, Any], *, org_id: str, meeting_id: str, job_id: str) -> None:
     await run_analysis(
         ctx["sessionmaker"], ctx["llm"], ctx["ai"],
+        org_id=org_id, meeting_id=meeting_id, job_id=job_id,
+    )
+
+
+async def transcribe(ctx: dict[str, Any], *, org_id: str, meeting_id: str, job_id: str) -> None:
+    await run_transcription(
+        ctx["sessionmaker"], ctx["stt"],
         org_id=org_id, meeting_id=meeting_id, job_id=job_id,
     )
 
@@ -32,6 +41,7 @@ async def startup(ctx: dict[str, Any]) -> None:
     ctx["sessionmaker"] = make_sessionmaker(ctx["engine"])
     ctx["ai"] = settings.ai_settings()
     ctx["llm"] = build_llm(settings)
+    ctx["stt"] = build_stt(settings)
     ctx["embedder"] = build_embedder(settings)
 
 
@@ -40,7 +50,7 @@ async def shutdown(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [analyze, index]  # noqa: RUF012
+    functions = [analyze, index, transcribe]  # noqa: RUF012
     on_startup = startup
     on_shutdown = shutdown
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)

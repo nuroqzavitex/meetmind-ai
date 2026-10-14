@@ -95,6 +95,26 @@ async def transition_status(
     return bool(result.rowcount)  # type: ignore[attr-defined]
 
 
+async def replace_source(
+    session: AsyncSession, *, org_id: str, meeting_id: str, filename: str, data: bytes
+) -> None:
+    await session.execute(
+        update(Meeting)
+        .where(Meeting.id == meeting_id, Meeting.org_id == org_id)
+        .values(source_filename=filename, source_bytes=data)
+    )
+
+
+async def update_context(
+    session: AsyncSession, *, org_id: str, meeting_id: str, ctx: MeetingContext
+) -> None:
+    await session.execute(
+        update(Meeting)
+        .where(Meeting.id == meeting_id, Meeting.org_id == org_id)
+        .values(context=ctx.model_dump(mode="json"))
+    )
+
+
 async def replace_analysis(
     session: AsyncSession,
     *,

@@ -15,9 +15,11 @@ from app.schemas.meetings import (
     MeetingDetail,
     MeetingSummary,
 )
+from app.schemas.speakers import SpeakerOut, SpeakersIn
 from app.services import meetings as service
 from app.services import publish as publish_service
 from app.services import review
+from app.services import speakers as speakers_service
 from app.workers.queue import JobQueue
 
 router = APIRouter(prefix="/meetings")
@@ -41,8 +43,10 @@ async def create_meeting(
     except ValidationError as exc:
         parts = [f"context.{'.'.join(str(p) for p in e['loc'])}: {e['msg']}" for e in exc.errors()]
         raise Unprocessable("; ".join(parts), "validation_error") from exc
-    max_bytes: int = request.app.state.settings.max_upload_bytes
-    data = await file.read(max_bytes + 1)
+    settings = request.app.state.settings
+    max_bytes: int = settings.max_upload_bytes
+    max_audio_bytes: int = settings.max_audio_bytes
+    data = await file.read(max(max_bytes, max_audio_bytes) + 1)
     return await service.create_meeting(
         session,
         queue,
@@ -51,6 +55,7 @@ async def create_meeting(
         filename=file.filename or "",
         data=data,
         max_bytes=max_bytes,
+        max_audio_bytes=max_audio_bytes,
     )
 
 
@@ -76,6 +81,26 @@ async def reanalyze(
     meeting_id: str, session: SessionDep, queue: QueueDep, principal: PrincipalDep
 ) -> MeetingCreated:
     return await service.reanalyze(session, queue, principal=principal, meeting_id=meeting_id)
+
+
+@router.get("/{meeting_id}/speakers")
+async def get_speakers(
+    meeting_id: str, session: SessionDep, principal: PrincipalDep
+) -> list[SpeakerOut]:
+    return await speakers_service.get_speakers(session, principal=principal, meeting_id=meeting_id)
+
+
+@router.post("/{meeting_id}/speakers", status_code=202)
+async def assign_speakers(
+    meeting_id: str,
+    body: SpeakersIn,
+    session: SessionDep,
+    queue: QueueDep,
+    principal: PrincipalDep,
+) -> MeetingCreated:
+    return await speakers_service.assign_speakers(
+        session, queue, principal=principal, meeting_id=meeting_id, body=body
+    )
 
 
 @router.get("/{meeting_id}/items")
