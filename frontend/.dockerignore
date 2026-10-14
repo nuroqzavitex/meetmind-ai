@@ -4,3 +4,7 @@ node_modules
 tests
 *.tsbuildinfo
 README.md
+# e2e config imports ../tests/e2e (outside the build context) and is not needed in the image
+playwright.config.ts
+test-results
+playwright-report
