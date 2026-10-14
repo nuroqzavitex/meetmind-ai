@@ -1,9 +1,20 @@
 name: CI
 
+# Changes that cannot affect the build or tests (docs, personal tooling) skip CI.
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "scripts/**"
+      - "docs/**"
+      - "**.md"
+      - ".gitignore"
   pull_request:
+    paths-ignore:
+      - "scripts/**"
+      - "docs/**"
+      - "**.md"
+      - ".gitignore"
 
 concurrency:
   group: ci-${{ github.ref }}

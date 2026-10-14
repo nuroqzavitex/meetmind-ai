@@ -123,7 +123,7 @@ Fallbacks and errors:
 - On an org switch, the query cache is cleared and the subtree is re-mounted with a key.
 
 **CI.**
-- `.github/workflows/ci.yml` has three jobs:
+- `.github/workflows/ci.yml` has three jobs (skipped when only `scripts/**`, `docs/**`, `*.md` or `.gitignore` change):
   - backend: ruff, mypy, pytest against a pgvector service.
   - frontend: lint, typecheck, Vitest, build, OpenAPI drift check.
   - e2e: skips without Clerk secrets.
