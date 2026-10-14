@@ -27,7 +27,12 @@ Nên chọn cùng khu vực Singapore cho Render, Neon và Upstash để giảm 
 ## 2. Upstash (Redis)
 
 1. Đăng ký [upstash.com](https://upstash.com), **Create Database** (Redis), region **ap-southeast-1 (Singapore)**.
-2. Copy URL dạng `rediss://default:<password>@<host>.upstash.io:6379` (có `rediss`, chữ s cuối là TLS).
+2. Mở tab **TCP** trong khung Connect (không phải REST), hiện mật khẩu rồi copy URL dạng
+   `rediss://default:<password>@<host>.upstash.io:6379`. Phải là `rediss` (hai chữ s, TLS);
+   nếu chỉ thấy lệnh `redis-cli --tls -u redis://...` thì tự đổi `redis://` thành `rediss://`.
+3. Gói Free giới hạn 500k lệnh/tháng. Worker hỏi Redis khoảng 1 lệnh mỗi lần kiểm tra job;
+   `render.yaml` đặt `WORKER_POLL_DELAY=10` (khoảng 260k lệnh/tháng kể cả khi service không ngủ).
+   Đổi lại 0.5 giây thì hết hạn mức trong vài ngày.
 
 ## 3. Render (backend + worker)
 

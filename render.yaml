@@ -50,3 +50,7 @@ services:
         sync: false
       - key: PROMPT_VERSION
         value: v1
+      # Arq polls Redis once per poll (~1 command). 0.5 s default = ~5M commands/month,
+      # far over Upstash free (500k). 10 s = ~260k/month even if the service never sleeps.
+      - key: WORKER_POLL_DELAY
+        value: "10"

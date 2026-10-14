@@ -46,3 +46,4 @@ class WorkerSettings:
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)
     max_tries = 1
     job_timeout = JOB_TIMEOUT_SECONDS
+    poll_delay = get_settings().worker_poll_delay

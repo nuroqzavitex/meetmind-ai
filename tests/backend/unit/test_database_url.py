@@ -25,3 +25,15 @@ def test_normalize_database_url(raw: str, expected: str) -> None:
 def test_settings_normalizes_database_url() -> None:
     s = Settings(_env_file=None, database_url="postgresql://u:p@h/db?sslmode=require")
     assert s.database_url == "postgresql+asyncpg://u:p@h/db?ssl=require"
+
+
+def test_worker_poll_delay_defaults_to_arq_default_and_is_configurable() -> None:
+    assert Settings(_env_file=None).worker_poll_delay == 0.5
+    assert Settings(_env_file=None, worker_poll_delay=10).worker_poll_delay == 10
+
+
+def test_worker_settings_use_configured_poll_delay() -> None:
+    from app.core.config import get_settings
+    from app.workers.main import WorkerSettings
+
+    assert WorkerSettings.poll_delay == get_settings().worker_poll_delay
