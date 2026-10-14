@@ -16,3 +16,4 @@ frontend/playwright/.clerk/
 
 # Personal log of prompts sent to the AI assistant
 ai-log.txt
+ai-log-temp.txt

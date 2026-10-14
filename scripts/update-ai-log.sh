@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# Rebuild ai-log.txt (gitignored) from the Claude Code session transcripts of this project.
-# Usage (Git Bash or any POSIX shell, from anywhere in the repo):  sh scripts/update-ai-log.sh
+# Review-then-keep log of the prompts sent to Claude Code (both files are gitignored).
+#   sh scripts/update-ai-log.sh          new prompts -> ai-log-temp.txt; delete the ones to drop
+#   sh scripts/update-ai-log.sh commit   what is left in ai-log-temp.txt -> ai-log.txt, temp emptied
 set -eu
 
 ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
+CMD="${1:-collect}"
 
 for py in python3 python py; do
   if command -v "$py" >/dev/null 2>&1 && "$py" -c "import sys; sys.exit(sys.version_info < (3, 9))" 2>/dev/null; then
-    PYTHONIOENCODING=utf-8 exec "$py" "$ROOT/scripts/ai_log.py" "$ROOT/ai-log.txt"
+    PYTHONIOENCODING=utf-8 exec "$py" "$ROOT/scripts/ai_log.py" "$CMD"
   fi
 done
 
