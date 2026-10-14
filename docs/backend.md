@@ -3,7 +3,7 @@
 ## Chạy bằng Docker Compose
 
 ```bash
-cp .env.example .env        # điền ANTHROPIC_API_KEY và các biến CLERK_*
+cp .env.example .env        # điền khoá LLM (ANTHROPIC_API_KEY hoặc OPENAI_API_KEY + LLM_PROVIDER=openai) và CLERK_*
 docker compose up -d --build   # hoặc: make up
 curl localhost:8000/api/v1/health   # {"status":"ok"}
 ```
@@ -40,11 +40,14 @@ Test không gọi LLM hay Clerk thật.
 
 Xem [README → Cấu hình Clerk](../README.md#cấu-hình-clerk) (Organizations, claim `name` trong session token,
 `CLERK_JWKS_URL`, `CLERK_ISSUER`, `CLERK_AUTHORIZED_PARTIES`, user test cho e2e).
-Token thiếu/sai → 401; không có organization đang active → 403.
+Token thiếu/sai → 401; không có organization đang active → 403 (trừ các endpoint của người xin vào tổ chức).
+Vai trò admin lấy từ claim `o.rol` (`admin`, token v2) hoặc `org_role` (`org:admin`, v1); thao tác chỉ dành cho admin
+trả 403 `admin_only`. Duyệt người xin vào tổ chức cần `CLERK_SECRET_KEY` ở backend (gọi Clerk Backend API).
 
 ## LLM giả cho e2e (`LLM_PROVIDER=fake`)
 
-`LLM_PROVIDER=fake` thay Anthropic bằng `FixtureLLM`: mỗi lời gọi của agent `<agent>` trả nội dung file
+`LLM_PROVIDER` chọn `anthropic` (mặc định), `openai` (strict JSON schema, cần `OPENAI_API_KEY`) hoặc `fake`.
+`LLM_PROVIDER=fake` thay LLM thật bằng `FixtureLLM`: mỗi lời gọi của agent `<agent>` trả nội dung file
 `<FAKE_LLM_DIR>/<agent>.json` (mặc định `../tests/fixtures/llm/payment_v2`, tính từ `backend/`), không gọi mạng.
 Chỉ dùng cho e2e (Playwright tự đặt biến này cho backend và worker, xem [tests/e2e/README.md](../tests/e2e/README.md));
 không dùng khi chạy thật hay eval. Unit/integration test dùng `FakeLLM` trong code, không cần biến này.
@@ -54,7 +57,9 @@ không dùng khi chạy thật hay eval. Unit/integration test dùng `FakeLLM` t
 | Method | Path | Mô tả |
 |---|---|---|
 | GET | `/health` | Kiểm tra sống (không cần token) |
-| POST | `/meetings` | Upload transcript (multipart: `file`, `context` JSON) → 201, tạo job analyze |
+| POST | `/meetings` | Upload transcript hoặc file ghi âm (multipart: `file`, `context` JSON) → 201, tạo job analyze (transcript) hoặc transcribe (ghi âm) |
+| GET | `/meetings/{id}/speakers` | Người nói trong bản ghi âm đã chuyển văn bản (số câu, câu mẫu); chỉ khi `awaiting_speakers` |
+| POST | `/meetings/{id}/speakers` | Gán tên thật và người quyết định cho từng "Người nói A/B…" → 202, tạo job analyze |
 | GET | `/meetings` | Danh sách cuộc họp của org |
 | GET | `/meetings/{id}` | Chi tiết cuộc họp |
 | POST | `/meetings/{id}/reanalyze` | Phân tích lại → 202 |
@@ -69,9 +74,46 @@ không dùng khi chạy thật hay eval. Unit/integration test dùng `FakeLLM` t
 | POST | `/items/{item_id}/reopen` | Mở lại item |
 | GET | `/jobs/{job_id}` | Trạng thái job phân tích |
 | POST | `/qa` | Hỏi đáp trên các cuộc họp đã phát hành của org, trả lời kèm trích dẫn |
+| GET / PUT | `/settings/discord` | Webhook (chỉ trả 4 ký tự cuối), bản tin 8h sáng, link mời server. Mọi thành viên đọc, chỉ admin sửa |
+| POST | `/settings/discord/test` | Gửi tin thử vào webhook (admin) |
+| GET | `/settings/discord-bot` | Trạng thái bot `/hoi`, mã liên kết, link mời bot (admin) |
+| POST | `/settings/discord-bot/rotate-code`, `/settings/discord-bot/unlink` | Đổi mã liên kết, huỷ liên kết server (admin) |
+| GET | `/settings/join-code` | Mã tham gia tổ chức `MM-XXXX-XXXX` (admin) |
+| POST | `/settings/join-code/rotate` | Đổi mã tham gia (admin) |
+| POST | `/join-requests` | Xin vào tổ chức bằng mã (không cần org đang active) → 201 |
+| GET | `/join-requests/mine` | Yêu cầu của mình và trạng thái (không cần org) |
+| DELETE | `/join-requests/{id}` | Huỷ yêu cầu đang chờ của mình (không cần org) |
+| GET | `/join-requests` | Yêu cầu đang chờ của tổ chức (admin) |
+| POST | `/join-requests/{id}/approve`, `/join-requests/{id}/reject` | Đồng ý (thêm thành viên qua Clerk) / từ chối (admin) |
+| POST | `/internal/digest` | Bản tin nhắc việc hằng ngày; header `X-Cron-Secret` = `CRON_SECRET`, không dùng Clerk |
+| POST | `/discord/interactions` | Interactions Endpoint của bot Discord; xác thực chữ ký Ed25519, không dùng Clerk |
 
 Lỗi luôn có dạng `{"error": {"code": "...", "message": "..."}}`: 401, 403, 404 (kể cả truy cập
-chéo org), 409, 413 (file quá lớn, `MAX_UPLOAD_BYTES`), 422.
+chéo org), 409, 413 (file quá lớn, `MAX_UPLOAD_BYTES` / `MAX_AUDIO_BYTES`), 422, 429 (quá nhiều yêu cầu xin vào
+đang chờ), 502 (Discord/Clerk từ chối), 503 (dịch vụ ngoài chưa cấu hình hoặc chưa sẵn sàng).
+
+## Job nền (Arq)
+
+| Job | Khi nào | Việc |
+|---|---|---|
+| `transcribe` | Upload file ghi âm | OpenAI `gpt-4o-transcribe-diarize` → transcript `.txt` có "Người nói A/B…", trạng thái `awaiting_speakers` |
+| `analyze` | Upload transcript, gán xong người nói, phân tích lại | Pipeline LangGraph → các mục chờ duyệt |
+| `index` | Phát hành | Lập chỉ mục cho hỏi đáp |
+| `notify` | Phát hành, khi org đã gắn webhook | Gửi tóm tắt cuộc họp vào Discord (không tạo hàng `jobs`, lỗi chỉ ghi log) |
+
+`WORKER_POLL_DELAY` (mặc định 0.5 s, bản deploy đặt 10 s để tiết kiệm lệnh Redis của Upstash) là khoảng cách giữa
+hai lần worker hỏi hàng đợi.
+
+## Discord
+
+- **Webhook** (`notify/discord.py`, `services/notifications.py`): chỉ nhận URL `https://discord.com/api/webhooks/…`,
+  tin nhắn luôn tắt mention (`allowed_mentions: {"parse": []}`) để nội dung transcript không ping cả server.
+- **Bản tin 8h sáng**: `.github/workflows/digest.yml` gọi `POST /internal/digest` lúc 01:00 UTC; việc quá hạn (7 ngày
+  gần nhất), đến hạn hôm nay và trong 2 ngày tới, theo giờ Việt Nam.
+- **Bot `/hoi`** (`api/v1/endpoints/discord.py`, `services/discord_bot.py`): trả lời "đang suy nghĩ" ngay (Discord
+  chỉ chờ 3 giây), chạy `services/qa.ask` cho org đã liên kết rồi sửa tin bằng câu trả lời. `/ketnoi <mã>` (cần quyền
+  quản lý server) liên kết server với org. Đăng ký lệnh một lần: `uv run python scripts/register_discord_commands.py`
+  (cần `DISCORD_APP_ID`, `DISCORD_BOT_TOKEN`). Cách cấu hình: [deploy.md, mục 7](deploy.md#7-bot-hỏi-đáp-discord-tuỳ-chọn).
 
 ## Hỏi đáp (Q&A)
 
