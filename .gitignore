@@ -12,3 +12,4 @@ frontend/.env*.local
 frontend/test-results/
 frontend/playwright-report/
 frontend/playwright/.clerk/
+.playwright-mcp/

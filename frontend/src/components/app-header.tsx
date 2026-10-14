@@ -1,30 +1,23 @@
 import { OrganizationSwitcher, SignedIn, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
 
+import { BrandMark } from "@/components/brand"
+import { NavLinks } from "@/components/nav-links"
+
 export function AppHeader() {
   return (
     <SignedIn>
-    <header className="border-b bg-background">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
-        <Link href="/" className="font-semibold">
-          MeetMind
+    <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6">
+        <Link href="/" className="flex items-center gap-2 font-semibold">
+          <BrandMark />
+          <span>MeetMind</span>
         </Link>
-        <nav className="flex flex-1 items-center gap-4 text-sm">
-          <Link href="/" className="text-muted-foreground hover:text-foreground">
-            Cuộc họp
-          </Link>
-          <Link
-            href="/meetings/new"
-            className="text-muted-foreground hover:text-foreground"
-          >
-            Tải lên
-          </Link>
-          <Link href="/qa" className="text-muted-foreground hover:text-foreground">
-            Hỏi đáp
-          </Link>
-        </nav>
-        <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/" />
-        <UserButton />
+        <NavLinks />
+        <div className="ml-auto flex items-center gap-3">
+          <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/" />
+          <UserButton />
+        </div>
       </div>
     </header>
     </SignedIn>

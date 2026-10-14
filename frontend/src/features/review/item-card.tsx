@@ -1,5 +1,6 @@
 "use client"
 
+import { Check, Pencil, X } from "lucide-react"
 import { useState } from "react"
 
 import { Badge } from "@/components/ui/badge"
@@ -8,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ApiError } from "@/lib/api-client"
 import { cn } from "@/lib/utils"
 import { REVIEW_STATE_LABEL, fmtDate, fmtPercent } from "@/lib/format"
+import { ITEM_TYPE_STYLE, REVIEW_STATE_STYLE } from "@/lib/item-style"
 import type { ItemAction, ItemOut } from "@/lib/types"
 import { ItemEditForm } from "./item-edit-form"
 
@@ -47,11 +49,13 @@ export function ItemCard({
   ]
 
   return (
-    <Card>
-      <CardContent className="space-y-2">
+    <Card className={cn("border border-border border-l-4 shadow-xs ring-0", ITEM_TYPE_STYLE[item.type]?.border, superseded && "opacity-75")}>
+      <CardContent className="space-y-3">
         <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant="secondary">{REVIEW_STATE_LABEL[item.review_state]}</Badge>
-          <Badge variant={item.confidence < 0.6 ? "destructive" : "outline"}>
+          <Badge variant="outline" className={cn("border-transparent ring-1 ring-inset", REVIEW_STATE_STYLE[item.review_state])}>
+            {REVIEW_STATE_LABEL[item.review_state]}
+          </Badge>
+          <Badge variant={item.confidence < 0.6 ? "destructive" : "outline"} title="Độ tin cậy">
             {fmtPercent(item.confidence)}
           </Badge>
           {superseded && <Badge variant="outline">Bị thay thế</Badge>}
@@ -61,7 +65,7 @@ export function ItemCard({
             </Badge>
           ))}
         </div>
-        <p className={cn("font-medium", superseded && "line-through text-muted-foreground")}>{item.content}</p>
+        <p className={cn("text-[0.95rem] leading-relaxed font-medium", superseded && "line-through text-muted-foreground")}>{item.content}</p>
         {item.supersedes.length > 0 && (
           <p className="text-sm text-muted-foreground">
             Thay cho:{" "}
@@ -73,40 +77,46 @@ export function ItemCard({
             ))}
           </p>
         )}
-        <dl className="text-sm">
-          {meta.map(([k, val]) =>
-            val ? (
-              <div key={k} className="flex gap-1">
-                <dt className="text-muted-foreground">{k}:</dt>
-                <dd>{val}</dd>
-              </div>
-            ) : null,
-          )}
-        </dl>
+        {meta.some(([, v]) => v) && (
+          <dl className="grid gap-x-4 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
+            {meta.map(([k, val]) =>
+              val ? (
+                <div key={k} className="contents">
+                  <dt className="text-muted-foreground">{k}:</dt>
+                  <dd className="font-medium">{val}</dd>
+                </div>
+              ) : null,
+            )}
+          </dl>
+        )}
         {item.evidence.length > 0 && (
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1.5">
             {item.evidence.map((e, i) => (
               <li key={`${e.utterance_id}-${i}`}>
                 <button
                   type="button"
-                  className="text-left text-muted-foreground hover:underline"
+                  className="group/ev w-full rounded-lg border-l-2 border-primary/30 bg-muted/60 px-3 py-2 text-left text-sm transition-colors hover:border-primary hover:bg-accent"
                   onClick={() => onEvidenceClick(e.utterance_id)}
                 >
-                  [{e.ts} · {e.speaker}] &quot;{e.quote}&quot;
+                  <span className="mr-1.5 font-mono text-xs text-muted-foreground">[{e.ts} · {e.speaker}]</span>
+                  <span className="text-foreground/80 italic">&quot;{e.quote}&quot;</span>
                 </button>
               </li>
             ))}
           </ul>
         )}
         {!readOnly && !editing && (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 border-t pt-3">
             <Button size="sm" disabled={pending} onClick={() => fire({ action: "approve" })}>
+              <Check aria-hidden />
               Duyệt
             </Button>
             <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
+              <Pencil aria-hidden />
               Sửa
             </Button>
             <Button size="sm" variant="destructive" disabled={pending} onClick={() => fire({ action: "reject" })}>
+              <X aria-hidden />
               Bác
             </Button>
           </div>
