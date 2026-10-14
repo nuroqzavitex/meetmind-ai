@@ -18,6 +18,8 @@ export type TopicOut = S["TopicOut"];
 export type ApproveCleanOut = S["ApproveCleanOut"];
 export type SpeakerOut = S["SpeakerOut"];
 export type SpeakerAssignment = S["SpeakerAssignment"];
+export type DiscordSettingsOut = S["DiscordSettingsOut"];
+export type DiscordSettingsIn = S["DiscordSettingsIn"];
 
 export type ItemType = ItemOut["type"];
 export type ReviewState = NonNullable<ItemOut["review_state"]>;

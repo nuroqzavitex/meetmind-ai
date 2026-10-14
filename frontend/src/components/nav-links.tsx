@@ -1,6 +1,6 @@
 "use client"
 
-import { FileUp, ListChecks, MessagesSquare } from "lucide-react"
+import { FileUp, ListChecks, MessagesSquare, Settings } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/", label: "Cuộc họp", icon: ListChecks, match: (p: string) => p === "/" || p.startsWith("/meetings/") && !p.startsWith("/meetings/new") },
   { href: "/meetings/new", label: "Tải lên", icon: FileUp, match: (p: string) => p.startsWith("/meetings/new") },
   { href: "/qa", label: "Hỏi đáp", icon: MessagesSquare, match: (p: string) => p.startsWith("/qa") },
+  { href: "/settings", label: "Cài đặt", icon: Settings, match: (p: string) => p.startsWith("/settings") },
 ]
 
 export function NavLinks() {

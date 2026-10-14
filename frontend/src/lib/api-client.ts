@@ -86,7 +86,7 @@ export async function apiFetch<T>(
   path: string,
   opts: {
     getToken: TokenGetter;
-    method?: "GET" | "POST" | "PATCH";
+    method?: "GET" | "POST" | "PATCH" | "PUT";
     json?: unknown;
     form?: FormData;
     signal?: AbortSignal;

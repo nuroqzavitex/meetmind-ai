@@ -778,6 +778,71 @@
           }
         }
       }
+    },
+    "/api/v1/settings/discord": {
+      "get": {
+        "summary": "Get Discord Settings",
+        "operationId": "get_discord_settings_api_v1_settings_discord_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordSettingsOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Save Discord Settings",
+        "operationId": "save_discord_settings_api_v1_settings_discord_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscordSettingsIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordSettingsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/settings/discord/test": {
+      "post": {
+        "summary": "Test Discord",
+        "operationId": "test_discord_api_v1_settings_discord_test_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1022,6 +1087,60 @@
           "quote"
         ],
         "title": "DialogueAct"
+      },
+      "DiscordSettingsIn": {
+        "properties": {
+          "webhook_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Url"
+          },
+          "digest_enabled": {
+            "type": "boolean",
+            "title": "Digest Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "digest_enabled"
+        ],
+        "title": "DiscordSettingsIn"
+      },
+      "DiscordSettingsOut": {
+        "properties": {
+          "configured": {
+            "type": "boolean",
+            "title": "Configured"
+          },
+          "webhook_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Hint"
+          },
+          "digest_enabled": {
+            "type": "boolean",
+            "title": "Digest Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "configured",
+          "digest_enabled"
+        ],
+        "title": "DiscordSettingsOut"
       },
       "Evidence": {
         "properties": {

@@ -16,6 +16,8 @@ export function useApi() {
         apiFetch<T>(path, { getToken, method: "POST", form }),
       patch: <T,>(path: string, json: unknown) =>
         apiFetch<T>(path, { getToken, method: "PATCH", json }),
+      put: <T,>(path: string, json: unknown) =>
+        apiFetch<T>(path, { getToken, method: "PUT", json }),
       download: async (path: string, fallbackName?: string): Promise<void> => {
         const { blob, filename } = await apiDownload(path, getToken, fallbackName)
         const url = URL.createObjectURL(blob)

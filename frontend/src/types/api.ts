@@ -278,6 +278,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/settings/discord": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Discord Settings */
+        get: operations["get_discord_settings_api_v1_settings_discord_get"];
+        /** Save Discord Settings */
+        put: operations["save_discord_settings_api_v1_settings_discord_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings/discord/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Test Discord */
+        post: operations["test_discord_api_v1_settings_discord_test_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -357,6 +392,22 @@ export interface components {
              * @default 0.7
              */
             confidence: number;
+        };
+        /** DiscordSettingsIn */
+        DiscordSettingsIn: {
+            /** Webhook Url */
+            webhook_url?: string | null;
+            /** Digest Enabled */
+            digest_enabled: boolean;
+        };
+        /** DiscordSettingsOut */
+        DiscordSettingsOut: {
+            /** Configured */
+            configured: boolean;
+            /** Webhook Hint */
+            webhook_hint?: string | null;
+            /** Digest Enabled */
+            digest_enabled: boolean;
         };
         /** Evidence */
         Evidence: {
@@ -1326,6 +1377,77 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
+            };
+        };
+    };
+    get_discord_settings_api_v1_settings_discord_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscordSettingsOut"];
+                };
+            };
+        };
+    };
+    save_discord_settings_api_v1_settings_discord_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DiscordSettingsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscordSettingsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    test_discord_api_v1_settings_discord_test_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
