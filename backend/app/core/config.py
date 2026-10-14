@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     clerk_jwks_url: str = ""
     clerk_issuer: str = ""
     clerk_authorized_parties: Annotated[list[str], NoDecode] = ["http://localhost:3000"]
+    # Clerk Backend API key (sk_...): adds members when an admin approves a join request.
+    clerk_secret_key: SecretStr | None = None
     anthropic_api_key: SecretStr | None = None
     openai_api_key: SecretStr | None = None
     gemini_api_key: SecretStr | None = None

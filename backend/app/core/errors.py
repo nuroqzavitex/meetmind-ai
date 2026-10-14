@@ -18,6 +18,7 @@ _STATUS_CODES = {
     409: "conflict",
     413: "file_too_large",
     422: "validation_error",
+    429: "too_many_requests",
 }
 
 
@@ -78,6 +79,13 @@ class Unauthorized(AppError):
 class Forbidden(AppError):
     status = 403
     code = "no_active_org"
+
+
+class TooManyRequests(AppError):
+    status = 429
+
+    def __init__(self, message: str, code: str) -> None:
+        super().__init__(message, code)
 
 
 def _envelope(status: int, code: str, message: str) -> JSONResponse:

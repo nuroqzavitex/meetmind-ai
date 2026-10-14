@@ -6,6 +6,7 @@ from typing import Any
 
 from app.ai.domain.enums import ItemType
 from app.ai.domain.models import MeetingContext, MeetingItem
+from app.schemas.join_requests import JoinRequestOut
 from app.services.export import publishable
 
 COLOR = 0x4F46E5  # indigo, matches the UI primary
@@ -86,6 +87,24 @@ def published_message(
                 "description": meta,
                 "color": COLOR,
                 "fields": fields,
+            }
+        ],
+    }
+
+
+def join_request_message(request: JoinRequestOut, settings_url: str) -> dict[str, Any]:
+    who = _clip(request.user_name, 80)
+    if request.user_email:
+        who += f" ({_clip(request.user_email, 80)})"
+    return {
+        "username": "MeetMind AI",
+        "embeds": [
+            {
+                "title": "🙋 Có người xin vào tổ chức",
+                "url": settings_url,
+                "description": f"**{who}** xin tham gia **{_clip(request.org_name, 80)}**.\n"
+                "Admin mở trang Cài đặt để đồng ý hoặc từ chối.",
+                "color": COLOR,
             }
         ],
     }

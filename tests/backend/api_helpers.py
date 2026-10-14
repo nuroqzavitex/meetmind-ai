@@ -11,5 +11,8 @@ class FakeQueue:
         self.calls.append((kind, org_id, meeting_id, job_id))
 
 
-def auth(org: str | None = "org_a", user: str = "user_1", name: str = "Lan") -> dict[str, str]:
-    return {"Authorization": f"Bearer {make_token(sub=user, org_id=org, name=name)}"}
+def auth(
+    org: str | None = "org_a", user: str = "user_1", name: str = "Lan", role: str = "admin"
+) -> dict[str, str]:
+    token = make_token(sub=user, org_id=org, name=name, role=role)
+    return {"Authorization": f"Bearer {token}"}

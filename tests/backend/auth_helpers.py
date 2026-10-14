@@ -46,6 +46,7 @@ def make_token(
     kid: str = TEST_KID,
     key: rsa.RSAPrivateKey | None = None,
     algorithm: str = "RS256",
+    role: str = "admin",
     **overrides: Any,
 ) -> str:
     """Build a signed token. org_format "v2" -> {"o": {"id", "rol"}}, "v1" -> "org_id".
@@ -65,7 +66,7 @@ def make_token(
         claims["name"] = name
     if org_id is not None:
         if org_format == "v2":
-            claims["o"] = {"id": org_id, "rol": "admin"}
+            claims["o"] = {"id": org_id, "rol": role}
         else:
             claims["org_id"] = org_id
     claims.update(overrides)

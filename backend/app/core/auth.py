@@ -19,10 +19,25 @@ _INITIAL_RETRY_INTERVAL = 5.0  # retry gap while keys have never loaded
 log = logging.getLogger(__name__)
 
 
+class User(BaseModel):
+    """A signed-in Clerk user, with or without an active organization."""
+
+    user_id: str
+    name: str
+    org_id: str | None = None
+    org_role: str | None = None
+
+
 class Principal(BaseModel):
     user_id: str
     org_id: str
     name: str
+    org_role: str | None = None
+
+    @property
+    def is_admin(self) -> bool:
+        # Session token v2 carries "admin"; v1 carries "org:admin".
+        return self.org_role in ("admin", "org:admin")
 
 
 class JWKSCache:
@@ -106,14 +121,14 @@ def http_jwks_fetcher(url: str) -> Callable[[], Awaitable[dict[str, Any]]]:
     return fetch
 
 
-async def verify_token(
+async def verify_user(
     token: str,
     *,
     jwks: JWKSCache,
     issuer: str,
     authorized_parties: list[str],
     leeway: int = 5,
-) -> Principal:
+) -> User:
     try:
         kid = jwt.get_unverified_header(token).get("kid")
         if not isinstance(kid, str):
@@ -136,23 +151,61 @@ async def verify_token(
         raise Unauthorized("Invalid token")
 
     org = claims.get("o")
-    org_id = org.get("id") if isinstance(org, dict) else claims.get("org_id")
-    if not org_id or not isinstance(org_id, str):
-        raise Forbidden("No active organization")
-
+    if isinstance(org, dict):
+        org_id, role = org.get("id"), org.get("rol")
+    else:
+        org_id, role = claims.get("org_id"), claims.get("org_role")
     sub = str(claims["sub"])
     name = claims.get("name")
-    return Principal(user_id=sub, org_id=org_id, name=name if isinstance(name, str) and name else sub)
+    return User(
+        user_id=sub,
+        name=name if isinstance(name, str) and name else sub,
+        org_id=org_id if isinstance(org_id, str) and org_id else None,
+        org_role=role if isinstance(role, str) and role else None,
+    )
 
 
-async def get_principal(request: Request) -> Principal:
+async def verify_token(
+    token: str,
+    *,
+    jwks: JWKSCache,
+    issuer: str,
+    authorized_parties: list[str],
+    leeway: int = 5,
+) -> Principal:
+    user = await verify_user(
+        token, jwks=jwks, issuer=issuer, authorized_parties=authorized_parties, leeway=leeway
+    )
+    if user.org_id is None:
+        raise Forbidden("No active organization")
+    return Principal(
+        user_id=user.user_id, org_id=user.org_id, name=user.name, org_role=user.org_role
+    )
+
+
+def _bearer(request: Request) -> str:
     header = request.headers.get("Authorization", "")
     scheme, _, token = header.partition(" ")
     if scheme.lower() != "bearer" or not token.strip():
         raise Unauthorized("Missing or malformed Authorization header")
+    return token.strip()
+
+
+async def get_principal(request: Request) -> Principal:
     settings = request.app.state.settings
     return await verify_token(
-        token.strip(),
+        _bearer(request),
+        jwks=request.app.state.jwks,
+        issuer=settings.clerk_issuer,
+        authorized_parties=settings.clerk_authorized_parties,
+    )
+
+
+async def get_user(request: Request) -> User:
+    """Like get_principal, but an active organization is not required."""
+    settings = request.app.state.settings
+    return await verify_user(
+        _bearer(request),
         jwks=request.app.state.jwks,
         issuer=settings.clerk_issuer,
         authorized_parties=settings.clerk_authorized_parties,

@@ -13,6 +13,7 @@ class OrgSettings(Base):
 
     org_id: Mapped[str] = mapped_column(String, primary_key=True)
     discord_webhook_url: Mapped[str | None] = mapped_column(String)
+    join_code: Mapped[str | None] = mapped_column(String, unique=True)
     digest_enabled: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="false"
     )
