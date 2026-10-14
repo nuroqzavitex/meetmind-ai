@@ -36,7 +36,10 @@ def _do_run(connection: Connection) -> None:
 async def run_migrations_online() -> None:
     section: dict[str, Any] = dict(config.get_section(config.config_ini_section) or {})
     section["sqlalchemy.url"] = _url()
-    engine = async_engine_from_config(section, prefix="sqlalchemy.", poolclass=NullPool)
+    # Fail with an error instead of hanging silently when the database is unreachable.
+    engine = async_engine_from_config(
+        section, prefix="sqlalchemy.", poolclass=NullPool, connect_args={"timeout": 30}
+    )
     async with engine.connect() as connection:
         await connection.run_sync(_do_run)
     await engine.dispose()
