@@ -82,8 +82,9 @@ Evals (call the real Claude API; need `ANTHROPIC_API_KEY`):
   - `ai/llm/fixture.py` (`FixtureLLM`) reads `<dir>/<agent>.json`.
   - `core/llm.py::build_llm(settings)` picks one of these for both the API and the worker.
 
-**Async jobs.** The Arq worker in `workers/main.py` runs two job types:
-- `analyze`: upload → review items.
+**Async jobs.** The Arq worker in `workers/main.py` runs three job types:
+- `transcribe`: audio upload → OpenAI diarized STT (`ai/stt/`, `services/transcription.py`). The audio in `source_bytes` is replaced by a generated `[hh:mm:ss.mmm] Người nói A: …` `.txt`; status goes `transcribing` → `awaiting_speakers`. `POST /meetings/{id}/speakers` renames the labels, sets participants and starts `analyze` (`services/speakers.py`).
+- `analyze`: transcript → review items.
 - `index`: enqueued on publish; embeds approved items and transcript chunks.
 
 Job rules:

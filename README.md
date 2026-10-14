@@ -17,6 +17,7 @@ Theo danh sách "MVP xong khi" ở mục 0 của spec:
 
 - **Đăng nhập và org.** Đăng nhập bằng Clerk, người dùng phải thuộc một organization. Dữ liệu của org này không lộ sang org khác (có bộ test cách ly).
 - **Upload và duyệt.** Upload transcript (`.txt`, `.srt`, `.vtt`, `.docx`), màn hình duyệt hiển thị 7 loại mục: `decision`, `action_item`, `open_question`, `blocker`, `request`, `feedback`, `knowledge`. Mỗi mục có trích dẫn và mốc thời gian, bấm vào là cuộn tới câu gốc. Tab **Diễn biến chủ đề** cho thấy phương án nào bị thay thế lúc nào.
+- **Upload ghi âm.** File `.mp3`, `.m4a`, `.wav`, `.webm`, `.mp4` (≤ 25 MB) được chuyển thành văn bản và tách người nói bằng OpenAI `gpt-4o-transcribe-diarize`. Người dùng gán tên thật và người quyết định cho từng "Người nói A/B…", sau đó luồng phân tích chạy như với transcript.
 - **Kịch bản bẫy.** Các trường hợp A→B, chốt A rồi đổi B, quay lại A, mở lại, bác phương án đã chốt, chốt không rõ phương án và chờ cấp trên đều phải ra đúng trạng thái cuối.
 - **Phát hành.** Duyệt xong thì phát hành, tải biên bản `.md` và `.json`. Sau phát hành có thể "Báo sai", mở lại mục, sửa rồi phát hành lại.
 - **Hỏi đáp.** Hỏi trên các cuộc họp đã phát hành của org, câu trả lời có trích dẫn `[cuộc họp · hh:mm:ss · người nói]`. Câu hỏi ngoài dữ liệu nhận câu từ chối cố định.
@@ -155,7 +156,8 @@ Danh sách đầy đủ và giá trị mặc định nằm ở [.env.example](.e
 | `PROMPT_VERSION` | Phiên bản prompt (`ai/prompts/<agent>/vN.md`) |
 | `EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, `EMBEDDING_DIM` | `local` (bge-m3, 1024 chiều), `gemini` (`gemini-embedding-001`, cần `GEMINI_API_KEY`) hoặc `hash` |
 | `INSTALL_EMBEDDINGS` | Build arg của Compose: `false` thì image backend/worker không cài torch |
-| `CORS_ORIGINS`, `MAX_UPLOAD_BYTES` | Origin được phép gọi API, kích thước file tối đa |
+| `CORS_ORIGINS`, `MAX_UPLOAD_BYTES` | Origin được phép gọi API, kích thước transcript tối đa |
+| `MAX_AUDIO_BYTES`, `STT_MODEL` | Kích thước file ghi âm tối đa (mặc định 25 MB) và model chuyển giọng nói (dùng `OPENAI_API_KEY`) |
 | `TEST_DATABASE_URL` | DB cho test và eval QA (tên phải kết thúc bằng `_test`) |
 | `NEXT_PUBLIC_API_URL` | URL backend mà trình duyệt gọi, mặc định `http://localhost:8000` |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` | Khoá Clerk cho frontend |
@@ -239,7 +241,7 @@ docs/              tài liệu backend, frontend, spec
 
 ## Giới hạn và hướng phát triển
 
-- **Không có chuyển giọng nói.** Input luôn là transcript có sẵn; STT (WhisperX + pyannote) nằm ngoài phạm vi đợt này.
+- **Chuyển giọng nói qua API.** Ghi âm dùng OpenAI `gpt-4o-transcribe-diarize` (cần `OPENAI_API_KEY`), giới hạn 25 MB mỗi file, chưa cắt file dài, chưa ghi âm trực tiếp trên trình duyệt; tên người nói phải gán tay.
 - **Model embedding nặng.** bge-m3 tải khoảng 2 GB lần đầu và API, worker mỗi bên giữ một bản trong RAM. Image Docker cài torch bản CPU.
 - **Hỏi đáp một lượt, không streaming.** Không nhớ hội thoại, câu trả lời trả về một lần.
 - **Chuỗi thay thế chỉ trong một cuộc họp.** Nối quyết định xuyên cuộc họp và phát hiện mâu thuẫn với quyết định cũ là P2.

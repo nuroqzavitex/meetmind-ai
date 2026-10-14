@@ -47,6 +47,9 @@ services:
         value: "1024"
       - key: GEMINI_API_KEY
         sync: false
+      # Audio upload: OpenAI diarized transcription (uses OPENAI_API_KEY)
+      - key: STT_MODEL
+        value: gpt-4o-transcribe-diarize
       - key: PROMPT_VERSION
         value: v1
       # Arq polls Redis once per poll (~1 command). 0.5 s default = ~5M commands/month,
