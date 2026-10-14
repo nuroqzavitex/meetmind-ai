@@ -66,6 +66,14 @@ CASES: dict[str, tuple[list[tuple], dict[str, tuple[OptState, str | None]], dict
         [(D, "A", 5, 1), (D, "B", 5, 2)],
         {"A": (SU, "B"), "B": (DE, None)}, {},
     ),
+    "13_bare_decide_after_defer": (
+        [(P, "A", 1), (DF, None, 2), (D, None, 3)],
+        {"A": (OP, None)}, {"deferred": True, "ambiguous": 1},
+    ),
+    "14_explicit_decide_settles_earlier_bare_one": (
+        [(P, "A", 1), (P, "B", 2), (D, None, 3), (D, "B", 4)],
+        {"A": (SU, "B"), "B": (DE, None)}, {},
+    ),
     "12_support_superseded": (
         [(D, "A", 1), (D, "B", 2), (S, "A", 3)],
         {"A": (SU, "B"), "B": (DE, None)}, {},

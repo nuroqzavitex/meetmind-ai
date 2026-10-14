@@ -76,5 +76,6 @@ Phân tích từng tình huống: [docs/test-cases.md](../docs/test-cases.md). B
 | Ngày | Prompt version | Model | Final-decision acc | P | R | Owner+due | Evidence | Trap |
 |---|---|---|---|---|---|---|---|---|
 | 14/10/2026 | v1 | gpt-4o-mini (arbitrate: gpt-5-mini) | 0.73 | 0.61 | 0.63 | 0.78 | 1.00 | 0.70 |
+| 14/10/2026, sau `decide_guard` + mẫu hạn (2 lần chạy) | v1 | gpt-4o-mini (arbitrate: gpt-5-mini) | 0.85–0.88 | 0.69 | 0.66 | 0.85–0.89 | 1.00 | 0.80–0.90 |
 
 Ngưỡng cần đạt: P ≥ 0.85, R ≥ 0.75, final-decision ≥ 0.90, owner+due ≥ 0.85, evidence = 1.00, trap = 1.00.

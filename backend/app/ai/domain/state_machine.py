@@ -44,7 +44,8 @@ def run_topic(topic: Topic, acts: list[DialogueAct]) -> Topic:
     for a in sorted(acts, key=lambda x: (x.start, x.seq)):
         label = a.option
         if label is None and a.act == Act.DECIDE:
-            label = _resolve_option(topic)
+            # After a deferral ("chờ ý kiến sếp"), a bare "ok" is not a decision on the only option.
+            label = None if topic.deferred else _resolve_option(topic)
             if label is None:
                 topic.ambiguous_decides.append(a)
                 continue
@@ -62,6 +63,8 @@ def run_topic(topic: Topic, acts: list[DialogueAct]) -> Topic:
             opt.state = OptState.DISCUSSED
         elif a.act == Act.DECIDE:
             opt.state, opt.decided_act, opt.superseded_by = OptState.DECIDED, a, None
+            # An explicit decision settles the unnamed "chốt" said before it.
+            topic.ambiguous_decides = []
             for o in topic.options.values():
                 if o is not opt and o.state != OptState.REJECTED:
                     o.state, o.superseded_by = OptState.SUPERSEDED, opt.label

@@ -75,6 +75,7 @@ Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they nee
 **AI core** (`backend/app/ai`) has no dependency on the web layer.
 - `pipeline.py` is a LangGraph graph: parse transcript → chunk/normalize → `extract` dialogue acts (LLM, parallel per chunk) → `check_quotes` (verbatim evidence, one retry) → `topics` (LLM) → **deterministic state machine** `domain/state_machine.py` → `arbitrate` (LLM, only on ambiguity signals) → `build_items` → `validate`.
 - Final decisions come from the state machine, not the LLM. Only an explicit `DECIDE` act creates a decision.
+- `domain/decide_guard.py` runs before the state machine: a `DECIDE` keeps its option only if its own quote names it (diacritic-insensitive word match), and `"null"`-like labels become `None`. An unnamed `DECIDE` is resolved to the sole live option unless the topic was deferred.
 - Prompts are versioned files `ai/prompts/<agent>/<version>.md`, selected by `PROMPT_VERSION`.
 - LLM clients:
   - `ai/llm/client.py` (Anthropic) is the default production client.

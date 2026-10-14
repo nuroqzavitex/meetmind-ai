@@ -15,6 +15,7 @@ from app.ai.agents.normalize import Chunk, apply_glossary, make_chunks
 from app.ai.agents.topics import TopicSpec, assign_topics
 from app.ai.agents.validate import validate_items
 from app.ai.config import AISettings
+from app.ai.domain.decide_guard import guard_acts
 from app.ai.domain.models import DialogueAct, MeetingContext, MeetingItem, Utterance
 from app.ai.domain.state_machine import Topic, run_topic
 from app.ai.errors import AnalysisError, TranscriptParseError
@@ -114,7 +115,7 @@ async def analyze_transcript(
     async def n_topics(state: State) -> dict[str, Any]:
         merged = [a for i in sorted(state["acts_by_chunk"]) for a in state["acts_by_chunk"][i]]
         specs, acts = await assign_topics(llm, ctx, dedupe_acts(merged), settings.prompt_version)
-        return {"specs": specs, "acts": acts}
+        return {"specs": specs, "acts": guard_acts(acts)}
 
     async def n_state_machine(state: State) -> dict[str, Any]:
         topics = [

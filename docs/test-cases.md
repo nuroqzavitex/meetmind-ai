@@ -4,12 +4,20 @@ Core loop: **transcript → hiểu diễn biến → trích xuất có cấu tr�
 
 7 tình huống dưới đây gồm 3 tình huống sản phẩm làm tốt, 2 tình huống khó/dữ liệu không rõ ràng và 2 tình huống thất bại.
 
+Tài liệu ghi lại hai vòng:
+- **Vòng 1:** chạy bộ đánh giá, phân tích từng tình huống thất bại để tìm nguyên nhân gốc.
+- **Vòng 2:** sửa hai nguyên nhân gốc bằng code (không đổi prompt, không đổi model), rồi chạy lại.
+
+Mỗi tình huống ghi kết quả của vòng 1. Các tình huống được sửa có thêm phần **Sau khi sửa**.
+
 ## Cách chạy
 
 - **Ngày chạy:** 14/10/2026.
 - **Lệnh:** `cd backend && PYTHONPATH=.. uv run python -m evals.runners.run_pipeline`.
 - **Model:** `gpt-4o-mini` cho các agent, `gpt-5-mini` cho bước phân xử. Đây là cấu hình đang deploy, để chi phí thấp.
-- **Kết quả thô:** [`evals/results/2026-10-14-gpt-4o-mini.json`](../evals/results/2026-10-14-gpt-4o-mini.json). File chứa toàn bộ mục trích xuất và điểm của từng cuộc họp.
+- **Kết quả thô** (toàn bộ mục trích xuất và điểm của từng cuộc họp):
+  - Vòng 1: [`evals/results/2026-10-14-gpt-4o-mini-before-fix.json`](../evals/results/2026-10-14-gpt-4o-mini-before-fix.json).
+  - Vòng 2, chạy 2 lần vì LLM trả lời khác nhau giữa các lần: [`…-after-fix-run1.json`](../evals/results/2026-10-14-gpt-4o-mini-after-fix-run1.json) và [`…-after-fix-run2.json`](../evals/results/2026-10-14-gpt-4o-mini-after-fix-run2.json).
 - **Dữ liệu:**
   - Transcript nằm trong `evals/datasets/`.
   - Đáp án (kỳ vọng do người viết) nằm trong `evals/golden/`.
@@ -17,13 +25,18 @@ Core loop: **transcript → hiểu diễn biến → trích xuất có cấu tr�
 
 Kết quả tổng hợp trên cả 15 cuộc họp:
 
-| Chỉ số | Kết quả | Ngưỡng | |
+| Chỉ số | Vòng 1 (trước khi sửa) | Vòng 2 (sau khi sửa, 2 lần chạy) | Ngưỡng |
 |---|---|---|---|
-| Bằng chứng đúng nguyên văn (evidence faithfulness) | **1.00** | 1.00 | Đạt |
-| Kịch bản bẫy ra đúng trạng thái cuối | 0.70 (7/10) | 1.00 | Chưa đạt |
-| Quyết định cuối đúng | 0.73 | 0.90 | Chưa đạt |
-| Người phụ trách và hạn đúng | 0.78 | 0.85 | Chưa đạt |
-| Precision / Recall | 0.61 / 0.63 | 0.85 / 0.75 | Chưa đạt |
+| Bằng chứng đúng nguyên văn (evidence faithfulness) | **1.00** | **1.00** | 1.00 |
+| Kịch bản bẫy ra đúng trạng thái cuối | 0.70 (7/10) | **0.80 – 0.90** | 1.00 |
+| Quyết định cuối đúng | 0.73 | **0.85 – 0.88** | 0.90 |
+| Người phụ trách và hạn đúng | 0.78 | **0.85 – 0.89** | 0.85 |
+| Precision | 0.61 | 0.69 | 0.85 |
+| Recall | 0.63 | 0.66 | 0.75 |
+
+Sau khi sửa, cả hai lần chạy của vòng 2 đều qua TC5, TC6 và phần hạn của TC7. Tình huống bẫy còn trượt:
+- Lần 1 trượt `reject_decided` (TC2). Chạy riêng tình huống này thêm 3 lần thì cả 3 đều đúng, nên đây là dao động của LLM, không phải do luật mới.
+- Lần 2 chỉ trượt `relative_deadlines` (TC7), do cách diễn đạt nhãn quyết định.
 
 **Bằng chứng luôn chính xác.** Mọi trích dẫn đều khớp nguyên văn transcript: 100% trên 103 trích dẫn. Lý do là code kiểm tra từng trích dẫn với transcript gốc, không tin LLM.
 
@@ -59,7 +72,7 @@ Kết quả tổng hợp trên cả 15 cuộc họp:
 **Điều học được:**
 - Có hai lần chốt mâu thuẫn và một lần mở lại, nhưng kết quả vẫn đúng. Lý do là LLM chỉ gán nhãn từng câu (đề xuất / chốt / mở lại), còn **máy trạng thái bằng code** quyết định phương án nào thắng.
 - Hạn tương đối như "thứ Sáu tuần này" cũng do code tính, không để LLM đoán.
-- Lỗi nhỏ phát hiện được: danh sách "thay cho" có một phần tử rỗng (`['', 'Vue']`). Cần lọc nhãn rỗng khi dựng danh sách phương án bị thay thế.
+- Lỗi nhỏ phát hiện được: danh sách "thay cho" có một phần tử rỗng (`['', 'Vue']`). Cần lọc nhãn rỗng khi dựng danh sách phương án bị thay thế. Đã sửa ở vòng 2: nhãn `null`/rỗng mà LLM trả về được coi là "không có phương án" (`decide_guard`), và lần chạy sau ra đúng `['Vue']`.
 
 ## TC2 · Đã chốt rồi bị bác → không còn quyết định
 
@@ -174,12 +187,17 @@ Kết quả tổng hợp trên cả 15 cuộc họp:
 - Quyết định "Lưu trữ file đính kèm ở đâu? → **Amazon S3**", độ tin cậy **0.95**, **không có cờ cảnh báo**.
 - Bằng chứng là câu "Ok chốt vậy nhé." Câu này không hề nhắc tới S3.
 
-**Đánh giá: Chưa đạt.**
+**Đánh giá (vòng 1): Chưa đạt.**
 
 **Điều học được:**
 - LLM tự điền phương án cho câu "chốt" mơ hồ, dựa vào câu "nghiêng về S3" trước đó. Đây là **lỗi nguy hiểm nhất**: kết quả sai nhưng trông rất chắc chắn.
 - Bằng chứng trung thực chưa đủ. Cần thêm luật trong code: một hành vi "chốt" mà **câu trích dẫn không chứa tên phương án** thì không được tạo quyết định. Hệ thống phải chuyển thành câu hỏi mở kèm cờ "cần xác nhận", để người duyệt hỏi lại.
 - Lớp kiểm tra này có thể làm bằng code thuần, giống cách kiểm tra trích dẫn, nên không phụ thuộc vào model.
+
+**Sau khi sửa:**
+- Đã thêm luật vào [`ai/domain/decide_guard.py`](../backend/app/ai/domain/decide_guard.py): câu chốt chỉ được tính cho một phương án khi **chính câu đó nhắc tên phương án**. So khớp không dấu và chấp nhận viết tắt, ví dụ "Postgres" khớp "PostgreSQL".
+- "Ok chốt vậy nhé" mất phương án do LLM tự gán, rồi đi vào luồng "chốt không rõ phương án" đã có sẵn: chủ đề có hai phương án còn hiệu lực nên được đưa sang phân xử. Bên phân xử không tìm được câu chốt nào nêu tên, nên chủ đề thành câu hỏi mở.
+- **Kết quả:** câu hỏi mở "Lưu trữ file đính kèm", có cờ "cần xác nhận", bằng chứng là câu "Ok chốt vậy nhé." Không còn quyết định S3. **Đạt** ở cả 2 lần chạy.
 
 ## TC6 · Phải chờ cấp trên duyệt → hệ thống tự chốt
 
@@ -206,13 +224,19 @@ Kết quả tổng hợp trên cả 15 cuộc họp:
 - **Quyết định sai:** "Có nên mua thêm năm license Figma…? → Figma", độ tin cậy 1.0. Bằng chứng chốt là câu **"Ok, họp tới đây thôi."**
 - Câu "Dạ, vậy em chờ tin từ Long." bị biến thành việc cần làm của Nhi.
 
-**Đánh giá: Chưa đạt.**
+**Đánh giá (vòng 1): Chưa đạt.**
 
 **Điều học được:**
 - Model nhỏ hiểu "Ok, …" ở cuối buổi là chốt. Nó cũng bỏ qua câu "anh chưa quyết được khoản này", là tín hiệu rõ ràng của việc *hoãn chờ cấp trên*.
 - Cách khắc phục giống TC5: chặn quyết định khi câu chốt không nêu phương án.
 - Thêm luật: một chủ đề đã có hành vi "hoãn / chờ ý kiến" thì một câu "ok" chung chung sau đó không được gỡ trạng thái hoãn.
 - Đây cũng là lý do sản phẩm **bắt buộc người duyệt** trước khi phát hành. Màn hình duyệt cho thấy ngay câu bằng chứng "Ok, họp tới đây thôi", nên người duyệt bác được mục sai trong vài giây.
+
+**Sau khi sửa:**
+- Xem lại nhãn LLM gán, nguyên nhân thật hơi khác dự đoán. LLM gán "Ok, họp tới đây thôi" là câu chốt **không nêu phương án**. Sau đó máy trạng thái tự gán câu này vào phương án duy nhất của chủ đề là Figma.
+- Đã thêm luật vào [`ai/domain/state_machine.py`](../backend/app/ai/domain/state_machine.py): khi chủ đề đã được hoãn ("anh chưa quyết được khoản này"), câu chốt không nêu phương án **không được tự gán**. Chủ đề được chuyển sang xác nhận.
+- **Kết quả:** câu hỏi mở "Có nên mua thêm năm license Figma…?", có cờ "cần xác nhận", và việc cần làm của Long. Không còn quyết định. **Đạt** ở cả 2 lần chạy.
+- **Còn tồn tại:** model vẫn sinh thêm việc cần làm trùng lặp ("Chờ thông tin từ Long") và một lần gán sai người phụ trách là chị Thảo. Phần này kéo precision xuống, cần prompt tốt hơn hoặc model mạnh hơn.
 
 ## TC7 · Hạn chót viết theo nhiều kiểu tương đối
 
@@ -230,12 +254,17 @@ Kết quả tổng hợp trên cả 15 cuộc họp:
 
 Quyết định "giữ nguyên lịch phát hành bản 2.0" được trích xuất thành "→ phát hành bản 2.0". Nội dung này đúng về ý nhưng thiếu chữ "giữ nguyên", nên bộ chấm không khớp.
 
-**Đánh giá: Chưa đạt.** 4/5 hạn đúng, quyết định bị diễn đạt mơ hồ.
+**Đánh giá (vòng 1): Chưa đạt.** 4/5 hạn đúng, quyết định bị diễn đạt mơ hồ.
 
 **Điều học được:**
 - Bộ tính hạn bằng code (`ai/domain/due_dates.py`) chưa nhận dạng mẫu "trong vòng N ngày (nữa)". Cần bổ sung mẫu này và một unit test.
 - Khi không hiểu hạn, hệ thống **để trống và gắn cờ "thiếu hạn chót"**, không đoán. Như vậy là đúng hướng: người duyệt thấy cờ và tự điền.
 - Với câu hỏi có/không ("có dời ngày phát hành không?"), nhãn phương án nên giữ nguyên ý phủ định ("giữ nguyên lịch"). Nếu không, quyết định đọc lên dễ hiểu sai.
+
+**Sau khi sửa:**
+- Đã thêm các mẫu "trong vòng N ngày (nữa)", "trong N ngày tới" và "N ngày tới" vào bộ tính hạn, kèm unit test. Riêng "5 ngày" đứng một mình vẫn không được tính, vì đó là khoảng thời gian chứ không phải hạn.
+- **Kết quả:** "Việt gia hạn chứng chỉ SSL, trong vòng 5 ngày nữa" ra hạn 21/10. Đúng **5/5 hạn** ở cả 2 lần chạy.
+- **Vẫn chưa đạt:** quyết định vẫn ra "→ phát hành bản 2.0", thiếu ý "giữ nguyên lịch". Đây là lỗi diễn đạt nhãn của LLM, luật code không sửa được. Đây là tình huống thất bại còn lại của bộ kiểm thử.
 
 ---
 
@@ -247,12 +276,16 @@ Quyết định "giữ nguyên lịch phát hành bản 2.0" được trích xu�
 - Gắn bằng chứng nguyên văn: 100%.
 - Tính hạn tương đối bằng code.
 
-**Hệ thống chưa làm tốt:**
-- Câu "chốt" mơ hồ (TC5, TC6).
-- Ý phụ nằm ghép trong câu dài (TC4).
-- Một số mẫu hạn chưa hỗ trợ (TC7).
+**Đã sửa sau vòng 1** (bằng code, không đổi prompt hay model):
+- Câu "chốt" mơ hồ không còn tạo ra quyết định sai. TC5 và TC6 chuyển sang Đạt.
+- Mẫu hạn "trong vòng N ngày". Phần hạn của TC7 đạt 5/5.
 
-**Ưu tiên sửa:**
-1. Luật "câu chốt phải nêu phương án". Sửa được TC5 và TC6, và không phụ thuộc model.
-2. Mẫu hạn "trong vòng N ngày".
-3. Chạy lại bộ đánh giá với model mạnh hơn cho bước trích xuất, để tách lỗi do model khỏi lỗi do thiết kế.
+**Hệ thống vẫn chưa làm tốt:**
+- Ý phụ nằm ghép trong câu dài (TC4, recall).
+- Mục thừa hoặc trùng lặp từ câu xã giao (TC2, TC6, precision).
+- Nhãn phương án mất ý phủ định "giữ nguyên" (TC7).
+- Kết quả dao động giữa các lần chạy với model nhỏ (TC2).
+
+Các lỗi còn lại đều nằm ở chất lượng gán nhãn của LLM, không sửa được bằng luật code đơn giản.
+
+**Hướng tiếp theo:** chạy lại bộ đánh giá với model mạnh hơn cho bước trích xuất (thiết kế gốc dùng Claude Sonnet), để tách lỗi do model khỏi lỗi do thiết kế. Sau đó cải thiện prompt với các ví dụ phủ định (câu xã giao, câu chào kết thúc buổi họp).

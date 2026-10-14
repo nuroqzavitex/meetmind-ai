@@ -16,7 +16,11 @@ _WEEKDAY = re.compile(
     r"(?:\s+tuần\s+(này|sau|tới))?$"
 )
 _END_WEEK = re.compile(r"cuối tuần(?:\s+(này|sau|tới))?$")
-_IN_DAYS = re.compile(r"(\d+)\s+ngày\s+nữa$")
+# "3 ngày nữa", "trong vòng 5 ngày (nữa)", "trong 2 ngày tới"; a bare "5 ngày" is a duration, not a due date.
+_IN_DAYS = re.compile(
+    r"(?:(?:trong\s+(?:vòng\s+)?|vòng\s+)(\d+)\s+ngày(?:\s+(?:nữa|tới))?"
+    r"|(\d+)\s+ngày\s+(?:nữa|tới))$"
+)
 _DATE = re.compile(r"(?:ngày\s+)?(\d{1,2})/(\d{1,2})(?:/(\d{4}))?$")
 _DAY_ONLY = re.compile(r"ngày\s+(\d{1,2})$")
 _FIXED = {
@@ -55,7 +59,7 @@ def resolve_due(due_text: str | None, meeting_date: date) -> date | None:
 
     if m := _IN_DAYS.match(s):
         try:
-            return meeting_date + timedelta(days=int(m.group(1)))
+            return meeting_date + timedelta(days=int(m.group(1) or m.group(2)))
         except (OverflowError, ValueError):
             return None
 
