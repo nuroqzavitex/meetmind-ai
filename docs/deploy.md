@@ -109,6 +109,13 @@ Interactions Endpoint, nên không cần máy chạy bot riêng.
 Mọi người trong server đã liên kết đều đọc được nội dung các cuộc họp đã phát hành qua bot: chỉ liên kết server dành
 riêng cho nhóm. Render Free đang ngủ thì lệnh đầu tiên có thể báo "ứng dụng không phản hồi"; gõ lại sau ít giây.
 
+## Khi nào Render và Vercel deploy lại
+
+- Render chỉ deploy khi commit có thay đổi trong `backend/**` (`buildFilter` trong `render.yaml`; sửa `render.yaml` thì
+  bấm **Sync** blueprint trên dashboard để áp dụng, hoặc đặt Settings → Build & Deploy → Build Filters → `backend/**`).
+- Vercel bỏ qua build khi không có thay đổi trong `frontend/` (`ignoreCommand` trong `frontend/vercel.json`).
+- CI bỏ qua commit chỉ sửa `scripts/**`, `docs/**`, `*.md`, `.gitignore`.
+
 ## Kiểm tra sau khi deploy
 
 1. Mở URL Vercel, đăng ký, tạo tổ chức.

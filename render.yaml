@@ -15,6 +15,10 @@ services:
     dockerCommand: sh start.sh
     healthCheckPath: /api/v1/health
     autoDeploy: true
+    # Redeploy only when the backend changed (docs, frontend and tooling commits skip it).
+    buildFilter:
+      paths:
+        - backend/**
     envVars:
       # Paste Neon's connection string as-is (postgresql://...?sslmode=require); the app converts it.
       - key: DATABASE_URL
