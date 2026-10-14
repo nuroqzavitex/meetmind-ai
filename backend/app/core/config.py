@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     clerk_issuer: str = ""
     clerk_authorized_parties: Annotated[list[str], NoDecode] = ["http://localhost:3000"]
     anthropic_api_key: SecretStr | None = None
-    llm_provider: Literal["anthropic", "fake"] = "anthropic"
+    openai_api_key: SecretStr | None = None
+    llm_provider: Literal["anthropic", "openai", "fake"] = "anthropic"
     fake_llm_dir: str = "../tests/fixtures/llm/payment_v2"
     llm_model_default: str = "claude-sonnet-5-5"
     llm_model_arbitrate: str = "claude-opus-5-5"

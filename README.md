@@ -141,10 +141,11 @@ Danh sách đầy đủ và giá trị mặc định nằm ở [.env.example](.e
 | Biến | Ý nghĩa |
 |---|---|
 | `ANTHROPIC_API_KEY` | Khoá Anthropic cho pipeline, hỏi đáp và eval |
+| `OPENAI_API_KEY` | Khoá OpenAI, dùng khi `LLM_PROVIDER=openai` |
 | `DATABASE_URL`, `REDIS_URL` | Postgres và Redis. Host `db` / `redis` trong Compose, `localhost` khi chạy local |
 | `CLERK_JWKS_URL`, `CLERK_ISSUER`, `CLERK_AUTHORIZED_PARTIES` | Backend xác thực JWT của Clerk |
-| `LLM_PROVIDER` | `anthropic` (mặc định) hoặc `fake` (chỉ dùng cho e2e, đọc fixture, không gọi Anthropic) |
-| `LLM_MODEL_DEFAULT`, `LLM_MODEL_ARBITRATE` | Model cho các agent và cho arbitrate |
+| `LLM_PROVIDER` | `anthropic` (mặc định), `openai` (cần `OPENAI_API_KEY`, đặt `LLM_MODEL_*` thành model OpenAI) hoặc `fake` (chỉ dùng cho e2e, đọc fixture, không gọi LLM thật) |
+| `LLM_MODEL_DEFAULT`, `LLM_MODEL_ARBITRATE` | Model cho các agent và cho arbitrate (tên model của nhà cung cấp đang chọn) |
 | `PROMPT_VERSION` | Phiên bản prompt (`ai/prompts/<agent>/vN.md`) |
 | `EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, `EMBEDDING_DIM` | `local` (bge-m3, 1024 chiều) hoặc `hash` |
 | `CORS_ORIGINS`, `MAX_UPLOAD_BYTES` | Origin được phép gọi API, kích thước file tối đa |

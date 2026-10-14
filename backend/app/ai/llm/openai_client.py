@@ -1,0 +1,71 @@
+"""LLMClient implementation backed by the OpenAI API (strict structured outputs)."""
+
+from typing import Any, TypeVar
+
+import openai
+from openai.lib._pydantic import to_strict_json_schema
+from pydantic import BaseModel, ValidationError
+
+from app.ai.config import AISettings
+from app.ai.errors import LLMError, LLMRefusal
+
+T = TypeVar("T", bound=BaseModel)
+
+
+def _drop_defaults(node: Any) -> Any:
+    if isinstance(node, dict):
+        return {k: _drop_defaults(v) for k, v in node.items() if k != "default"}
+    if isinstance(node, list):
+        return [_drop_defaults(v) for v in node]
+    return node
+
+
+def strict_json_schema(schema: type[BaseModel]) -> dict[str, Any]:
+    """JSON schema accepted by OpenAI strict mode.
+
+    The SDK makes every property required but keeps non-None defaults, which strict mode
+    rejects; since the model must emit every field anyway, defaults are dropped.
+    """
+    result: dict[str, Any] = _drop_defaults(to_strict_json_schema(schema))
+    return result
+
+
+class OpenAILLM:
+    """LLMClient backed by OpenAI chat completions with a strict JSON schema."""
+
+    def __init__(self, settings: AISettings, client: openai.AsyncOpenAI) -> None:
+        self._settings = settings
+        self._client = client
+
+    async def structured(self, *, agent: str, system: str, user: str, schema: type[T]) -> T:
+        try:
+            response = await self._client.chat.completions.create(
+                model=self._settings.model_for(agent),
+                max_completion_tokens=self._settings.max_tokens,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": schema.__name__,
+                        "schema": strict_json_schema(schema),
+                        "strict": True,
+                    },
+                },
+            )
+        except openai.APIError as e:
+            raise LLMError(f"OpenAI API error in agent '{agent}': {e}") from e
+        choice = response.choices[0]
+        if choice.message.refusal:
+            raise LLMRefusal(f"Model refused request for agent '{agent}'")
+        if choice.finish_reason == "length":
+            raise LLMError(f"Output of agent '{agent}' was cut off at max_tokens")
+        content = choice.message.content
+        if not content:
+            raise LLMError(f"No output for agent '{agent}'")
+        try:
+            return schema.model_validate_json(content)
+        except ValidationError as e:
+            raise LLMError(f"Invalid structured output from agent '{agent}': {e}") from e

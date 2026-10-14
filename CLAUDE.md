@@ -76,7 +76,8 @@ Evals (call the real Claude API; need `ANTHROPIC_API_KEY`):
 - Final decisions come from the state machine, not the LLM. Only an explicit `DECIDE` act creates a decision.
 - Prompts are versioned files `ai/prompts/<agent>/<version>.md`, selected by `PROMPT_VERSION`.
 - LLM clients:
-  - `ai/llm/client.py` (Anthropic) is the production client.
+  - `ai/llm/client.py` (Anthropic) is the default production client.
+  - `ai/llm/openai_client.py` (`OpenAILLM`, `LLM_PROVIDER=openai`) uses strict JSON-schema output; `strict_json_schema` drops pydantic defaults, which strict mode rejects.
   - `ai/llm/fake.py` (`FakeLLM`, queue-based) is used in tests.
   - `ai/llm/fixture.py` (`FixtureLLM`) reads `<dir>/<agent>.json`.
   - `core/llm.py::build_llm(settings)` picks one of these for both the API and the worker.
