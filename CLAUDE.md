@@ -92,7 +92,7 @@ Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they nee
 - `index`: enqueued on publish; embeds approved items and transcript chunks.
 - `notify`: enqueued on publish only when the org has a Discord webhook; best-effort, no `jobs` row.
 
-**Discord** (`notify/`, `services/notifications.py`): per-org webhook in `org_settings` (`/settings/discord`, URL never returned, only Discord webhook hosts accepted). The daily digest is `POST /internal/digest` guarded by `X-Cron-Secret` = `CRON_SECRET`, called by `.github/workflows/digest.yml` at 01:00 UTC.
+**Discord** (`notify/`, `services/notifications.py`): per-org webhook in `org_settings` (`/settings/discord`: everyone reads, only admins write or send a test (`core/auth.py::require_admin`), URL never returned, only Discord webhook hosts accepted). The daily digest is `POST /internal/digest` guarded by `X-Cron-Secret` = `CRON_SECRET`, called by `.github/workflows/digest.yml` at 01:00 UTC.
 
 Job rules:
 - Only `queued` jobs run.

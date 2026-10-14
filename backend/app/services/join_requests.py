@@ -9,12 +9,11 @@ from datetime import UTC, datetime
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.auth import Principal, User
+from app.core.auth import Principal, User, require_admin
 from app.core.clerk_api import ClerkAPI, ClerkError, ClerkUnavailable
 from app.core.errors import (
     BadGateway,
     Conflict,
-    Forbidden,
     NotFound,
     ServiceUnavailable,
     TooManyRequests,
@@ -50,11 +49,6 @@ def normalize_code(raw: str) -> str | None:
     return f"MM-{s[:4]}-{s[4:]}"
 
 
-def _require_admin(principal: Principal) -> None:
-    if not principal.is_admin:
-        raise Forbidden("Chỉ admin của tổ chức mới thực hiện được", "admin_only")
-
-
 def _clerk_failure(exc: ClerkError) -> Exception:
     if isinstance(exc, ClerkUnavailable):
         return ServiceUnavailable(str(exc), "clerk_unavailable")
@@ -62,7 +56,7 @@ def _clerk_failure(exc: ClerkError) -> Exception:
 
 
 async def get_join_code(session: AsyncSession, *, principal: Principal) -> JoinCodeOut:
-    _require_admin(principal)
+    require_admin(principal)
     row = await settings_repo.get_or_create(session, org_id=principal.org_id)
     if row.join_code is None:
         row.join_code = await _unused_code(session)
@@ -71,7 +65,7 @@ async def get_join_code(session: AsyncSession, *, principal: Principal) -> JoinC
 
 
 async def rotate_join_code(session: AsyncSession, *, principal: Principal) -> JoinCodeOut:
-    _require_admin(principal)
+    require_admin(principal)
     row = await settings_repo.get_or_create(session, org_id=principal.org_id)
     row.join_code = await _unused_code(session)
     await session.commit()
@@ -151,7 +145,7 @@ async def cancel(session: AsyncSession, *, user: User, request_id: str) -> None:
 
 
 async def list_pending(session: AsyncSession, *, principal: Principal) -> list[JoinRequestOut]:
-    _require_admin(principal)
+    require_admin(principal)
     rows = await repo.list_pending(session, org_id=principal.org_id)
     return [JoinRequestOut.model_validate(r) for r in rows]
 
@@ -159,7 +153,7 @@ async def list_pending(session: AsyncSession, *, principal: Principal) -> list[J
 async def decide(
     session: AsyncSession, clerk: ClerkAPI, *, principal: Principal, request_id: str, approve: bool
 ) -> JoinRequestOut:
-    _require_admin(principal)
+    require_admin(principal)
     row = await repo.get(session, org_id=principal.org_id, request_id=request_id)
     if row is None:
         raise NotFound(_NOT_FOUND)

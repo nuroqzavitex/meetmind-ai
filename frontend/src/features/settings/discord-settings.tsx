@@ -1,6 +1,6 @@
 "use client"
 
-import { BellRing, Send, Trash2 } from "lucide-react"
+import { BellRing, ExternalLink, Lock, Send, Trash2 } from "lucide-react"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
+import { useIsOrgAdmin } from "@/features/orgs/hooks"
 import type { DiscordSettingsIn, DiscordSettingsOut } from "@/lib/types"
 import { useDiscordSettings, useSaveDiscordSettings, useTestDiscord } from "./hooks"
 
@@ -17,6 +18,7 @@ export const INVITE_RE = /^https:\/\/(?:discord\.gg|(?:www\.)?(?:discord|discord
 
 export function DiscordSettings() {
   const settings = useDiscordSettings()
+  const admin = useIsOrgAdmin()
   if (settings.isPending)
     return (
       <p className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -29,7 +31,47 @@ export function DiscordSettings() {
         {settings.error.message}
       </p>
     )
-  return <DiscordForm initial={settings.data} />
+  return admin ? <DiscordForm initial={settings.data} /> : <DiscordReadOnly settings={settings.data} />
+}
+
+/** Members see the org's Discord setup but cannot change it (the API refuses with 403 too). */
+function DiscordReadOnly({ settings }: { settings: DiscordSettingsOut }) {
+  return (
+    <section className="max-w-2xl space-y-4 rounded-xl border bg-card p-6 shadow-xs">
+      <div className="flex items-center gap-3">
+        <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-foreground">
+          <BellRing className="size-4" aria-hidden />
+        </span>
+        <div>
+          <h2 className="font-semibold">Thông báo Discord</h2>
+          <p className="text-sm text-muted-foreground">
+            {settings.configured ? "Tổ chức đã kết nối kênh Discord" : "Tổ chức chưa kết nối kênh Discord"}
+          </p>
+        </div>
+      </div>
+      <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+        <dt className="text-muted-foreground">Tóm tắt khi phát hành</dt>
+        <dd>{settings.configured ? "Đang bật" : "Chưa bật"}</dd>
+        <dt className="text-muted-foreground">Bản tin nhắc việc 8h sáng</dt>
+        <dd>{settings.configured && settings.digest_enabled ? "Đang bật" : "Đang tắt"}</dd>
+      </dl>
+      {settings.invite_url && (
+        <a
+          href={settings.invite_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          <ExternalLink className="size-4" aria-hidden />
+          Tham gia server Discord
+        </a>
+      )}
+      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Lock className="size-3.5" aria-hidden />
+        Chỉ admin của tổ chức mới thay đổi được các cài đặt này.
+      </p>
+    </section>
+  )
 }
 
 function DiscordForm({ initial }: { initial: DiscordSettingsOut }) {

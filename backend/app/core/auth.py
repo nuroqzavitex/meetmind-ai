@@ -121,6 +121,12 @@ def http_jwks_fetcher(url: str) -> Callable[[], Awaitable[dict[str, Any]]]:
     return fetch
 
 
+def require_admin(principal: Principal) -> None:
+    """Org-wide settings and membership decisions are for org admins only."""
+    if not principal.is_admin:
+        raise Forbidden("Chỉ admin của tổ chức mới thực hiện được", "admin_only")
+
+
 async def verify_user(
     token: str,
     *,

@@ -10,7 +10,9 @@ const api = vi.hoisted(() => ({
   post: vi.fn(),
   put: vi.fn(),
 }))
+const org = vi.hoisted(() => ({ admin: true }))
 vi.mock("@/lib/use-api", () => ({ useApi: () => api }))
+vi.mock("@/features/orgs/hooks", () => ({ useIsOrgAdmin: () => org.admin }))
 
 import { DiscordSettings } from "@/features/settings/discord-settings"
 
@@ -28,7 +30,10 @@ function renderIt() {
 }
 
 afterEach(cleanup)
-beforeEach(() => Object.values(api).forEach((f) => f.mockReset()))
+beforeEach(() => {
+  Object.values(api).forEach((f) => f.mockReset())
+  org.admin = true
+})
 
 test("saves a new webhook with the digest toggle", async () => {
   api.get.mockResolvedValue(OFF)
@@ -111,4 +116,16 @@ test("saves the Discord invite link and rejects other links", async () => {
       invite_url: "https://discord.gg/team",
     }),
   )
+})
+
+
+test("members get a read-only view with the invite link and no controls", async () => {
+  org.admin = false
+  api.get.mockResolvedValue({ ...ON, invite_url: "https://discord.gg/team" })
+  renderIt()
+  expect(await screen.findByText("Tổ chức đã kết nối kênh Discord")).toBeInTheDocument()
+  expect(screen.getByRole("link", { name: /Tham gia server Discord/ })).toHaveAttribute("href", "https://discord.gg/team")
+  expect(screen.getByText(/Chỉ admin của tổ chức/)).toBeInTheDocument()
+  expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
+  expect(screen.queryByRole("button")).not.toBeInTheDocument()
 })

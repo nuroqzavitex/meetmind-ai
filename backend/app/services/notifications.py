@@ -6,7 +6,7 @@ from datetime import date, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.ai.domain.models import MeetingContext
-from app.core.auth import Principal
+from app.core.auth import Principal, require_admin
 from app.core.errors import BadGateway, Conflict, Unprocessable
 from app.models import OrgSettings
 from app.notify.discord import (
@@ -50,6 +50,7 @@ async def get_discord(session: AsyncSession, *, principal: Principal) -> Discord
 async def save_discord(
     session: AsyncSession, *, principal: Principal, body: DiscordSettingsIn
 ) -> DiscordSettingsOut:
+    require_admin(principal)
     row = await settings_repo.get_or_create(session, org_id=principal.org_id)
     if "webhook_url" in body.model_fields_set:
         url = (body.webhook_url or "").strip()
@@ -76,6 +77,7 @@ async def save_discord(
 async def send_test(
     session: AsyncSession, discord: DiscordClient, *, principal: Principal
 ) -> None:
+    require_admin(principal)
     row = await settings_repo.get(session, org_id=principal.org_id)
     if row is None or row.discord_webhook_url is None:
         raise Conflict("Chưa cấu hình webhook Discord", "not_configured")

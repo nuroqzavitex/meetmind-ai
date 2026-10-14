@@ -232,3 +232,21 @@ async def test_invalid_invite_link_rejected(client: httpx.AsyncClient, discord: 
         headers=auth(),
     )
     assert r.status_code == 422 and r.json()["error"]["code"] == "invalid_invite"
+
+
+async def test_members_can_read_but_not_change_discord_settings(
+    client: httpx.AsyncClient, discord: Recorder
+) -> None:
+    await _configure(client)
+    member = auth(user="m1", role="member")
+    got = await client.get("/settings/discord", headers=member)
+    assert got.status_code == 200 and got.json()["configured"] is True
+    for method, path, body in [
+        ("PUT", "/settings/discord", {"webhook_url": "", "digest_enabled": False}),
+        ("PUT", "/settings/discord", {"invite_url": "https://discord.gg/x", "digest_enabled": True}),
+        ("POST", "/settings/discord/test", None),
+    ]:
+        r = await client.request(method, path, json=body, headers=member)
+        assert r.status_code == 403 and r.json()["error"]["code"] == "admin_only", path
+    after = (await client.get("/settings/discord", headers=auth())).json()
+    assert after == got.json() and discord.sent == []
