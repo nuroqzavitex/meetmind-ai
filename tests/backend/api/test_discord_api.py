@@ -58,10 +58,14 @@ async def _publish(client: httpx.AsyncClient, mid: str, org: str = "org_a") -> N
 
 async def test_settings_default_save_and_mask(client: httpx.AsyncClient, discord: Recorder) -> None:
     r = await client.get("/settings/discord", headers=auth())
-    assert r.json() == {"configured": False, "webhook_hint": None, "digest_enabled": False}
+    assert r.json() == {
+        "configured": False, "webhook_hint": None, "digest_enabled": False, "invite_url": None
+    }
     await _configure(client)
     got = (await client.get("/settings/discord", headers=auth())).json()
-    assert got == {"configured": True, "webhook_hint": "…abcd", "digest_enabled": True}
+    assert got == {
+        "configured": True, "webhook_hint": "…abcd", "digest_enabled": True, "invite_url": None
+    }
     assert HOOK not in json.dumps(got)
 
 
@@ -70,7 +74,9 @@ async def test_omitted_url_keeps_it_and_empty_clears_it(
 ) -> None:
     await _configure(client)
     r = await client.put("/settings/discord", json={"digest_enabled": False}, headers=auth())
-    assert r.json() == {"configured": True, "webhook_hint": "…abcd", "digest_enabled": False}
+    assert r.json() == {
+        "configured": True, "webhook_hint": "…abcd", "digest_enabled": False, "invite_url": None
+    }
     r = await client.put(
         "/settings/discord", json={"webhook_url": "", "digest_enabled": False}, headers=auth()
     )
@@ -197,3 +203,32 @@ async def test_digest_sends_due_tasks_per_org(
 
     r = await client.post("/internal/digest", params={"on": "2026-11-30"}, headers=h)
     assert r.json() == {"orgs": 1, "sent": 0, "failed": 0}
+
+
+async def test_invite_link_saved_kept_cleared_and_visible_to_members(
+    client: httpx.AsyncClient, discord: Recorder
+) -> None:
+    invite = "https://discord.gg/meetmind"
+    r = await client.put(
+        "/settings/discord", json={"invite_url": invite, "digest_enabled": False}, headers=auth()
+    )
+    assert r.json()["invite_url"] == invite and r.json()["configured"] is False
+    member = auth(user="m1", role="member")
+    assert (await client.get("/settings/discord", headers=member)).json()["invite_url"] == invite
+    r = await client.put("/settings/discord", json={"digest_enabled": True}, headers=auth())
+    assert r.json()["invite_url"] == invite  # omitted: kept
+    r = await client.put(
+        "/settings/discord", json={"invite_url": "", "digest_enabled": True}, headers=auth()
+    )
+    assert r.json()["invite_url"] is None
+    other_org = await client.get("/settings/discord", headers=auth(org="org_b"))
+    assert other_org.json()["invite_url"] is None
+
+
+async def test_invalid_invite_link_rejected(client: httpx.AsyncClient, discord: Recorder) -> None:
+    r = await client.put(
+        "/settings/discord",
+        json={"invite_url": "https://evil.io/x", "digest_enabled": False},
+        headers=auth(),
+    )
+    assert r.status_code == 422 and r.json()["error"]["code"] == "invalid_invite"

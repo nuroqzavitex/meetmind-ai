@@ -9,6 +9,15 @@ import httpx
 _WEBHOOK_RE = re.compile(r"^https://(?:discord|discordapp)\.com/api/webhooks/\d+/[\w-]+$")
 
 
+_INVITE_RE = re.compile(
+    r"^https://(?:discord\.gg|(?:www\.)?(?:discord|discordapp)\.com/invite)/[A-Za-z0-9-]{2,32}$"
+)
+
+
+def is_invite_url(url: str) -> bool:
+    return _INVITE_RE.fullmatch(url) is not None
+
+
 def is_webhook_url(url: str) -> bool:
     return _WEBHOOK_RE.fullmatch(url) is not None
 

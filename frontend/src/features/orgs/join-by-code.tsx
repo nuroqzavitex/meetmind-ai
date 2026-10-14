@@ -97,6 +97,16 @@ function MyRequest({ request }: { request: JoinRequestOut }) {
               Huỷ
             </Button>
           )}
+          {request.status === "approved" && request.discord_invite_url && (
+            <a
+              href={request.discord_invite_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-8 items-center rounded-lg border px-3 text-sm font-medium hover:bg-muted"
+            >
+              Tham gia Discord
+            </a>
+          )}
           {request.status === "approved" && (
             <Button size="sm" onClick={enter}>
               Vào tổ chức

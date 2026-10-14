@@ -8,11 +8,12 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
-import type { DiscordSettingsOut } from "@/lib/types"
+import type { DiscordSettingsIn, DiscordSettingsOut } from "@/lib/types"
 import { useDiscordSettings, useSaveDiscordSettings, useTestDiscord } from "./hooks"
 
 // Mirrors the backend check; the server is the authority.
 export const WEBHOOK_RE = /^https:\/\/(?:discord|discordapp)\.com\/api\/webhooks\/\d+\/[\w-]+$/
+export const INVITE_RE = /^https:\/\/(?:discord\.gg|(?:www\.)?(?:discord|discordapp)\.com\/invite)\/[A-Za-z0-9-]{2,32}$/
 
 export function DiscordSettings() {
   const settings = useDiscordSettings()
@@ -37,6 +38,7 @@ function DiscordForm({ initial }: { initial: DiscordSettingsOut }) {
   const current = save.data ?? initial
   const [url, setUrl] = useState("")
   const [digest, setDigest] = useState(initial.digest_enabled)
+  const [invite, setInvite] = useState(initial.invite_url ?? "")
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
 
@@ -54,7 +56,17 @@ function DiscordForm({ initial }: { initial: DiscordSettingsOut }) {
       setError("URL webhook không hợp lệ. URL đúng có dạng https://discord.com/api/webhooks/<id>/<token>")
       return
     }
-    save.mutate(trimmed ? { webhook_url: trimmed, digest_enabled: digest } : { digest_enabled: digest }, {
+    const inviteTrimmed = invite.trim()
+    if (inviteTrimmed && !INVITE_RE.test(inviteTrimmed)) {
+      setError("Link mời Discord không hợp lệ. Link đúng có dạng https://discord.gg/<mã>")
+      return
+    }
+    const body: DiscordSettingsIn = trimmed
+      ? { webhook_url: trimmed, digest_enabled: digest }
+      : { digest_enabled: digest }
+    // Only send the invite when it changed, so saving the rest never touches it.
+    if (inviteTrimmed !== (current.invite_url ?? "")) body.invite_url = inviteTrimmed
+    save.mutate(body, {
       onSuccess: () => {
         setUrl("")
         setNotice("Đã lưu cài đặt")
@@ -105,6 +117,21 @@ function DiscordForm({ initial }: { initial: DiscordSettingsOut }) {
         />
         <p className="text-xs text-muted-foreground">
           URL webhook là bí mật: ai có URL đều gửi được tin vào kênh. Hệ thống chỉ hiển thị 4 ký tự cuối.
+        </p>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="invite-url">Link mời vào server Discord</Label>
+        <Input
+          id="invite-url"
+          autoComplete="off"
+          placeholder="https://discord.gg/…"
+          value={invite}
+          onChange={(e) => setInvite(e.target.value)}
+        />
+        <p className="text-xs text-muted-foreground">
+          Không bắt buộc. Thành viên sẽ thấy nút Discord trên thanh điều hướng, người mới được duyệt cũng nhận link này.
+          Tạo link: chuột phải tên server → Mời mọi người → đặt &quot;Không bao giờ hết hạn&quot;.
         </p>
       </div>
 

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { BrandMark } from "@/components/brand"
 import { NavLinks } from "@/components/nav-links"
 import { JoinRequestsBell } from "@/features/orgs/join-requests-bell"
+import { DiscordInviteLink } from "@/features/settings/discord-invite-link"
 
 export function AppHeader() {
   return (
@@ -16,6 +17,7 @@ export function AppHeader() {
         </Link>
         <NavLinks />
         <div className="ml-auto flex items-center gap-3">
+          <DiscordInviteLink />
           <JoinRequestsBell />
           <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/" />
           <UserButton />

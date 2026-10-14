@@ -23,3 +23,5 @@ class JoinRequestOut(BaseModel):
     status: Literal["pending", "approved", "rejected", "cancelled"]
     created_at: dt.datetime
     decided_at: dt.datetime | None = None
+    # Filled for approved requests when the org shared a Discord invite link.
+    discord_invite_url: str | None = None

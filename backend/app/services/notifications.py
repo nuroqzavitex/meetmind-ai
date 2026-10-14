@@ -9,7 +9,13 @@ from app.ai.domain.models import MeetingContext
 from app.core.auth import Principal
 from app.core.errors import BadGateway, Conflict, Unprocessable
 from app.models import OrgSettings
-from app.notify.discord import DiscordClient, DiscordError, is_webhook_url, webhook_hint
+from app.notify.discord import (
+    DiscordClient,
+    DiscordError,
+    is_invite_url,
+    is_webhook_url,
+    webhook_hint,
+)
 from app.notify.messages import (
     OVERDUE_DAYS,
     UPCOMING_DAYS,
@@ -33,6 +39,7 @@ def _out(row: OrgSettings | None) -> DiscordSettingsOut:
         configured=url is not None,
         webhook_hint=webhook_hint(url) if url else None,
         digest_enabled=bool(row and row.digest_enabled),
+        invite_url=row.discord_invite_url if row else None,
     )
 
 
@@ -53,6 +60,14 @@ async def save_discord(
                 "invalid_webhook",
             )
         row.discord_webhook_url = url or None
+    if "invite_url" in body.model_fields_set:
+        invite = (body.invite_url or "").strip()
+        if invite and not is_invite_url(invite):
+            raise Unprocessable(
+                "Link mời Discord không hợp lệ. Link đúng có dạng https://discord.gg/<mã>",
+                "invalid_invite",
+            )
+        row.discord_invite_url = invite or None
     row.digest_enabled = body.digest_enabled
     await session.commit()
     return _out(row)

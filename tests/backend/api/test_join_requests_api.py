@@ -180,3 +180,20 @@ async def test_new_request_posts_to_discord(
     assert (await _request(client, await _code(client))).status_code == 201
     text = json.dumps(sent, ensure_ascii=False)
     assert "Minh u_new" in text and "u_new@example.com" in text and "/settings" in text
+
+
+async def test_approved_request_carries_the_discord_invite(
+    client: httpx.AsyncClient, clerk: FakeClerk
+) -> None:
+    await client.put(
+        "/settings/discord",
+        json={"invite_url": "https://discord.gg/team-a", "digest_enabled": False},
+        headers=auth(**ADMIN),
+    )
+    req = (await _request(client, await _code(client))).json()
+    assert req["discord_invite_url"] is None  # not shown before approval
+    mine = auth(org=None, user="u_new")
+    assert (await client.get("/join-requests/mine", headers=mine)).json()[0]["discord_invite_url"] is None
+    await client.post(f"/join-requests/{req['id']}/approve", headers=auth(**ADMIN))
+    got = (await client.get("/join-requests/mine", headers=mine)).json()[0]
+    assert got["status"] == "approved" and got["discord_invite_url"] == "https://discord.gg/team-a"

@@ -14,6 +14,8 @@ class OrgSettings(Base):
     org_id: Mapped[str] = mapped_column(String, primary_key=True)
     discord_webhook_url: Mapped[str | None] = mapped_column(String)
     join_code: Mapped[str | None] = mapped_column(String, unique=True)
+    # Public invite link to the team's Discord server, shown to members (not a secret).
+    discord_invite_url: Mapped[str | None] = mapped_column(String)
     digest_enabled: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="false"
     )

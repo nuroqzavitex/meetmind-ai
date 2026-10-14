@@ -519,6 +519,8 @@ export interface components {
             webhook_url?: string | null;
             /** Digest Enabled */
             digest_enabled: boolean;
+            /** Invite Url */
+            invite_url?: string | null;
         };
         /** DiscordSettingsOut */
         DiscordSettingsOut: {
@@ -528,6 +530,8 @@ export interface components {
             webhook_hint?: string | null;
             /** Digest Enabled */
             digest_enabled: boolean;
+            /** Invite Url */
+            invite_url?: string | null;
         };
         /** Evidence */
         Evidence: {
@@ -697,6 +701,8 @@ export interface components {
             created_at: string;
             /** Decided At */
             decided_at?: string | null;
+            /** Discord Invite Url */
+            discord_invite_url?: string | null;
         };
         /** MeetingContext */
         MeetingContext: {

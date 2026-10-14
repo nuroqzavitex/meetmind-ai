@@ -90,3 +90,25 @@ test("removes the webhook", async () => {
   )
   expect(await screen.findByText(/Chưa kết nối/)).toBeInTheDocument()
 })
+
+
+test("saves the Discord invite link and rejects other links", async () => {
+  api.get.mockResolvedValue(OFF)
+  api.put.mockResolvedValue({ ...OFF, invite_url: "https://discord.gg/team" })
+  renderIt()
+  const field = await screen.findByLabelText("Link mời vào server Discord")
+  await userEvent.type(field, "https://evil.io/x")
+  await userEvent.click(screen.getByRole("button", { name: "Lưu" }))
+  expect(screen.getByRole("alert")).toHaveTextContent("Link mời Discord không hợp lệ")
+  expect(api.put).not.toHaveBeenCalled()
+
+  await userEvent.clear(field)
+  await userEvent.type(field, "https://discord.gg/team")
+  await userEvent.click(screen.getByRole("button", { name: "Lưu" }))
+  await waitFor(() =>
+    expect(api.put).toHaveBeenCalledWith("/settings/discord", {
+      digest_enabled: false,
+      invite_url: "https://discord.gg/team",
+    }),
+  )
+})

@@ -130,7 +130,14 @@ async def create(
 
 async def list_mine(session: AsyncSession, *, user: User) -> list[JoinRequestOut]:
     rows = await repo.list_by_user(session, user_id=user.user_id)
-    return [JoinRequestOut.model_validate(r) for r in rows]
+    out = []
+    for r in rows:
+        item = JoinRequestOut.model_validate(r)
+        if r.status == "approved":
+            settings = await settings_repo.get(session, org_id=r.org_id)
+            item.discord_invite_url = settings.discord_invite_url if settings else None
+        out.append(item)
+    return out
 
 
 async def cancel(session: AsyncSession, *, user: User, request_id: str) -> None:

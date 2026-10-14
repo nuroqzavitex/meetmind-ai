@@ -114,7 +114,7 @@ Fallbacks and errors:
 - Embeddings come from `EMBEDDING_PROVIDER=local` (bge-m3, 1024-dim, about 2 GB download), `gemini` (`gemini-embedding-001` requested at 1024 dims and L2-normalised, needs `GEMINI_API_KEY`) or `hash` (tests and e2e). The DB columns are fixed at `vector(1024)`; `core/embedding.py::build_embedder(settings)` picks the embedder. Compose build arg `INSTALL_EMBEDDINGS=false` drops torch from the image.
 
 **Frontend** (`frontend/src`):
-- `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/settings` (Discord, and for admins the join code and pending join requests), `/select-org` (Clerk org list plus "join by code"), and sign-in/up.
+- `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/settings` (Discord webhook and team invite link, and for admins the join code and pending join requests), `/select-org` (Clerk org list plus "join by code"), and sign-in/up.
 - `features/<area>/` holds UI and hooks.
 - `lib/api-client.ts` and `lib/use-api.ts` attach the Clerk token.
 - `middleware.ts` enforces sign-in and redirects users without an active org to `/select-org`.

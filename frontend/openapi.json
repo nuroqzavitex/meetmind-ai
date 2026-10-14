@@ -1331,6 +1331,18 @@
           "digest_enabled": {
             "type": "boolean",
             "title": "Digest Enabled"
+          },
+          "invite_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invite Url"
           }
         },
         "type": "object",
@@ -1359,6 +1371,17 @@
           "digest_enabled": {
             "type": "boolean",
             "title": "Digest Enabled"
+          },
+          "invite_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invite Url"
           }
         },
         "type": "object",
@@ -1886,6 +1909,17 @@
               }
             ],
             "title": "Decided At"
+          },
+          "discord_invite_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Discord Invite Url"
           }
         },
         "type": "object",

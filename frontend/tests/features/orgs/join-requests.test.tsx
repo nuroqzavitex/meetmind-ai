@@ -66,6 +66,14 @@ test("approved request enters the organization", async () => {
   expect(push).toHaveBeenCalledWith("/")
 })
 
+test("approved request shows the team's Discord invite", async () => {
+  api.get.mockResolvedValue([{ ...REQ, status: "approved", discord_invite_url: "https://discord.gg/team-a" }])
+  renderIt(<JoinByCode />)
+  const link = await screen.findByRole("link", { name: "Tham gia Discord" })
+  expect(link).toHaveAttribute("href", "https://discord.gg/team-a")
+  expect(link).toHaveAttribute("target", "_blank")
+})
+
 test("pending request can be cancelled", async () => {
   api.get.mockResolvedValue([REQ])
   api.del.mockResolvedValue(undefined)

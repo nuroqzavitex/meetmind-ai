@@ -128,6 +128,8 @@ async def test_discord_settings_are_per_org(client: httpx.AsyncClient) -> None:
     )
     assert r.status_code == 200 and r.json()["configured"] is True
     mine = await client.get("/settings/discord", headers=auth(org="org_a"))
-    assert mine.json() == {"configured": False, "webhook_hint": None, "digest_enabled": False}
+    assert mine.json() == {
+        "configured": False, "webhook_hint": None, "digest_enabled": False, "invite_url": None
+    }
     test = await client.post("/settings/discord/test", headers=auth(org="org_a"))
     assert test.status_code == 409 and test.json()["error"]["code"] == "not_configured"

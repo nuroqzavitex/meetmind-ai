@@ -6,7 +6,13 @@ import pytest
 
 from app.ai.domain.enums import ItemStatus, ItemType, ReviewState
 from app.ai.domain.models import Evidence, MeetingContext, MeetingItem
-from app.notify.discord import DiscordClient, DiscordError, is_webhook_url, webhook_hint
+from app.notify.discord import (
+    DiscordClient,
+    DiscordError,
+    is_invite_url,
+    is_webhook_url,
+    webhook_hint,
+)
 from app.notify.messages import (
     MAX_FIELD,
     DueTask,
@@ -50,6 +56,24 @@ def _item(n: int, type_: ItemType, content: str, **kw: object) -> MeetingItem:
 )
 def test_is_webhook_url(url: str, ok: bool) -> None:
     assert is_webhook_url(url) is ok
+
+
+@pytest.mark.parametrize(
+    ("url", "ok"),
+    [
+        ("https://discord.gg/abc123", True),
+        ("https://discord.com/invite/Team-Meet", True),
+        ("https://www.discord.com/invite/abc", True),
+        ("https://discordapp.com/invite/abc", True),
+        ("http://discord.gg/abc", False),
+        ("https://discord.gg.evil.io/abc", False),
+        ("https://evil.io/discord.gg/abc", False),
+        ("https://discord.gg/abc?x=1", False),
+        ("https://discord.com/api/webhooks/1/tok", False),
+    ],
+)
+def test_is_invite_url(url: str, ok: bool) -> None:
+    assert is_invite_url(url) is ok
 
 
 def test_webhook_hint_only_shows_the_tail() -> None:
