@@ -87,12 +87,13 @@ make up                  # = docker compose up -d --build
 `worker` và `frontend` (cổng 3000). Kiểm tra backend: `curl localhost:8000/api/v1/health`. Tắt: `make down`.
 
 Lần đầu phát hành hoặc hỏi đáp với `EMBEDDING_PROVIDER=local`, backend và worker tải model bge-m3 (khoảng 2 GB) vào volume
-`hf-cache`. Muốn thử nhanh không tải model thì đặt `EMBEDDING_PROVIDER=hash` trong `.env` (chất lượng tìm kiếm thấp hơn).
+`hf-cache`. Không muốn tải model: đặt `EMBEDDING_PROVIDER=gemini`, `EMBEDDING_MODEL=gemini-embedding-001`, `GEMINI_API_KEY`
+và `INSTALL_EMBEDDINGS=false` (image không cài torch), hoặc `EMBEDDING_PROVIDER=hash` để thử nhanh (chất lượng tìm kiếm thấp hơn).
 
 **Chạy không Docker cho app** (chỉ Postgres và Redis chạy trong Docker):
 
 ```bash
-cd backend && uv sync --extra embeddings && cd ..   # bỏ --extra embeddings nếu dùng EMBEDDING_PROVIDER=hash
+cd backend && uv sync --extra embeddings && cd ..   # bỏ --extra embeddings nếu dùng EMBEDDING_PROVIDER=gemini hoặc hash
 cd frontend && npm install && cd ..
 cp frontend/.env.example frontend/.env.local         # điền khoá Clerk cho frontend
 # trong .env: đổi host db / redis thành localhost
@@ -147,7 +148,8 @@ Danh sách đầy đủ và giá trị mặc định nằm ở [.env.example](.e
 | `LLM_PROVIDER` | `anthropic` (mặc định), `openai` (cần `OPENAI_API_KEY`, đặt `LLM_MODEL_*` thành model OpenAI) hoặc `fake` (chỉ dùng cho e2e, đọc fixture, không gọi LLM thật) |
 | `LLM_MODEL_DEFAULT`, `LLM_MODEL_ARBITRATE` | Model cho các agent và cho arbitrate (tên model của nhà cung cấp đang chọn) |
 | `PROMPT_VERSION` | Phiên bản prompt (`ai/prompts/<agent>/vN.md`) |
-| `EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, `EMBEDDING_DIM` | `local` (bge-m3, 1024 chiều) hoặc `hash` |
+| `EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, `EMBEDDING_DIM` | `local` (bge-m3, 1024 chiều), `gemini` (`gemini-embedding-001`, cần `GEMINI_API_KEY`) hoặc `hash` |
+| `INSTALL_EMBEDDINGS` | Build arg của Compose: `false` thì image backend/worker không cài torch |
 | `CORS_ORIGINS`, `MAX_UPLOAD_BYTES` | Origin được phép gọi API, kích thước file tối đa |
 | `TEST_DATABASE_URL` | DB cho test và eval QA (tên phải kết thúc bằng `_test`) |
 | `NEXT_PUBLIC_API_URL` | URL backend mà trình duyệt gọi, mặc định `http://localhost:8000` |

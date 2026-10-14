@@ -4,8 +4,8 @@ from typing import Any
 
 from arq.connections import RedisSettings
 
-from app.ai.retrieval.embedder import make_embedder
 from app.core.config import JOB_TIMEOUT_SECONDS, get_settings
+from app.core.embedding import build_embedder
 from app.core.llm import build_llm
 from app.db.session import make_engine, make_sessionmaker
 from app.services.analysis import run_analysis
@@ -32,9 +32,7 @@ async def startup(ctx: dict[str, Any]) -> None:
     ctx["sessionmaker"] = make_sessionmaker(ctx["engine"])
     ctx["ai"] = settings.ai_settings()
     ctx["llm"] = build_llm(settings)
-    ctx["embedder"] = make_embedder(
-        settings.embedding_provider, settings.embedding_model, settings.embedding_dim
-    )
+    ctx["embedder"] = build_embedder(settings)
 
 
 async def shutdown(ctx: dict[str, Any]) -> None:

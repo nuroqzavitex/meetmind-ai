@@ -10,7 +10,9 @@ ENV UV_COMPILE_BYTECODE=1 \
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project --extra embeddings
+# false = skip torch/sentence-transformers (~3 GB) when EMBEDDING_PROVIDER is gemini or hash
+ARG INSTALL_EMBEDDINGS=true
+RUN if [ "$INSTALL_EMBEDDINGS" = "true" ]; then       uv sync --frozen --no-dev --no-install-project --extra embeddings;     else       uv sync --frozen --no-dev --no-install-project;     fi
 
 COPY app ./app
 COPY alembic ./alembic

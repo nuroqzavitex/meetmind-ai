@@ -1,4 +1,4 @@
-"""Text embedders: a deterministic hash embedder (tests) and a local sentence-transformers one."""
+"""Text embedders: deterministic hash (tests), local sentence-transformers, and Gemini API."""
 
 import asyncio
 import hashlib
@@ -6,6 +6,10 @@ import math
 import threading
 import unicodedata
 from typing import Any, Protocol
+
+from google import genai
+from google.genai import errors as genai_errors
+from google.genai import types as genai_types
 
 from app.ai.errors import EmbeddingError
 
@@ -87,9 +91,50 @@ class LocalEmbedder:
         return vectors
 
 
-def make_embedder(provider: str, model: str, dim: int) -> Embedder:
+class GeminiEmbedder:
+    """Gemini embedding API; vectors are requested at `dim` and L2-normalised.
+
+    With `client=None` (no API key) it fails only when used, so the API and worker still start.
+    """
+
+    def __init__(self, model: str, dim: int, client: Any = None) -> None:
+        self.model_name = model
+        self.dim = dim
+        self._client = client
+
+    async def embed(self, texts: list[str]) -> list[list[float]]:
+        if not texts:
+            return []
+        if self._client is None:
+            raise EmbeddingError("GEMINI_API_KEY chưa được cấu hình")
+        try:
+            response = await self._client.aio.models.embed_content(
+                model=self.model_name,
+                contents=texts,
+                config=genai_types.EmbedContentConfig(output_dimensionality=self.dim),
+            )
+        except genai_errors.APIError as e:
+            raise EmbeddingError(f"Lỗi Gemini API khi tạo embedding: {e}") from e
+        embeddings = response.embeddings or []
+        if len(embeddings) != len(texts):
+            raise EmbeddingError(f"Gemini trả {len(embeddings)} embedding cho {len(texts)} đoạn")
+        vectors = [_normalize([float(x) for x in (e.values or [])]) for e in embeddings]
+        for v in vectors:
+            if len(v) != self.dim:
+                raise EmbeddingError(f"Embedding có {len(v)} chiều, cần {self.dim}")
+        return vectors
+
+
+def _normalize(vec: list[float]) -> list[float]:
+    norm = math.sqrt(sum(x * x for x in vec))
+    return vec if norm == 0 else [x / norm for x in vec]
+
+
+def make_embedder(provider: str, model: str, dim: int, api_key: str | None = None) -> Embedder:
     if provider == "hash":
         return HashEmbedder(dim)
     if provider == "local":
         return LocalEmbedder(model, dim)
+    if provider == "gemini":
+        return GeminiEmbedder(model, dim, genai.Client(api_key=api_key) if api_key else None)
     raise EmbeddingError(f"Embedding provider không hợp lệ: {provider}")

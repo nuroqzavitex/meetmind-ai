@@ -84,7 +84,10 @@ chéo org), 409, 413 (file quá lớn, `MAX_UPLOAD_BYTES`), 422.
   Lỗi index không làm đổi trạng thái cuộc họp. Sửa/từ chối một mục sẽ xoá chỉ mục của mục đó; lần publish lại sẽ lập chỉ mục lại các mục đã đổi.
 - **Embedder** (`EMBEDDING_PROVIDER`): `local` (mặc định) dùng sentence-transformers với
   `EMBEDDING_MODEL=BAAI/bge-m3`, `EMBEDDING_DIM=1024`; `hash` là embedder xác định, không tải model,
-  chất lượng thấp hơn (dùng cho test và kiểm tra nhanh).
+  chất lượng thấp hơn (dùng cho test và kiểm tra nhanh); `gemini` gọi Gemini API
+  (`EMBEDDING_MODEL=gemini-embedding-001`, cần `GEMINI_API_KEY`), xin đúng `EMBEDDING_DIM` chiều rồi chuẩn hoá L2,
+  không tải model. Dùng `gemini` hoặc `hash` thì có thể build image không có torch: `INSTALL_EMBEDDINGS=false`.
+  Đổi provider sau khi đã index thì vector cũ và mới không so sánh được: phát hành lại để index lại.
 - **Bộ nhớ**: API và worker mỗi bên giữ một bản model trong RAM khi dùng `local` (nạp lười, một lần mỗi tiến trình).
 - **Lần chạy đầu tiên** với `local` phải tải model bge-m3 (~2 GB). Compose gắn volume `hf-cache`
   (`/root/.cache/huggingface`) cho `backend` và `worker` nên chỉ tải một lần. Image cài torch bản CPU.

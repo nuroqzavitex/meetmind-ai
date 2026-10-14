@@ -148,7 +148,13 @@ async def _run(
     engine = create_async_engine(url, poolclass=NullPool)
     sm = make_sessionmaker(engine)
     cfg = Settings()
-    embedder = make_embedder(provider, cfg.embedding_model, cfg.embedding_dim)
+    key = cfg.gemini_api_key
+    embedder = make_embedder(
+        provider,
+        cfg.embedding_model,
+        cfg.embedding_dim,
+        api_key=key.get_secret_value() if key else None,
+    )
     principal = Principal(user_id="eval", org_id=ORG_ID, name="Eval")
     results: list[tuple[QAQuestion, QAResponse]] = []
     utterances: dict[str, list[Utterance]] = {}
@@ -188,7 +194,7 @@ def main(argv: list[str] | None = None, llm_factory: LLMFactory | None = None) -
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="run_qa")
     ap.add_argument("--only", help="run a single question id")
-    ap.add_argument("--embedder", choices=["local", "hash"], default="local")
+    ap.add_argument("--embedder", choices=["local", "hash", "gemini"], default="local")
     ap.add_argument("--prompt-version", default="v1")
     ap.add_argument("--report-dir", type=Path, default=EVALS_DIR / "reports")
     args = ap.parse_args(argv)

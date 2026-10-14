@@ -103,7 +103,7 @@ Job rules:
 Fallbacks and errors:
 - Questions with no usable context get the fixed refusal: "Không đủ thông tin trong các cuộc họp đã phát hành."
 - LLM and embedder failures return 503.
-- Embeddings come from `EMBEDDING_PROVIDER=local` (bge-m3, 1024-dim, about 2 GB download) or `hash` (tests and e2e).
+- Embeddings come from `EMBEDDING_PROVIDER=local` (bge-m3, 1024-dim, about 2 GB download), `gemini` (`gemini-embedding-001` requested at 1024 dims and L2-normalised, needs `GEMINI_API_KEY`) or `hash` (tests and e2e). The DB columns are fixed at `vector(1024)`; `core/embedding.py::build_embedder(settings)` picks the embedder. Compose build arg `INSTALL_EMBEDDINGS=false` drops torch from the image.
 
 **Frontend** (`frontend/src`):
 - `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/select-org`, and sign-in/up.

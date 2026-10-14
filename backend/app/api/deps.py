@@ -1,8 +1,9 @@
 from fastapi import Request
 
 from app.ai.llm import LLMClient
-from app.ai.retrieval.embedder import Embedder, make_embedder
+from app.ai.retrieval.embedder import Embedder
 from app.core.auth import get_principal
+from app.core.embedding import build_embedder
 from app.core.llm import UnconfiguredLLM, build_llm
 from app.db.session import get_session
 from app.workers.queue import get_queue
@@ -24,7 +25,6 @@ def get_llm(request: Request) -> LLMClient:
 def get_embedder(request: Request) -> Embedder:
     state = request.app.state
     if getattr(state, "embedder", None) is None:
-        s = state.settings
-        state.embedder = make_embedder(s.embedding_provider, s.embedding_model, s.embedding_dim)
+        state.embedder = build_embedder(state.settings)
     embedder: Embedder = state.embedder
     return embedder
