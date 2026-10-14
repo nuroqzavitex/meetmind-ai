@@ -1,0 +1,28 @@
+name: Daily digest
+
+# Calls the backend's daily Discord reminder. 01:00 UTC = 08:00 Vietnam time.
+# GitHub may start scheduled runs a few minutes late.
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: Skip without secrets
+        if: env.API_URL == '' || env.CRON_SECRET == ''
+        run: echo "::notice::API_URL or CRON_SECRET not set; skipping the digest."
+      # Render's free plan sleeps; the first request wakes it (~1 min), hence the retries.
+      - name: Send digest
+        if: env.API_URL != '' && env.CRON_SECRET != ''
+        run: |
+          curl --fail-with-body --silent --show-error \
+            --retry 6 --retry-delay 20 --retry-all-errors --max-time 90 \
+            -X POST -H "X-Cron-Secret: $CRON_SECRET" \
+            "${API_URL%/}/api/v1/internal/digest"

@@ -77,6 +77,16 @@ Nên chọn cùng khu vực Singapore cho Render, Neon và Upstash để giảm 
 3. Instance Development của Clerk chạy được trên domain `vercel.app` (có dòng "Development mode", tối đa 100 user).
    Instance Production của Clerk cần domain riêng của bạn.
 
+## 6. Discord (tuỳ chọn)
+
+1. Trong Discord: Cài đặt kênh → **Tích hợp** → **Webhook** → **Webhook mới** → **Sao chép URL Webhook**.
+2. Trên MeetMind: trang **Cài đặt**, dán URL, bật "Bản tin nhắc việc 8h sáng" nếu muốn, **Lưu**, rồi **Gửi thử**.
+3. Bản tin 8h sáng cần thêm:
+   - Render: `FRONTEND_URL` = URL Vercel, `CRON_SECRET` = một chuỗi ngẫu nhiên dài.
+   - GitHub → Settings → Secrets and variables → Actions: `API_URL` = URL Render, `CRON_SECRET` = cùng chuỗi trên.
+   - Chạy thử: tab **Actions** → **Daily digest** → **Run workflow**.
+   GitHub tự tắt workflow theo lịch nếu repo không có hoạt động trong 60 ngày.
+
 ## Kiểm tra sau khi deploy
 
 1. Mở URL Vercel, đăng ký, tạo tổ chức.

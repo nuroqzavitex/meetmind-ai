@@ -82,10 +82,13 @@ Evals (call the real Claude API; need `ANTHROPIC_API_KEY`):
   - `ai/llm/fixture.py` (`FixtureLLM`) reads `<dir>/<agent>.json`.
   - `core/llm.py::build_llm(settings)` picks one of these for both the API and the worker.
 
-**Async jobs.** The Arq worker in `workers/main.py` runs three job types:
+**Async jobs.** The Arq worker in `workers/main.py` runs four job types:
 - `transcribe`: audio upload → OpenAI diarized STT (`ai/stt/`, `services/transcription.py`). The audio in `source_bytes` is replaced by a generated `[hh:mm:ss.mmm] Người nói A: …` `.txt`; status goes `transcribing` → `awaiting_speakers`. `POST /meetings/{id}/speakers` renames the labels, sets participants and starts `analyze` (`services/speakers.py`).
 - `analyze`: transcript → review items.
 - `index`: enqueued on publish; embeds approved items and transcript chunks.
+- `notify`: enqueued on publish only when the org has a Discord webhook; best-effort, no `jobs` row.
+
+**Discord** (`notify/`, `services/notifications.py`): per-org webhook in `org_settings` (`/settings/discord`, URL never returned, only Discord webhook hosts accepted). The daily digest is `POST /internal/digest` guarded by `X-Cron-Secret` = `CRON_SECRET`, called by `.github/workflows/digest.yml` at 01:00 UTC.
 
 Job rules:
 - Only `queued` jobs run.
@@ -107,7 +110,7 @@ Fallbacks and errors:
 - Embeddings come from `EMBEDDING_PROVIDER=local` (bge-m3, 1024-dim, about 2 GB download), `gemini` (`gemini-embedding-001` requested at 1024 dims and L2-normalised, needs `GEMINI_API_KEY`) or `hash` (tests and e2e). The DB columns are fixed at `vector(1024)`; `core/embedding.py::build_embedder(settings)` picks the embedder. Compose build arg `INSTALL_EMBEDDINGS=false` drops torch from the image.
 
 **Frontend** (`frontend/src`):
-- `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/select-org`, and sign-in/up.
+- `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/settings` (Discord), `/select-org`, and sign-in/up.
 - `features/<area>/` holds UI and hooks.
 - `lib/api-client.ts` and `lib/use-api.ts` attach the Clerk token.
 - `middleware.ts` enforces sign-in and redirects users without an active org to `/select-org`.
