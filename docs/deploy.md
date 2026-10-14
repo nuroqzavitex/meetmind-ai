@@ -46,6 +46,7 @@ Nên chọn cùng khu vực Singapore cho Render, Neon và Upstash để giảm 
    | `REDIS_URL` | URL Upstash (bước 2) |
    | `CLERK_JWKS_URL` | `https://<frontend-api>.clerk.accounts.dev/.well-known/jwks.json` |
    | `CLERK_ISSUER` | `https://<frontend-api>.clerk.accounts.dev` |
+   | `CLERK_SECRET_KEY` | Secret key của Clerk (`sk_test_…`), giống biến cùng tên trên Vercel. Cần cho tính năng xin vào tổ chức |
    | `CLERK_AUTHORIZED_PARTIES` | URL Vercel, ví dụ `https://meetmind-ai.vercel.app` (chưa có thì tạm điền, sửa sau bước 4) |
    | `CORS_ORIGINS` | Giống `CLERK_AUTHORIZED_PARTIES` |
    | `OPENAI_API_KEY` | Khoá OpenAI |

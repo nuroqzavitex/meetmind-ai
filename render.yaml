@@ -26,6 +26,9 @@ services:
         sync: false
       - key: CLERK_ISSUER
         sync: false
+      # Clerk secret key (sk_...): approving a join request adds the member through Clerk's API.
+      - key: CLERK_SECRET_KEY
+        sync: false
       # Your Vercel URL, e.g. https://meetmind-ai.vercel.app (comma-separated if several)
       - key: CLERK_AUTHORIZED_PARTIES
         sync: false

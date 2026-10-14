@@ -15,7 +15,7 @@ thức của nhóm để hỏi đáp có trích dẫn. Dữ liệu tách theo nh
 
 Theo danh sách "MVP xong khi" ở mục 0 của spec:
 
-- **Đăng nhập và org.** Đăng nhập bằng Clerk, người dùng phải thuộc một organization. Dữ liệu của org này không lộ sang org khác (có bộ test cách ly).
+- **Đăng nhập và org.** Đăng nhập bằng Clerk, người dùng phải thuộc một organization. Dữ liệu của org này không lộ sang org khác (có bộ test cách ly). Người mới có thể tạo org hoặc **xin vào org có sẵn bằng mã tham gia**: admin thấy yêu cầu ở chuông trên thanh điều hướng (và trên Discord nếu đã gắn), đồng ý thì backend thêm thành viên qua Clerk Backend API.
 - **Upload và duyệt.** Upload transcript (`.txt`, `.srt`, `.vtt`, `.docx`), màn hình duyệt hiển thị 7 loại mục: `decision`, `action_item`, `open_question`, `blocker`, `request`, `feedback`, `knowledge`. Mỗi mục có trích dẫn và mốc thời gian, bấm vào là cuộn tới câu gốc. Tab **Diễn biến chủ đề** cho thấy phương án nào bị thay thế lúc nào.
 - **Upload ghi âm.** File `.mp3`, `.m4a`, `.wav`, `.webm`, `.mp4` (≤ 25 MB) được chuyển thành văn bản và tách người nói bằng OpenAI `gpt-4o-transcribe-diarize`. Người dùng gán tên thật và người quyết định cho từng "Người nói A/B…", sau đó luồng phân tích chạy như với transcript.
 - **Kịch bản bẫy.** Các trường hợp A→B, chốt A rồi đổi B, quay lại A, mở lại, bác phương án đã chốt, chốt không rõ phương án và chờ cấp trên đều phải ra đúng trạng thái cuối.
@@ -153,6 +153,7 @@ Danh sách đầy đủ và giá trị mặc định nằm ở [.env.example](.e
 | `OPENAI_API_KEY` | Khoá OpenAI, dùng khi `LLM_PROVIDER=openai` |
 | `DATABASE_URL`, `REDIS_URL` | Postgres và Redis. Host `db` / `redis` trong Compose, `localhost` khi chạy local |
 | `CLERK_JWKS_URL`, `CLERK_ISSUER`, `CLERK_AUTHORIZED_PARTIES` | Backend xác thực JWT của Clerk |
+| `CLERK_SECRET_KEY` (backend) | Đọc tên/email người xin vào org và thêm thành viên khi admin đồng ý. Thiếu thì tính năng xin vào org trả 503 |
 | `LLM_PROVIDER` | `anthropic` (mặc định), `openai` (cần `OPENAI_API_KEY`, đặt `LLM_MODEL_*` thành model OpenAI) hoặc `fake` (chỉ dùng cho e2e, đọc fixture, không gọi LLM thật) |
 | `LLM_MODEL_DEFAULT`, `LLM_MODEL_ARBITRATE` | Model cho các agent và cho arbitrate (tên model của nhà cung cấp đang chọn) |
 | `PROMPT_VERSION` | Phiên bản prompt (`ai/prompts/<agent>/vN.md`) |

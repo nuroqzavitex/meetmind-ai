@@ -1,4 +1,5 @@
 import { PageHeader, PageShell } from "@/components/page-header"
+import { JoinSettings } from "@/features/orgs/join-settings"
 import { DiscordSettings } from "@/features/settings/discord-settings"
 
 export default function SettingsPage() {
@@ -6,9 +7,12 @@ export default function SettingsPage() {
     <PageShell>
       <PageHeader
         title="Cài đặt"
-        description="Kết nối kênh Discord để nhận tóm tắt khi cuộc họp được phát hành và bản tin nhắc việc mỗi sáng."
+        description="Thành viên tổ chức và kết nối Discord để nhận tóm tắt cuộc họp, bản tin nhắc việc và yêu cầu tham gia."
       />
-      <DiscordSettings />
+      <div className="space-y-6">
+        <JoinSettings />
+        <DiscordSettings />
+      </div>
     </PageShell>
   )
 }

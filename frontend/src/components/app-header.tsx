@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import { BrandMark } from "@/components/brand"
 import { NavLinks } from "@/components/nav-links"
+import { JoinRequestsBell } from "@/features/orgs/join-requests-bell"
 
 export function AppHeader() {
   return (
@@ -15,6 +16,7 @@ export function AppHeader() {
         </Link>
         <NavLinks />
         <div className="ml-auto flex items-center gap-3">
+          <JoinRequestsBell />
           <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/" />
           <UserButton />
         </div>
