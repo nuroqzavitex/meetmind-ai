@@ -66,6 +66,10 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
     # Shared secret for POST /internal/digest (the scheduled daily reminder); empty disables it.
     cron_secret: SecretStr | None = None
+    # Discord Q&A bot (slash commands over the HTTP Interactions Endpoint).
+    discord_app_id: str = ""
+    discord_public_key: str = ""
+    discord_bot_token: SecretStr | None = None  # only for scripts/register_discord_commands.py
 
     @field_validator("database_url")
     @classmethod

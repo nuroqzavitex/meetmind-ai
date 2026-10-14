@@ -16,6 +16,13 @@ class DiscordSettingsIn(BaseModel):
     invite_url: str | None = Field(default=None, max_length=200)
 
 
+class DiscordBotOut(BaseModel):
+    available: bool  # the backend has DISCORD_APP_ID and DISCORD_PUBLIC_KEY
+    linked: bool
+    link_code: str
+    install_url: str | None = None
+
+
 class DigestOut(BaseModel):
     orgs: int
     sent: int

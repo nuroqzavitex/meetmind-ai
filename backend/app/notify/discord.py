@@ -31,6 +31,9 @@ class DiscordError(Exception):
     """Discord could not be reached or rejected the message."""
 
 
+API = "https://discord.com/api/v10"
+
+
 class DiscordClient:
     def __init__(
         self, transport: httpx.AsyncBaseTransport | None = None, timeout: float = 10.0
@@ -48,5 +51,16 @@ class DiscordClient:
             raise DiscordError("Không kết nối được tới Discord") from exc
         if r.status_code in (401, 404):
             raise DiscordError("Webhook không còn tồn tại hoặc đã bị xoá trên Discord")
+        if r.status_code >= 400:
+            raise DiscordError(f"Discord từ chối tin nhắn (HTTP {r.status_code})")
+
+    async def edit_original(self, app_id: str, token: str, payload: dict[str, Any]) -> None:
+        """Replace a deferred interaction response ("đang suy nghĩ…") with the real message."""
+        url = f"{API}/webhooks/{app_id}/{token}/messages/@original"
+        try:
+            async with httpx.AsyncClient(transport=self._transport, timeout=self._timeout) as c:
+                r = await c.patch(url, json=payload)
+        except httpx.HTTPError as exc:
+            raise DiscordError("Không kết nối được tới Discord") from exc
         if r.status_code >= 400:
             raise DiscordError(f"Discord từ chối tin nhắn (HTTP {r.status_code})")

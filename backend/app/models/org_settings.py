@@ -16,6 +16,9 @@ class OrgSettings(Base):
     join_code: Mapped[str | None] = mapped_column(String, unique=True)
     # Public invite link to the team's Discord server, shown to members (not a secret).
     discord_invite_url: Mapped[str | None] = mapped_column(String)
+    # Discord server linked to this org for the /hoi bot, and the code admins type in /ketnoi.
+    discord_guild_id: Mapped[str | None] = mapped_column(String, unique=True)
+    discord_link_code: Mapped[str | None] = mapped_column(String, unique=True)
     digest_enabled: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="false"
     )
