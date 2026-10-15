@@ -9,7 +9,7 @@ from app.ai.domain.models import MeetingContext
 from app.ai.errors import TranscriptParseError
 from app.ai.parsing import parse_transcript
 from app.ai.stt import is_audio
-from app.core.auth import Principal
+from app.core.auth import Principal, require_admin
 from app.core.config import STALE_JOB_SECONDS
 from app.core.errors import Conflict, NotFound, PayloadTooLarge, ServiceUnavailable, Unprocessable
 from app.repositories import jobs, meetings
@@ -172,3 +172,29 @@ async def reanalyze(
     await session.commit()
     await _enqueue(session, queue, org_id=org_id, meeting_id=meeting_id, job_id=job.id, kind=kind)
     return MeetingCreated(meeting_id=meeting_id, job_id=job.id)
+
+
+PROCESSING = ("transcribing", "analyzing")
+
+
+async def delete_meeting(session: AsyncSession, *, principal: Principal, meeting_id: str) -> None:
+    """Admin only. Refused while a transcribe/analyze job may still write to the meeting."""
+    require_admin(principal)
+    org_id = principal.org_id
+    row = await meetings.get(session, org_id=org_id, meeting_id=meeting_id)
+    if row is None:
+        raise NotFound("Không tìm thấy cuộc họp")
+    active = [
+        await jobs.active_for_meeting(session, org_id=org_id, meeting_id=meeting_id, kind=kind)
+        for kind in ("analyze", "transcribe")
+    ]
+    if row.status in PROCESSING and any(active):
+        # A job that outlived the worker timeout is dead and no longer blocks the delete.
+        stale = await jobs.fail_stale(
+            session, org_id=org_id, meeting_id=meeting_id,
+            older_than_seconds=STALE_JOB_SECONDS, error="Cuộc họp đã bị xoá",
+        )
+        if not stale:
+            raise Conflict("Cuộc họp đang được xử lý, hãy đợi xong rồi xoá", "job_running")
+    await meetings.remove(session, org_id=org_id, meeting_id=meeting_id)
+    await session.commit()

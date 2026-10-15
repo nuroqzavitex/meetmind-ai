@@ -63,6 +63,7 @@ không dùng khi chạy thật hay eval. Unit/integration test dùng `FakeLLM` t
 | GET | `/meetings` | Danh sách cuộc họp của org |
 | GET | `/meetings/{id}` | Chi tiết cuộc họp |
 | POST | `/meetings/{id}/reanalyze` | Phân tích lại → 202 |
+| DELETE | `/meetings/{id}` | Xoá vĩnh viễn cuộc họp và mọi dữ liệu con (admin, 204); 409 `job_running` khi đang chuyển giọng nói/phân tích |
 | GET | `/meetings/{id}/items` | Các item AI trích xuất |
 | GET | `/meetings/{id}/topics` | Các chủ đề |
 | POST | `/meetings/{id}/items/approve-clean` | Duyệt hàng loạt các item sạch |

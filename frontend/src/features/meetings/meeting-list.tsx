@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { fmtDate, MEETING_STATUS_LABEL } from "@/lib/format"
 import type { MeetingSummary } from "@/lib/types"
+import { DeleteMeetingButton } from "./delete-meeting"
 import { useMeeting, useMeetings, useReanalyze } from "./hooks"
 import { JobProgress } from "./job-progress"
 import { StatusBadge } from "./status-badge"
@@ -100,6 +101,7 @@ function MeetingRow({ m }: { m: MeetingSummary }) {
           </p>
         </div>
         <StatusBadge status={m.status} />
+        <DeleteMeetingButton meetingId={m.id} title={m.title} compact />
         {href && (
           <Link
             href={href}

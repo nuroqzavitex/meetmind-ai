@@ -1,0 +1,18 @@
+[00:00:05] Lan: Hôm nay mình rà lại tiến độ ra mắt ứng dụng đặt lịch khám, rồi chia việc cho mấy ngày tới nhé.
+[00:00:25] Minh: Bản thiết kế màn hình thanh toán đáng lẽ phải xong ngày 13/10/2026, em đang bị chậm.
+[00:00:45] Lan: Ừ, Minh hoàn thiện thiết kế màn hình thanh toán, hạn 13/10/2026, làm bù sớm giúp chị.
+[00:01:00] Minh: Dạ, em nhận.
+[00:01:30] Hoa: Môi trường staging lại hết dung lượng, em chưa chạy test được.
+[00:01:50] Lan: Hoa dọn dung lượng staging và chạy lại bộ test, hạn hôm nay nhé.
+[00:02:05] Hoa: Vâng chị.
+[00:02:30] Minh: Còn chuyện cổng thanh toán, mình dùng VNPay hay MoMo?
+[00:02:50] Hoa: MoMo phí thấp hơn nhưng tài liệu tích hợp hơi thiếu.
+[00:03:10] Minh: Em nghiêng về VNPay, bên mình đã tích hợp ở dự án cũ.
+[00:03:30] Lan: Vậy mình chốt dùng VNPay cho bản đầu tiên.
+[00:03:50] Lan: Tuấn viết hướng dẫn sử dụng cho bác sĩ, hạn ngày mai nhé.
+[00:04:05] Tuấn: Em nhận ạ.
+[00:04:30] Lan: Minh tích hợp cổng VNPay vào môi trường staging, hạn ngày kia.
+[00:04:45] Minh: Dạ, em làm luôn.
+[00:05:10] Hoa: Có cần mời thêm bệnh viện thứ hai dùng thử không chị?
+[00:05:30] Lan: Cái này chị chưa quyết được, để chị hỏi ý kiến anh Quân rồi báo lại.
+[00:05:50] Lan: Ok, hôm nay đến đây thôi, cảm ơn mọi người.

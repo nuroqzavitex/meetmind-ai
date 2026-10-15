@@ -2,7 +2,7 @@
 
 import { Download, FileJson, ScrollText } from "lucide-react"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { ItemCard } from "@/features/review/item-card"
 import { useItems } from "@/features/review/hooks"
 import { TranscriptPanel } from "@/features/review/transcript-panel"
+import { DeleteMeetingButton } from "@/features/meetings/delete-meeting"
 import { useMeeting } from "@/features/meetings/hooks"
 import { ITEM_TYPES, ITEM_TYPE_LABEL, fmtDate } from "@/lib/format"
 import { ITEM_TYPE_STYLE } from "@/lib/item-style"
@@ -22,6 +23,7 @@ const noop = () => {}
 
 export function MinutesView({ meetingId }: { meetingId: string }) {
   const { download } = useApi()
+  const router = useRouter()
   const meeting = useMeeting(meetingId)
   const items = useItems(meetingId)
   const initial = useSearchParams().get("u")
@@ -79,6 +81,7 @@ export function MinutesView({ meetingId }: { meetingId: string }) {
               <FileJson aria-hidden />
               Tải .json
             </Button>
+            <DeleteMeetingButton meetingId={meetingId} title={m.title} onDeleted={() => router.push("/")} />
           </div>
         </div>
         {shown.length > 0 && (

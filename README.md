@@ -28,7 +28,7 @@ Theo danh sách "MVP xong khi" ở mục 0 của spec, cộng các phần làm t
 - **Hỏi đáp.** Hỏi trên các cuộc họp đã phát hành của org, câu trả lời có trích dẫn `[cuộc họp · hh:mm:ss · người nói]`. Câu hỏi ngoài dữ liệu nhận câu từ chối cố định.
 - **Đánh giá.** `evals/` gồm 15 transcript (10 kịch bản bẫy, 5 transcript thực tế) và 18 câu hỏi QA, có ngưỡng ở mục 13.2 của spec. Đã chạy thật ngày 14/10/2026, kết quả ở [Đánh giá](#đánh-giá-evals).
 - **Bộ kiểm thử Mission 2.** [docs/test-cases.md](docs/test-cases.md): 7 tình huống chạy thật (làm tốt, dữ liệu mơ hồ, thất bại) theo format Kỳ vọng → Thực tế → Đạt/Chưa đạt → Điều học được.
-- **Phân quyền admin.** Admin của org (vai trò trong Clerk) quản lý mã tham gia, duyệt người xin vào, sửa cài đặt Discord và bot; thành viên thường chỉ xem.
+- **Phân quyền admin.** Admin của org (vai trò trong Clerk) quản lý mã tham gia, duyệt người xin vào, sửa cài đặt Discord và bot, và xoá vĩnh viễn cuộc họp; thành viên thường chỉ xem.
 - **CI.** Lint, type check, test, e2e, và eval khi prompt hoặc agent thay đổi. Commit chỉ sửa tài liệu hoặc script tiện ích không chạy CI.
 
 ## Kiến trúc

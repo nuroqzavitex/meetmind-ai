@@ -12,6 +12,7 @@ const api = vi.hoisted(() => ({
 vi.mock("@/lib/use-api", () => ({ useApi: () => api }))
 const push = vi.hoisted(() => vi.fn())
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }))
+vi.mock("@/features/orgs/hooks", () => ({ useIsOrgAdmin: () => false }))
 
 import { ApiError } from "@/lib/api-client"
 import { MeetingList } from "@/features/meetings/meeting-list"

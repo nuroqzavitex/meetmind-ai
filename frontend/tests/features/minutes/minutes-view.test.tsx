@@ -10,6 +10,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(search.value),
 }))
 vi.mock("@clerk/nextjs", () => ({ useAuth: () => ({ getToken: vi.fn() }) }))
+vi.mock("@/features/orgs/hooks", () => ({ useIsOrgAdmin: () => false }))
 
 import { MinutesView } from "@/features/minutes/minutes-view"
 

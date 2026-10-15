@@ -187,3 +187,11 @@ async def get_topics(session: AsyncSession, *, org_id: str, meeting_id: str) -> 
         .order_by(TopicRow.pk)
     )
     return [Topic.model_validate(r.history) for r in (await session.scalars(stmt)).all()]
+
+
+async def remove(session: AsyncSession, *, org_id: str, meeting_id: str) -> bool:
+    """Delete a meeting; items, events, utterances, chunks and jobs go with it (ON DELETE CASCADE)."""
+    result = await session.execute(
+        delete(Meeting).where(Meeting.id == meeting_id, Meeting.org_id == org_id)
+    )
+    return bool(getattr(result, "rowcount", 0))

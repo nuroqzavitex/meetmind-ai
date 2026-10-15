@@ -127,6 +127,11 @@ async def approve_clean(
     return ApproveCleanOut(approved=n)
 
 
+@router.delete("/{meeting_id}", status_code=204)
+async def delete_meeting(meeting_id: str, session: SessionDep, principal: PrincipalDep) -> None:
+    await service.delete_meeting(session, principal=principal, meeting_id=meeting_id)
+
+
 @router.post("/{meeting_id}/publish")
 async def publish(
     meeting_id: str, session: SessionDep, queue: QueueDep, principal: PrincipalDep

@@ -54,6 +54,7 @@ async def _snapshot(sm: async_sessionmaker[AsyncSession], b: OrgB) -> tuple[str,
 CASES: list[tuple[str, str, dict[str, object] | None]] = [
     ("GET", "/meetings/{m}", None),
     ("POST", "/meetings/{m}/reanalyze", None),
+    ("DELETE", "/meetings/{m}", None),
     ("GET", "/meetings/{m}/items", None),
     ("GET", "/meetings/{m}/topics", None),
     ("POST", "/meetings/{m}/items/approve-clean", None),
