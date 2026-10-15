@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Review-then-keep log of the prompts sent to Claude Code (both files are gitignored).
+# Review-then-keep log of the prompts sent to Claude Code (ai-log.txt is committed, ai-log-temp.txt is gitignored).
 #   sh scripts/update-ai-log.sh          new prompts -> ai-log-temp.txt; delete the ones to drop
 #   sh scripts/update-ai-log.sh commit   what is left in ai-log-temp.txt -> ai-log.txt, temp emptied
 set -eu

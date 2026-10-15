@@ -14,6 +14,5 @@ frontend/playwright-report/
 frontend/playwright/.clerk/
 .playwright-mcp/
 
-# Personal log of prompts sent to the AI assistant
-ai-log.txt
+# Prompts waiting for review before they go into ai-log.txt
 ai-log-temp.txt

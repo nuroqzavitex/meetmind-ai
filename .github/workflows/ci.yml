@@ -9,12 +9,14 @@ on:
       - "docs/**"
       - "**.md"
       - ".gitignore"
+      - "ai-log.txt"
   pull_request:
     paths-ignore:
       - "scripts/**"
       - "docs/**"
       - "**.md"
       - ".gitignore"
+      - "ai-log.txt"
 
 concurrency:
   group: ci-${{ github.ref }}
