@@ -20,9 +20,16 @@ class FakeClerk:
     def __init__(self) -> None:
         self.added: list[tuple[str, str]] = []
         self.fail_add = False
+        self.fail_memberships = False
 
     def __call__(self, request: httpx.Request) -> httpx.Response:
         path = request.url.path.removeprefix("/v1")
+        if request.method == "GET" and path.endswith("/organization_memberships"):
+            if self.fail_memberships:
+                return httpx.Response(500, json={})
+            uid = path.split("/")[2]
+            orgs = [o for o, u in self.added if u == uid]
+            return httpx.Response(200, json={"data": [{"organization": {"id": o}} for o in orgs]})
         if request.method == "GET" and path.startswith("/users/"):
             uid = path.split("/")[-1]
             return httpx.Response(200, json={
@@ -197,3 +204,33 @@ async def test_approved_request_carries_the_discord_invite(
     await client.post(f"/join-requests/{req['id']}/approve", headers=auth(**ADMIN))
     got = (await client.get("/join-requests/mine", headers=mine)).json()[0]
     assert got["status"] == "approved" and got["discord_invite_url"] == "https://discord.gg/team-a"
+
+
+async def test_approved_request_disappears_after_leaving_the_org(
+    client: httpx.AsyncClient, clerk: FakeClerk
+) -> None:
+    code = await _code(client)
+    mine = auth(org=None, user="u_new")
+    first = (await _request(client, code)).json()
+    await client.post(f"/join-requests/{first['id']}/reject", headers=auth(**ADMIN))
+    second = (await _request(client, code)).json()
+    await client.post(f"/join-requests/{second['id']}/approve", headers=auth(**ADMIN))
+    got = (await client.get("/join-requests/mine", headers=mine)).json()
+    assert [(g["id"], g["status"]) for g in got] == [(second["id"], "approved")]  # one row per org
+
+    clerk.added.clear()  # the user left the org in Clerk
+    assert (await client.get("/join-requests/mine", headers=mine)).json() == []
+    again = await _request(client, code)  # and can ask to come back
+    assert again.status_code == 201
+    got = (await client.get("/join-requests/mine", headers=mine)).json()
+    assert [g["status"] for g in got] == ["pending"]
+
+
+async def test_my_requests_still_load_when_clerk_is_down(
+    client: httpx.AsyncClient, clerk: FakeClerk
+) -> None:
+    req = (await _request(client, await _code(client))).json()
+    await client.post(f"/join-requests/{req['id']}/approve", headers=auth(**ADMIN))
+    clerk.fail_memberships = True
+    r = await client.get("/join-requests/mine", headers=auth(org=None, user="u_new"))
+    assert r.status_code == 200 and [g["status"] for g in r.json()] == ["approved"]

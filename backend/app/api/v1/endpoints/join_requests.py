@@ -49,8 +49,10 @@ async def create_join_request(
 
 
 @router.get("/join-requests/mine")
-async def my_join_requests(session: SessionDep, user: UserDep) -> list[JoinRequestOut]:
-    return await service.list_mine(session, user=user)
+async def my_join_requests(
+    session: SessionDep, user: UserDep, clerk: ClerkDep
+) -> list[JoinRequestOut]:
+    return await service.list_mine(session, clerk, user=user)
 
 
 @router.delete("/join-requests/{request_id}", status_code=204)

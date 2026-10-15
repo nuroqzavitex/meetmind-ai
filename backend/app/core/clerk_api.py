@@ -66,6 +66,17 @@ class ClerkAPI:
         name = r.json().get("name")
         return name if isinstance(name, str) and name else org_id
 
+    async def member_org_ids(self, user_id: str) -> set[str]:
+        """Ids of the organizations the user belongs to right now."""
+        r = await self._call("GET", f"/users/{user_id}/organization_memberships?limit=100")
+        if r.status_code != 200:
+            raise ClerkError(f"Clerk trả lỗi khi đọc tổ chức của người dùng (HTTP {r.status_code})")
+        return {
+            org["id"]
+            for m in r.json().get("data") or []
+            if isinstance(org := m.get("organization"), dict) and isinstance(org.get("id"), str)
+        }
+
     async def add_member(self, org_id: str, user_id: str) -> None:
         r = await self._call(
             "POST",

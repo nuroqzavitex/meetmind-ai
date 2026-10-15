@@ -35,7 +35,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
         </div>
         <p className="relative text-sm text-indigo-200">Phân tích bằng AI · con người duyệt trước khi phát hành</p>
       </section>
-      <section className="flex flex-col items-center justify-center gap-6 p-6">
+      <section className="relative flex flex-col items-center justify-center gap-6 p-6">
         <div className="flex items-center gap-2 text-lg font-semibold lg:hidden">
           <BrandMark />
           MeetMind AI

@@ -122,8 +122,20 @@ async def create(
     return JoinRequestOut.model_validate(row), settings.discord_webhook_url if settings else None
 
 
-async def list_mine(session: AsyncSession, *, user: User) -> list[JoinRequestOut]:
-    rows = await repo.list_by_user(session, user_id=user.user_id)
+async def list_mine(session: AsyncSession, clerk: ClerkAPI, *, user: User) -> list[JoinRequestOut]:
+    """The latest request per org. An approved one is dropped once the user has left that org."""
+    latest: dict[str, JoinRequest] = {}
+    for r in await repo.list_by_user(session, user_id=user.user_id):  # newest first
+        latest.setdefault(r.org_id, r)
+    rows = list(latest.values())
+    if any(r.status == "approved" for r in rows):
+        try:
+            orgs: set[str] | None = await clerk.member_org_ids(user.user_id)
+        except ClerkError:  # keep the page usable; "Vào tổ chức" explains a failed switch
+            logger.warning("Could not read Clerk memberships for %s", user.user_id)
+            orgs = None
+        if orgs is not None:
+            rows = [r for r in rows if r.status != "approved" or r.org_id in orgs]
     out = []
     for r in rows:
         item = JoinRequestOut.model_validate(r)
