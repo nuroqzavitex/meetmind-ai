@@ -62,14 +62,15 @@ export function ReviewScreen({ meetingId }: { meetingId: string }) {
       )}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Tabs defaultValue={ITEM_TYPES[0]} className="min-w-0">
+          {/* Tabs wrap on narrow screens: the list and every tab size to their content (h-auto). */}
           <TabsList className="h-auto w-full flex-wrap group-data-horizontal/tabs:h-auto justify-start gap-1 rounded-xl bg-muted p-1">
             {ITEM_TYPES.map((t) => (
-              <TabsTrigger key={t} value={t} className="flex-none gap-1.5 px-2.5 py-1.5">
+              <TabsTrigger key={t} value={t} className="h-auto flex-none gap-1.5 px-2.5 py-1.5">
                 <span aria-hidden className={cn("size-2 rounded-full", ITEM_TYPE_STYLE[t].dot)} />
                 {ITEM_TYPE_LABEL[t]} ({grouped[t].length})
               </TabsTrigger>
             ))}
-            <TabsTrigger value="topics" className="flex-none gap-1.5 px-2.5 py-1.5">
+            <TabsTrigger value="topics" className="h-auto flex-none gap-1.5 px-2.5 py-1.5">
               <GitBranch aria-hidden className="size-3.5" />
               Diễn biến chủ đề
             </TabsTrigger>
