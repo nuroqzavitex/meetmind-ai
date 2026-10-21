@@ -23,7 +23,7 @@ WAITING = "waiting"
 _TENTATIVE = [
     "hay là", "hay mình", "hay ai", "ai đó", "ai rảnh", "có lẽ", "chắc là", "nên chăng",
     "thử xem", "xem sao", "tính sau", "để sau", "nếu được", "nếu kịp", "may ra", "biết đâu",
-    "có khi", "để xem", "tạm chốt", "chốt sơ bộ", "chưa chắc",
+    "có khi", "để xem", "tạm chốt", "chốt sơ bộ", "chưa chắc", "chưa quyết",
 ]  # fmt: skip
 _CONDITIONAL = ["chỉ khi", "trong trường hợp", "với điều kiện", "miễn là"]
 _DECLINE = [
@@ -36,8 +36,10 @@ _WAIT = re.compile(r"\b(chờ|đợi)\b(\s+\S+){0,3}?\s+(tin|báo|phản hồi|�
 _NOBODY = {"ai đó", "ai do", "mọi người", "moi nguoi", "cả team", "ca team", "team", "cả nhóm",
            "ca nhom", "nhóm", "nhom"}  # fmt: skip
 # build_items turns "chưa chắc, để anh xin ý kiến X" into "Xin ý kiến: …" for the speaker: the doubt
-# is about the decision, while asking is a real commitment.
+# is about the decision, while asking is a real commitment. It also does so for a bare "để sau
+# tính", which asks nobody, so the exemption needs the words of asking in what was said.
 ASK_PERMISSION = "xin ý kiến"
+_ASKING = ["ý kiến", "hỏi", "xin phép", "báo lại"]
 DECLINE_WINDOW = 3  # utterances after the assignment in which the assignee may refuse
 
 
@@ -97,13 +99,18 @@ def _guard_task(item: MeetingItem, by_id: dict[str, Utterance],
         norm_name(e.speaker) == norm_name(owner) and not is_tentative(e.quote)
         for e in item.evidence
     )
-    asking = _text(item.content).startswith(ASK_PERMISSION)
+    asking = _text(item.content).startswith(ASK_PERMISSION) and any(
+        _has_phrase(q, _ASKING) for q in quotes
+    )
     if is_tentative(first.quote) and not taken and not asking:
         reasons.append(TENTATIVE)
     condition = item.condition
-    if condition or any(is_conditional(q) for q in quotes):
+    # The LLM may quote only "Vân soạn bộ mẫu" out of "Nếu pháp chế duyệt thì Vân soạn bộ mẫu".
+    said = [by_id[e.utterance_id].text if e.utterance_id in by_id else e.quote
+            for e in item.evidence]
+    if condition or any(is_conditional(t) for t in said):
         reasons.append(CONDITIONAL)
-        condition = condition or next(q for q in quotes if is_conditional(q))
+        condition = condition or next(t for t in said if is_conditional(t))
     if all(is_waiting(q) for q in quotes):
         reasons.append(WAITING)
     if owner is not None and _declined(item, owner, by_id, utts):

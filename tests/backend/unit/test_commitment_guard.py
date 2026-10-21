@@ -42,6 +42,7 @@ def _item(kind: ItemType, utts: list[Utterance], ids: list[int], owner: str | No
         ("Có lẽ vậy, để chị xem lại đã.", True),
         ("Ừ, cái đó tính sau.", True),
         ("Tạm chốt Redis, tuần sau xem lại.", True),
+        ("Đúng, anh chưa quyết được khoản này.", True),
         ("Minh dựng schema Postgres, xong trước thứ Sáu nhé.", False),
         ("Ok, chốt Redis Streams cho hàng đợi.", False),
         ("Em chắc chắn làm kịp.", False),  # "chắc chắn" is firm, not "chắc là"
@@ -126,6 +127,23 @@ def test_asking_for_an_opinion_is_a_commitment_despite_the_doubt() -> None:
     item = item.model_copy(update={"content": "Xin ý kiến: mức lương cho vị trí mới"})
     [out] = guard_items([item], u)
     assert out.flags == []
+
+
+def test_a_bare_deferral_turned_into_asking_is_not_exempt() -> None:
+    u = _utts(("Hằng", "Ừ, cái đó tính sau."),)
+    item = _item(ItemType.ACTION_ITEM, u, [0], owner="Hằng")
+    item = item.model_copy(update={"content": "Xin ý kiến: viết lại tài liệu API"})
+    [out] = guard_items([item], u)
+    assert NEEDS in out.flags and TENTATIVE in out.flags
+
+
+def test_condition_cut_out_of_the_quote_is_still_seen() -> None:
+    u = _utts(("Hằng", "Nếu bên pháp chế duyệt nội dung thì Vân soạn bộ mẫu thông báo tiếng Anh."),)
+    item = _item(ItemType.ACTION_ITEM, u, [0], owner="Vân")
+    ev = item.evidence[0].model_copy(update={"quote": "Vân soạn bộ mẫu thông báo tiếng Anh."})
+    [out] = guard_items([item.model_copy(update={"evidence": [ev]})], u)
+    assert NEEDS in out.flags and CONDITIONAL in out.flags
+    assert out.condition == u[0].text
 
 
 def test_task_without_owner_needs_confirmation() -> None:
