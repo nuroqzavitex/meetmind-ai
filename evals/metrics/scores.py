@@ -19,6 +19,9 @@ from evals.metrics.matching import (
     match_items,
 )
 
+COMMITTED = (ItemType.DECISION, ItemType.ACTION_ITEM)
+# Kept as a literal so the scorer also runs against older pipeline versions (before/after evals).
+NEEDS_CONFIRMATION = "needs_confirmation"
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
 
 
@@ -31,6 +34,8 @@ class MeetingScore(BaseModel):
     evidence_ok: int
     evidence_total: int
     trap_correct: bool | None = None
+    official_ok: int = 0  # unflagged decisions/tasks that are real, official ones
+    official_total: int = 0  # decisions/tasks the system presented as official (no confirmation flag)
 
 
 def load_thresholds(path: Path = CONFIG_PATH) -> dict[str, float]:
@@ -39,9 +44,11 @@ def load_thresholds(path: Path = CONFIG_PATH) -> dict[str, float]:
 
 
 def _topic_correct(topic: GoldTopic, items: list[MeetingItem]) -> bool:
+    # A decision flagged for confirmation is not presented as decided, so it does not count.
     decisions = [
         i for i in items
         if i.type == ItemType.DECISION and contains_keyword(i.content, topic.match)
+        and NEEDS_CONFIRMATION not in i.flags
     ]
     if topic.final_option is None:
         return not decisions
@@ -84,6 +91,15 @@ def score_meeting(
             if u is not None and quote_matches(ev.quote, u.text):
                 ev_ok += 1
 
+    gold_of = dict(pairs)
+    official = [
+        pi for pi, p in enumerate(res.items)
+        if p.type in COMMITTED and NEEDS_CONFIRMATION not in p.flags
+    ]
+    official_ok = sum(
+        1 for pi in official if pi in gold_of and golden.items[gold_of[pi]].official
+    )
+
     correct = [_topic_correct(t, res.items) for t in golden.topics]
     return MeetingScore(
         per_type=per_type,
@@ -91,6 +107,7 @@ def score_meeting(
         owner_due_correct=od_ok, owner_due_total=od_total,
         evidence_ok=ev_ok, evidence_total=ev_total,
         trap_correct=all(correct) if golden.kind == "trap" else None,
+        official_ok=official_ok, official_total=len(official),
     )
 
 
@@ -123,6 +140,9 @@ def aggregate(
             sum(s.evidence_ok for s in scores),
             sum(s.evidence_total for s in scores), "evidence_faithfulness", notes),
         "trap_accuracy": _ratio(sum(traps), len(traps), "trap_accuracy", notes),
+        "official_precision": _ratio(
+            sum(s.official_ok for s in scores),
+            sum(s.official_total for s in scores), "official_precision", notes),
     }
     out["thresholds"] = th
     out["notes"] = notes

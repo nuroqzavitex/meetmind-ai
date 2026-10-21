@@ -19,6 +19,10 @@ const FLAG_LABEL: Record<string, string> = {
   missing_requester: "Thiếu người yêu cầu",
   low_confidence: "Độ tin cậy thấp",
   needs_confirmation: "Cần xác nhận",
+  tentative: "Mới là gợi ý",
+  conditional: "Có điều kiện",
+  declined: "Người nhận chưa đồng ý",
+  waiting: "Chỉ là chờ phản hồi",
 }
 
 export function ItemCard({

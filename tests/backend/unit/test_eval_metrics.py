@@ -165,6 +165,31 @@ def perfect_score() -> MeetingScore:
     )
 
 
+def test_official_precision_counts_only_unflagged_decisions_and_tasks():
+    g = golden()
+    g.items.append(GoldItem(type=ItemType.ACTION_ITEM, content="Viết lại tài liệu API",
+                            match=["tai lieu"], official=False))
+    res = result([
+        item(ItemType.DECISION, "Chốt dùng Postgres"),  # real, official
+        item(ItemType.ACTION_ITEM, "Viết lại tài liệu API"),  # only a suggestion, unflagged
+        item(ItemType.ACTION_ITEM, "Chờ tin từ Long").model_copy(
+            update={"flags": ["needs_confirmation", "waiting"]}),  # flagged: not counted
+        item(ItemType.BLOCKER, "Staging hỏng"),  # other types: not counted
+    ])
+    s = score_meeting(res, g, UTTS)
+    assert (s.official_ok, s.official_total) == (1, 2)
+    assert aggregate([s])["official_precision"] == pytest.approx(0.5)
+
+
+def test_decision_flagged_for_confirmation_is_not_a_final_decision():
+    flagged = item(ItemType.DECISION, "Chốt dùng Postgres").model_copy(
+        update={"flags": ["needs_confirmation", "tentative"]})
+    trap = score_meeting(result([flagged]), golden(kind="trap", final=None), UTTS)
+    assert trap.trap_correct is True
+    real = score_meeting(result([flagged]), golden(), UTTS)
+    assert real.final_decision_correct == 0
+
+
 def half_recall_score() -> MeetingScore:
     return perfect_score().model_copy(update={"per_type": {"decision": (5, 5, 10)}})
 

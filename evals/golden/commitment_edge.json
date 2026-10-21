@@ -1,0 +1,73 @@
+{
+  "context": {
+    "meeting_id": "commitment_edge",
+    "title": "Chuẩn bị demo cho khách",
+    "meeting_date": "2026-10-19",
+    "participants": [
+      {
+        "name": "Phương",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Khánh"
+      },
+      {
+        "name": "Linh"
+      },
+      {
+        "name": "Tâm"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/commitment_edge.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Dùng công cụ trình chiếu nào cho buổi demo?",
+      "final_option": "Google Slides",
+      "match": [
+        "slides"
+      ],
+      "final_match": [
+        "slides"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Công cụ trình chiếu → Google Slides",
+      "match": [
+        "slides"
+      ]
+    },
+    {
+      "type": "action_item",
+      "content": "Quay sẵn video demo",
+      "match": [
+        "video"
+      ],
+      "owner": "Linh",
+      "due_date": "2026-10-21"
+    },
+    {
+      "type": "action_item",
+      "content": "Chuẩn bị dữ liệu mẫu cho buổi demo",
+      "match": [
+        "du lieu mau"
+      ],
+      "owner": "Tâm",
+      "due_date": "2026-10-22"
+    },
+    {
+      "type": "action_item",
+      "content": "Cài bản build mới lên máy demo",
+      "match": [
+        "build",
+        "may demo"
+      ],
+      "owner": "Linh",
+      "due_date": "2026-10-22"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "context": {
+    "meeting_id": "tentative_commitments",
+    "title": "Hàng đợi thông báo đẩy",
+    "meeting_date": "2026-10-19",
+    "participants": [
+      {
+        "name": "Hằng",
+        "is_decision_maker": true
+      },
+      {
+        "name": "Quốc"
+      },
+      {
+        "name": "Vân"
+      }
+    ]
+  },
+  "transcript": "datasets/synthetic/tentative_commitments.txt",
+  "kind": "trap",
+  "topics": [
+    {
+      "question": "Dùng gì làm hàng đợi cho thông báo đẩy?",
+      "final_option": "Redis Streams",
+      "match": [
+        "redis",
+        "rabbitmq"
+      ],
+      "final_match": [
+        "redis"
+      ]
+    },
+    {
+      "question": "Có dùng lại bộ icon cũ cho thông báo không?",
+      "final_option": null,
+      "match": [
+        "icon"
+      ],
+      "final_match": []
+    }
+  ],
+  "items": [
+    {
+      "type": "decision",
+      "content": "Hàng đợi thông báo → Redis Streams",
+      "match": [
+        "redis"
+      ]
+    },
+    {
+      "type": "action_item",
+      "content": "Dựng hàng đợi Redis Streams",
+      "match": [
+        "hang doi",
+        "redis"
+      ],
+      "owner": "Quốc",
+      "due_date": "2026-10-22"
+    },
+    {
+      "type": "action_item",
+      "content": "Viết lại tài liệu API thông báo cho đội mobile",
+      "match": [
+        "tai lieu"
+      ],
+      "owner": null,
+      "due_date": null,
+      "official": false
+    },
+    {
+      "type": "action_item",
+      "content": "Soạn bộ mẫu thông báo tiếng Anh nếu pháp chế duyệt",
+      "match": [
+        "mau thong bao",
+        "tieng anh"
+      ],
+      "owner": "Vân",
+      "due_date": null,
+      "official": false
+    },
+    {
+      "type": "action_item",
+      "content": "Làm dashboard theo dõi tỉ lệ gửi thành công",
+      "match": [
+        "dashboard"
+      ],
+      "owner": "Quốc",
+      "due_date": null,
+      "official": false
+    },
+    {
+      "type": "open_question",
+      "content": "Có dùng lại bộ icon cũ cho thông báo không?",
+      "match": [
+        "icon"
+      ]
+    }
+  ]
+}

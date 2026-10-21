@@ -15,6 +15,7 @@ from app.ai.agents.normalize import Chunk, apply_glossary, make_chunks
 from app.ai.agents.topics import TopicSpec, assign_topics
 from app.ai.agents.validate import validate_items
 from app.ai.config import AISettings
+from app.ai.domain.commitment_guard import guard_items
 from app.ai.domain.decide_guard import guard_acts
 from app.ai.domain.models import DialogueAct, MeetingContext, MeetingItem, Utterance
 from app.ai.domain.state_machine import Topic, run_topic
@@ -141,7 +142,8 @@ async def analyze_transcript(
         return {"topics": topics}
 
     async def n_build_items(state: State) -> dict[str, Any]:
-        return {"items": build_items(ctx, state["topics"], state["specs"], state["acts"])}
+        items = build_items(ctx, state["topics"], state["specs"], state["acts"])
+        return {"items": guard_items(items, state["utterances"])}
 
     async def n_validate(state: State) -> dict[str, Any]:
         return {"items": validate_items(state["items"])}

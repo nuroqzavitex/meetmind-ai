@@ -31,6 +31,7 @@ class GoldItem(BaseModel):
     owner: str | None = None
     due_date: date | None = None
     status: str | None = None
+    official: bool = True  # False: may be extracted, but only flagged for confirmation
 
 
 class Golden(BaseModel):

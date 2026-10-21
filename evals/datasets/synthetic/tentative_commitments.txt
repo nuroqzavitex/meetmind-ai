@@ -1,0 +1,16 @@
+[00:00:05] Hằng: Hôm nay mình chốt hàng đợi cho tính năng thông báo đẩy và chia việc tuần này.
+[00:00:20] Quốc: Em đề xuất dùng RabbitMQ cho hàng đợi.
+[00:00:40] Vân: Bên mình có sẵn Redis rồi, dùng Redis Streams cho gọn, đỡ thêm một hệ thống.
+[00:01:00] Hằng: Ok, chốt Redis Streams cho hàng đợi thông báo.
+[00:01:20] Hằng: Quốc dựng hàng đợi Redis Streams, xong trước thứ Năm tuần này nhé.
+[00:01:30] Quốc: Dạ, em nhận.
+[00:01:50] Vân: Hay là ai đó viết lại tài liệu API thông báo cho đội mobile nhỉ, tài liệu cũ hơi rối.
+[00:02:10] Hằng: Ừ, cái đó tính sau.
+[00:02:30] Hằng: Nếu bên pháp chế duyệt nội dung thì Vân soạn bộ mẫu thông báo tiếng Anh.
+[00:02:50] Hằng: Quốc làm luôn dashboard theo dõi tỉ lệ gửi thành công nhé.
+[00:03:05] Quốc: Tuần này em kín lịch rồi chị, em không nhận thêm được đâu.
+[00:03:20] Hằng: Ừ, vậy dashboard để chị tính sau.
+[00:03:40] Vân: Còn icon thông báo thì chắc là dùng lại bộ icon cũ thôi chị nhỉ.
+[00:03:55] Hằng: Có lẽ vậy, nhưng để chị xem lại với team thiết kế đã.
+[00:04:15] Vân: Dạ, vậy em chờ chị báo nhé.
+[00:04:30] Hằng: Ok, hôm nay đến đây thôi, cảm ơn mọi người.

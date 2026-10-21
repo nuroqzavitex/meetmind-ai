@@ -6,6 +6,8 @@ thresholds:
   owner_due_accuracy: 0.85
   evidence_faithfulness: 1.00
   trap_accuracy: 1.00
+  # Share of decisions/tasks shown as official (no "needs confirmation" flag) that are real ones.
+  official_precision: 0.90
 
 # QA eval thresholds (run_qa). Kept apart from `thresholds` so run_pipeline is unaffected.
 qa_thresholds:
