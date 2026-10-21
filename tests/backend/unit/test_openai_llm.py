@@ -10,7 +10,7 @@ from app.ai.agents.extract import ExtractOutput
 from app.ai.agents.qa import QAAnswer, QAFilter
 from app.ai.config import AISettings
 from app.ai.errors import LLMError, LLMRefusal
-from app.ai.llm.openai_client import OpenAILLM, strict_json_schema
+from app.ai.llm.openai_client import OpenAILLM, parse_loose, strict_json_schema
 from app.core.config import Settings
 from app.core.llm import build_llm
 
@@ -96,6 +96,29 @@ async def test_invalid_json_raises_llm_error() -> None:
     stub = StubAsyncOpenAI(_completion('{"acts": "not a list", "score": 1}'))
     with pytest.raises(LLMError, match="extract"):
         await _llm(stub).structured(agent="extract", system="s", user="u", schema=Out)
+
+
+class OneList(BaseModel):
+    acts: list[str]
+
+
+def test_parse_loose_accepts_fenced_json_and_a_bare_list() -> None:
+    assert parse_loose('```json\n{"acts": ["a"], "score": 1}\n```', Out).acts == ["a"]
+    assert parse_loose('```\n["a", "b"]\n```', OneList).acts == ["a", "b"]
+    assert parse_loose('{"acts": ["a"]}', OneList).acts == ["a"]
+
+
+def test_parse_loose_does_not_guess_for_other_shapes() -> None:
+    with pytest.raises(ValueError):
+        parse_loose('["a"]', Out)  # two fields: which one would the list be?
+    with pytest.raises(ValueError):
+        parse_loose("not json", OneList)
+
+
+async def test_fenced_output_from_compatible_servers_is_accepted() -> None:
+    stub = StubAsyncOpenAI(_completion('```json\n["x"]\n```'))
+    out = await _llm(stub).structured(agent="extract", system="s", user="u", schema=OneList)
+    assert out.acts == ["x"]
 
 
 async def test_api_error_raises_llm_error() -> None:

@@ -1,6 +1,8 @@
 """LLMClient implementation backed by the OpenAI API (strict structured outputs)."""
 
-from typing import Any, TypeVar
+import json
+import re
+from typing import Any, TypeVar, get_origin
 
 import openai
 from openai.lib._pydantic import to_strict_json_schema
@@ -28,6 +30,26 @@ def strict_json_schema(schema: type[BaseModel]) -> dict[str, Any]:
     """
     result: dict[str, Any] = _drop_defaults(to_strict_json_schema(schema))
     return result
+
+
+_FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
+
+
+def parse_loose(content: str, schema: type[T]) -> T:
+    """Validate JSON that OpenAI-compatible servers without strict schemas (Ollama) return.
+
+    They may wrap it in a ```json fence, or answer a one-list schema with the bare list.
+    """
+    fenced = _FENCE.match(content)
+    text = fenced.group(1) if fenced else content
+    try:
+        return schema.model_validate_json(text)
+    except ValidationError:
+        data = json.loads(text)  # not JSON at all: let JSONDecodeError say so
+        lists = [n for n, f in schema.model_fields.items() if get_origin(f.annotation) is list]
+        if isinstance(data, list) and len(schema.model_fields) == 1 and lists:
+            return schema.model_validate({lists[0]: data})
+        raise
 
 
 class OpenAILLM:
@@ -66,6 +88,6 @@ class OpenAILLM:
         if not content:
             raise LLMError(f"No output for agent '{agent}'")
         try:
-            return schema.model_validate_json(content)
-        except ValidationError as e:
+            return parse_loose(content, schema)
+        except (ValidationError, ValueError) as e:
             raise LLMError(f"Invalid structured output from agent '{agent}': {e}") from e
