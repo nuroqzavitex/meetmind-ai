@@ -49,10 +49,13 @@ Nên chọn cùng khu vực Singapore cho Render, Neon và Upstash để giảm 
    | `CLERK_SECRET_KEY` | Secret key của Clerk (`sk_test_…`), giống biến cùng tên trên Vercel. Cần cho tính năng xin vào tổ chức |
    | `CLERK_AUTHORIZED_PARTIES` | URL Vercel, ví dụ `https://meetmind-ai.vercel.app` (chưa có thì tạm điền, sửa sau bước 4) |
    | `CORS_ORIGINS` | Giống `CLERK_AUTHORIZED_PARTIES` |
-   | `OPENAI_API_KEY` | Khoá OpenAI |
+   | `OLLAMA_API_KEY` | Khoá Ollama Cloud (https://ollama.com/settings/keys), dùng cho phân tích và hỏi đáp |
+   | `OPENAI_API_KEY` | Khoá OpenAI, chỉ dùng cho upload ghi âm (chuyển giọng nói). Bỏ trống thì upload ghi âm báo lỗi |
    | `GEMINI_API_KEY` | Khoá Gemini |
 
-   Model và provider (`LLM_PROVIDER=openai`, `EMBEDDING_PROVIDER=gemini`…) đã đặt sẵn trong `render.yaml`.
+   Model và provider (`LLM_PROVIDER=ollama`, `LLM_MODEL_*=gemma4:31b`, `EMBEDDING_PROVIDER=gemini`…) đã đặt sẵn
+   trong `render.yaml`. Render chỉ áp các giá trị này khi tạo hoặc Sync blueprint; service tạo trước đó cần sửa
+   trong Dashboard → Environment.
 4. Đợi build xong, mở `https://<service>.onrender.com/api/v1/health`, thấy `{"status":"ok"}` là được.
    Ghi lại URL này cho bước 4.
 

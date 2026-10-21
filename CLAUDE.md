@@ -82,6 +82,7 @@ Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they nee
 - LLM clients:
   - `ai/llm/client.py` (Anthropic) is the default production client.
   - `ai/llm/openai_client.py` (`OpenAILLM`, `LLM_PROVIDER=openai`) uses strict JSON-schema output; `strict_json_schema` drops pydantic defaults, which strict mode rejects.
+  - `LLM_PROVIDER=ollama` reuses `OpenAILLM` against Ollama Cloud's OpenAI-compatible API (`OLLAMA_API_KEY`, `OLLAMA_BASE_URL`); the deploy runs `gemma4:31b`. Ollama ignores the schema, so `parse_loose` strips ```` ```json ```` fences and wraps a bare list, and a malformed answer is retried once. Audio STT still needs `OPENAI_API_KEY`.
   - `ai/llm/fake.py` (`FakeLLM`, queue-based) is used in tests.
   - `ai/llm/fixture.py` (`FixtureLLM`) reads `<dir>/<agent>.json`.
   - `core/llm.py::build_llm(settings)` picks one of these for both the API and the worker.

@@ -52,6 +52,9 @@ def parse_loose(content: str, schema: type[T]) -> T:
         raise
 
 
+INVALID_OUTPUT_ATTEMPTS = 2
+
+
 class OpenAILLM:
     """LLMClient backed by OpenAI chat completions with a strict JSON schema."""
 
@@ -60,6 +63,18 @@ class OpenAILLM:
         self._client = client
 
     async def structured(self, *, agent: str, system: str, user: str, schema: type[T]) -> T:
+        # Servers without strict schemas (Ollama) now and then emit a malformed object; a fresh
+        # sample usually parses, so one invalid answer is retried before failing the whole step.
+        for attempt in range(INVALID_OUTPUT_ATTEMPTS):
+            content = await self._complete(agent=agent, system=system, user=user, schema=schema)
+            try:
+                return parse_loose(content, schema)
+            except (ValidationError, ValueError) as e:
+                if attempt == INVALID_OUTPUT_ATTEMPTS - 1:
+                    raise LLMError(f"Invalid structured output from agent '{agent}': {e}") from e
+        raise AssertionError("unreachable")
+
+    async def _complete(self, *, agent: str, system: str, user: str, schema: type[T]) -> str:
         try:
             response = await self._client.chat.completions.create(
                 model=self._settings.model_for(agent),
@@ -80,14 +95,11 @@ class OpenAILLM:
         except openai.APIError as e:
             raise LLMError(f"OpenAI API error in agent '{agent}': {e}") from e
         choice = response.choices[0]
-        if choice.message.refusal:
+        if getattr(choice.message, "refusal", None):
             raise LLMRefusal(f"Model refused request for agent '{agent}'")
         if choice.finish_reason == "length":
             raise LLMError(f"Output of agent '{agent}' was cut off at max_tokens")
         content = choice.message.content
         if not content:
             raise LLMError(f"No output for agent '{agent}'")
-        try:
-            return parse_loose(content, schema)
-        except (ValidationError, ValueError) as e:
-            raise LLMError(f"Invalid structured output from agent '{agent}': {e}") from e
+        return content

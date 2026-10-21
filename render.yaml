@@ -50,11 +50,14 @@ services:
       - key: DISCORD_PUBLIC_KEY
         sync: false
       - key: LLM_PROVIDER
-        value: openai
+        value: ollama
       - key: LLM_MODEL_DEFAULT
-        value: gpt-4o-mini
+        value: gemma4:31b
       - key: LLM_MODEL_ARBITRATE
-        value: gpt-5-mini
+        value: gemma4:31b
+      - key: OLLAMA_API_KEY
+        sync: false
+      # Only for audio uploads now (speech-to-text below)
       - key: OPENAI_API_KEY
         sync: false
       - key: EMBEDDING_PROVIDER

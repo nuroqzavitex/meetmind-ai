@@ -23,6 +23,14 @@ class UnconfiguredLLM:
 def build_llm(settings: Settings) -> LLMClient:
     if settings.llm_provider == "fake":
         return FixtureLLM(Path(settings.fake_llm_dir))
+    if settings.llm_provider == "ollama":
+        if settings.ollama_api_key is None:
+            return UnconfiguredLLM("OLLAMA_API_KEY")
+        return make_openai_llm(
+            settings.ai_settings(),
+            settings.ollama_api_key.get_secret_value(),
+            base_url=settings.ollama_base_url,
+        )
     if settings.llm_provider == "openai":
         if settings.openai_api_key is None:
             return UnconfiguredLLM("OPENAI_API_KEY")

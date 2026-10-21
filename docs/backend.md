@@ -3,7 +3,7 @@
 ## Chạy bằng Docker Compose
 
 ```bash
-cp .env.example .env        # điền khoá LLM (ANTHROPIC_API_KEY hoặc OPENAI_API_KEY + LLM_PROVIDER=openai) và CLERK_*
+cp .env.example .env        # điền khoá LLM (ANTHROPIC_API_KEY, hoặc OPENAI_API_KEY/OLLAMA_API_KEY + LLM_PROVIDER) và CLERK_*
 docker compose up -d --build   # hoặc: make up
 curl localhost:8000/api/v1/health   # {"status":"ok"}
 ```
@@ -46,7 +46,9 @@ trả 403 `admin_only`. Duyệt người xin vào tổ chức cần `CLERK_SECRE
 
 ## LLM giả cho e2e (`LLM_PROVIDER=fake`)
 
-`LLM_PROVIDER` chọn `anthropic` (mặc định), `openai` (strict JSON schema, cần `OPENAI_API_KEY`) hoặc `fake`.
+`LLM_PROVIDER` chọn `anthropic` (mặc định), `openai` (strict JSON schema, cần `OPENAI_API_KEY`), `ollama` (Ollama Cloud
+qua API tương thích OpenAI, cần `OLLAMA_API_KEY`; server không ép schema nên client bỏ khối ```` ```json ````, bọc mảng trần
+và gọi lại một lần khi JSON sai cấu trúc) hoặc `fake`.
 `LLM_PROVIDER=fake` thay LLM thật bằng `FixtureLLM`: mỗi lời gọi của agent `<agent>` trả nội dung file
 `<FAKE_LLM_DIR>/<agent>.json` (mặc định `../tests/fixtures/llm/payment_v2`, tính từ `backend/`), không gọi mạng.
 Chỉ dùng cho e2e (Playwright tự đặt biến này cho backend và worker, xem [tests/e2e/README.md](../tests/e2e/README.md));

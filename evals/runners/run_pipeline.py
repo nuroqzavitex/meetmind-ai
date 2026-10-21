@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None, llm_factory: LLMFactory | None = None) -
         app_settings = get_settings()
         llm = build_llm(app_settings)
         if isinstance(llm, UnconfiguredLLM) or app_settings.llm_provider == "fake":
-            print("Set LLM_PROVIDER=anthropic|openai and its API key to run the real eval.",
+            print("Set LLM_PROVIDER=anthropic|openai|ollama and its API key to run the real eval.",
                   file=sys.stderr)
             return 2
         settings = app_settings.ai_settings().model_copy(

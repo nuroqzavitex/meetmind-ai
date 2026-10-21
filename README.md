@@ -41,7 +41,7 @@ flowchart LR
     API -- "enqueue job" --> R[(Redis)]
     R --> W["Arq worker<br/>transcribe, analyze, index, notify"]
     W --> PG
-    W --> C["LLM<br/>(Claude hoặc OpenAI)"]
+    W --> C["LLM<br/>(Ollama Cloud, OpenAI hoặc Claude)"]
     W --> STT["OpenAI<br/>chuyển giọng nói"]
     API -- "POST /qa" --> C
     W -- "webhook" --> DC["Discord"]
@@ -50,7 +50,7 @@ flowchart LR
 ```
 
 Embedding: bge-m3 chạy tại chỗ, hoặc Gemini API (bản deploy dùng Gemini). LLM chọn bằng `LLM_PROVIDER`; bản deploy dùng
-OpenAI `gpt-4o-mini` (phân xử: `gpt-5-mini`) để tiết kiệm chi phí.
+Ollama Cloud `gemma4:31b` cho mọi agent (trước 21/10/2026 là OpenAI `gpt-4o-mini`, phân xử `gpt-5-mini`).
 
 Phụ thuộc một chiều: `endpoints → services → repositories / ai`. Thư mục `backend/app/ai/` không biết gì về HTTP,
 Clerk hay org, nên cùng một lõi chạy được từ API, worker và runner eval.
@@ -91,7 +91,7 @@ filter (LLM: dự án, ngày, người, loại mục, câu hỏi viết lại)
 
 ## Chạy nhanh
 
-**Yêu cầu:** Docker (kèm Docker Compose). Khi chạy không Docker hoặc chạy test: thêm [uv](https://docs.astral.sh/uv/) (tự cài Python 3.11 theo `backend/.python-version`) và Node 22 (≥ 22.22, yêu cầu của jsdom trong Vitest). Cần tài khoản Clerk (xem [Cấu hình Clerk](#cấu-hình-clerk)) và khoá LLM: `ANTHROPIC_API_KEY`, hoặc `OPENAI_API_KEY` với `LLM_PROVIDER=openai`.
+**Yêu cầu:** Docker (kèm Docker Compose). Khi chạy không Docker hoặc chạy test: thêm [uv](https://docs.astral.sh/uv/) (tự cài Python 3.11 theo `backend/.python-version`) và Node 22 (≥ 22.22, yêu cầu của jsdom trong Vitest). Cần tài khoản Clerk (xem [Cấu hình Clerk](#cấu-hình-clerk)) và khoá LLM: `ANTHROPIC_API_KEY`, hoặc `OPENAI_API_KEY` với `LLM_PROVIDER=openai`, hoặc `OLLAMA_API_KEY` với `LLM_PROVIDER=ollama`.
 
 ```bash
 cp .env.example .env     # điền khoá LLM, CLERK_*, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
@@ -163,11 +163,12 @@ Danh sách đầy đủ và giá trị mặc định nằm ở [.env.example](.e
 | Biến | Ý nghĩa |
 |---|---|
 | `ANTHROPIC_API_KEY` | Khoá Anthropic cho pipeline, hỏi đáp và eval |
-| `OPENAI_API_KEY` | Khoá OpenAI, dùng khi `LLM_PROVIDER=openai` |
+| `OPENAI_API_KEY` | Khoá OpenAI, dùng khi `LLM_PROVIDER=openai` và cho upload ghi âm |
+| `OLLAMA_API_KEY`, `OLLAMA_BASE_URL` | Khoá Ollama Cloud và endpoint (mặc định `https://ollama.com/v1`), dùng khi `LLM_PROVIDER=ollama` |
 | `DATABASE_URL`, `REDIS_URL` | Postgres và Redis. Host `db` / `redis` trong Compose, `localhost` khi chạy local |
 | `CLERK_JWKS_URL`, `CLERK_ISSUER`, `CLERK_AUTHORIZED_PARTIES` | Backend xác thực JWT của Clerk |
 | `CLERK_SECRET_KEY` (backend) | Đọc tên/email người xin vào org và thêm thành viên khi admin đồng ý. Thiếu thì tính năng xin vào org trả 503 |
-| `LLM_PROVIDER` | `anthropic` (mặc định), `openai` (cần `OPENAI_API_KEY`, đặt `LLM_MODEL_*` thành model OpenAI) hoặc `fake` (chỉ dùng cho e2e, đọc fixture, không gọi LLM thật) |
+| `LLM_PROVIDER` | `anthropic` (mặc định), `openai` (cần `OPENAI_API_KEY`, đặt `LLM_MODEL_*` thành model OpenAI), `ollama` (cần `OLLAMA_API_KEY`, ví dụ `gemma4:31b`) hoặc `fake` (chỉ dùng cho e2e, đọc fixture, không gọi LLM thật) |
 | `LLM_MODEL_DEFAULT`, `LLM_MODEL_ARBITRATE` | Model cho các agent và cho arbitrate (tên model của nhà cung cấp đang chọn) |
 | `PROMPT_VERSION` | Phiên bản prompt (`ai/prompts/<agent>/vN.md`) |
 | `EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, `EMBEDDING_DIM` | `local` (bge-m3, 1024 chiều), `gemini` (`gemini-embedding-001`, cần `GEMINI_API_KEY`) hoặc `hash` |

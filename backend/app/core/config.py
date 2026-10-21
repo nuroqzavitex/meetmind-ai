@@ -47,7 +47,10 @@ class Settings(BaseSettings):
     anthropic_api_key: SecretStr | None = None
     openai_api_key: SecretStr | None = None
     gemini_api_key: SecretStr | None = None
-    llm_provider: Literal["anthropic", "openai", "fake"] = "anthropic"
+    # Ollama Cloud through its OpenAI-compatible API (models like gemma4:31b).
+    ollama_api_key: SecretStr | None = None
+    ollama_base_url: str = "https://ollama.com/v1"
+    llm_provider: Literal["anthropic", "openai", "ollama", "fake"] = "anthropic"
     fake_llm_dir: str = "../tests/fixtures/llm/payment_v2"
     llm_model_default: str = "claude-sonnet-5-5"
     llm_model_arbitrate: str = "claude-opus-5-5"

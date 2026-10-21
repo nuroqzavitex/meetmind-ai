@@ -137,3 +137,41 @@ async def test_build_llm_openai_without_key_names_openai_key() -> None:
     llm = build_llm(Settings(_env_file=None, llm_provider="openai", openai_api_key=None))
     with pytest.raises(LLMError, match="OPENAI_API_KEY"):
         await llm.structured(agent="qa", system="s", user="u", schema=QAAnswer)
+
+
+def test_build_llm_ollama_provider_points_at_ollama_cloud() -> None:
+    s = Settings(_env_file=None, llm_provider="ollama", ollama_api_key="ol-test")
+    llm = build_llm(s)
+    assert isinstance(llm, OpenAILLM)
+    assert str(llm._client.base_url).rstrip("/") == "https://ollama.com/v1"
+
+
+async def test_build_llm_ollama_without_key_names_ollama_key() -> None:
+    llm = build_llm(Settings(_env_file=None, llm_provider="ollama", ollama_api_key=None))
+    with pytest.raises(LLMError, match="OLLAMA_API_KEY"):
+        await llm.structured(agent="qa", system="s", user="u", schema=QAAnswer)
+
+
+class SequenceAsyncOpenAI:
+    def __init__(self, *contents: str) -> None:
+        self.calls = 0
+        answers = list(contents)
+
+        async def create(**_: Any) -> Any:
+            self.calls += 1
+            return _completion(answers.pop(0))
+
+        self.chat = SimpleNamespace(completions=SimpleNamespace(create=create))
+
+
+async def test_one_malformed_answer_is_retried() -> None:
+    stub = SequenceAsyncOpenAI('{"acts": [["nested"]]}', '{"acts": ["ok"]}')
+    out = await _llm(stub).structured(agent="extract", system="s", user="u", schema=OneList)  # type: ignore[arg-type]
+    assert out.acts == ["ok"] and stub.calls == 2
+
+
+async def test_two_malformed_answers_fail() -> None:
+    stub = SequenceAsyncOpenAI('{"acts": 1}', "nope")
+    with pytest.raises(LLMError, match="Invalid structured output"):
+        await _llm(stub).structured(agent="extract", system="s", user="u", schema=OneList)  # type: ignore[arg-type]
+    assert stub.calls == 2
