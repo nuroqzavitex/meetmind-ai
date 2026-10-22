@@ -22,9 +22,11 @@ Theo danh sách "MVP xong khi" ở mục 0 của spec, cộng các phần làm t
 - **Đăng nhập và org.** Đăng nhập bằng Clerk, người dùng phải thuộc một organization. Dữ liệu của org này không lộ sang org khác (có bộ test cách ly). Người mới có thể tạo org hoặc **xin vào org có sẵn bằng mã tham gia**: admin thấy yêu cầu ở chuông trên thanh điều hướng (và trên Discord nếu đã gắn), đồng ý thì backend thêm thành viên qua Clerk Backend API.
 - **Upload và duyệt.** Upload transcript (`.txt`, `.srt`, `.vtt`, `.docx`), màn hình duyệt hiển thị 7 loại mục: `decision`, `action_item`, `open_question`, `blocker`, `request`, `feedback`, `knowledge`. Mỗi mục có trích dẫn và mốc thời gian, bấm vào là cuộn tới câu gốc. Tab **Diễn biến chủ đề** cho thấy phương án nào bị thay thế lúc nào.
 - **Upload ghi âm.** File `.mp3`, `.m4a`, `.wav`, `.webm`, `.mp4` (≤ 25 MB) được chuyển thành văn bản và tách người nói bằng OpenAI `gpt-4o-transcribe-diarize`. Người dùng gán tên thật và người quyết định cho từng "Người nói A/B…", sau đó luồng phân tích chạy như với transcript.
+- **Hàng chờ xác nhận (Mission 3).** Lớp kiểm tra bằng code (`ai/domain/commitment_guard.py`) không để một gợi ý, việc có điều kiện, việc bị người nhận từ chối, câu "chờ tin" hay quyết định bị hiểu ngược ý ("chốt **không** …") thành quyết định hoặc việc chính thức. Những mục này lên đầu màn hình duyệt với lý do và cụm từ gây nghi ngờ được tô sáng; người duyệt xác nhận, chuyển thành câu hỏi mở hoặc bỏ. Biên bản tách phần **Đã chốt** và **Chưa chốt – cần theo dõi**.
+- **Tổng hợp.** Trang `/overview` xuyên mọi cuộc họp đã phát hành, không dùng AI: **Chương trình họp kế tiếp** (việc chưa chốt, điều kiện cần theo dõi, việc quá hạn/sắp đến hạn; sao chép hoặc gửi lên Discord), **Việc của tôi** (theo người phụ trách) và **Sổ quyết định** (có phương án bị thay thế). Lọc theo dự án.
 - **Kịch bản bẫy.** Các trường hợp A→B, chốt A rồi đổi B, quay lại A, mở lại, bác phương án đã chốt, chốt không rõ phương án và chờ cấp trên đều phải ra đúng trạng thái cuối.
 - **Phát hành.** Duyệt xong thì phát hành, tải biên bản `.md` và `.json`. Sau phát hành có thể "Báo sai", mở lại mục, sửa rồi phát hành lại.
-- **Discord.** Mỗi org gắn một webhook Discord ở trang **Cài đặt**. Khi phát hành, kênh nhận tóm tắt (quyết định, việc cần làm, link biên bản); mỗi sáng 8h có bản tin việc quá hạn, đến hạn và sắp đến hạn (GitHub Actions gọi `POST /api/v1/internal/digest`). Bot Discord: gõ `/hoi <câu hỏi>` trong server đã liên kết (`/ketnoi <mã>`) để hỏi đáp như trang Hỏi đáp, có trích dẫn.
+- **Discord.** Mỗi org gắn một webhook Discord ở trang **Cài đặt**. Khi phát hành, kênh nhận tóm tắt (quyết định, việc cần làm, link biên bản); mỗi sáng 8h có bản tin việc quá hạn, đến hạn và sắp đến hạn (GitHub Actions gọi `POST /api/v1/internal/digest`). Bot Discord: gõ `/hoi <câu hỏi>` trong server đã liên kết (`/ketnoi <mã>`) để hỏi đáp như trang Hỏi đáp, có trích dẫn; `/chuongtrinh`, `/viec ten:<tên>` và `/quyetdinh` trả về chương trình họp kế tiếp, việc của một người và các quyết định gần đây.
 - **Hỏi đáp.** Hỏi trên các cuộc họp đã phát hành của org, câu trả lời có trích dẫn `[cuộc họp · hh:mm:ss · người nói]`. Câu hỏi ngoài dữ liệu nhận câu từ chối cố định.
 - **Đánh giá.** `evals/` gồm 15 transcript (10 kịch bản bẫy, 5 transcript thực tế) và 18 câu hỏi QA, có ngưỡng ở mục 13.2 của spec. Đã chạy thật ngày 14/10/2026, kết quả ở [Đánh giá](#đánh-giá-evals).
 - **Bộ kiểm thử Mission 2.** [docs/test-cases.md](docs/test-cases.md): 7 tình huống chạy thật (làm tốt, dữ liệu mơ hồ, thất bại) theo format Kỳ vọng → Thực tế → Đạt/Chưa đạt → Điều học được.
@@ -45,7 +47,7 @@ flowchart LR
     W --> STT["OpenAI<br/>chuyển giọng nói"]
     API -- "POST /qa" --> C
     W -- "webhook" --> DC["Discord"]
-    DC -- "/hoi, /ketnoi<br/>(Interactions Endpoint)" --> API
+    DC -- "/hoi, /ketnoi, /chuongtrinh, /viec, /quyetdinh<br/>(Interactions Endpoint)" --> API
     GH["GitHub Actions<br/>8h sáng"] -- "POST /internal/digest" --> API
 ```
 

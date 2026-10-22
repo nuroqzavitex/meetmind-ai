@@ -103,11 +103,11 @@ Interactions Endpoint, nên không cần máy chạy bot riêng.
    `https://<service>.onrender.com/api/v1/discord/interactions` → **Save Changes**. Discord gửi thử một request;
    lưu được nghĩa là chữ ký đã khớp. (Render đang ngủ thì lần lưu đầu có thể báo lỗi, đợi 1 phút rồi lưu lại.)
 5. Trang **Bot** → **Reset Token** → chép token. Ở máy: thêm `DISCORD_APP_ID` và `DISCORD_BOT_TOKEN` vào `.env`, rồi
-   `cd backend && uv run python scripts/register_discord_commands.py` (in ra `Registered: /hoi, /ketnoi`). Token không
-   cần đưa lên Render.
+   `cd backend && uv run python scripts/register_discord_commands.py` (in ra `Registered: /hoi, /ketnoi, /chuongtrinh, /viec,
+   /quyetdinh`). Token không cần đưa lên Render. Khi code thêm lệnh mới, chạy lại script này một lần.
 6. MeetMind → **Cài đặt** → thẻ **Bot hỏi đáp Discord** (admin): bấm **Mời bot MeetMind**, chọn server.
 7. Trong server, người có quyền quản lý server gõ `/ketnoi ma:DC-XXXX-XXXX` (mã ở thẻ trên). Sau đó ai trong server
-   cũng gõ được `/hoi`.
+   cũng gõ được `/hoi`, `/chuongtrinh`, `/viec ten:<tên>` và `/quyetdinh`.
 
 Mọi người trong server đã liên kết đều đọc được nội dung các cuộc họp đã phát hành qua bot: chỉ liên kết server dành
 riêng cho nhóm. Render Free đang ngủ thì lệnh đầu tiên có thể báo "ứng dụng không phản hồi"; gõ lại sau ít giây.

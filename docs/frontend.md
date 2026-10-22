@@ -72,6 +72,7 @@ CLERK_SECRET_KEY=sk_test_dummy npm run build
 | `/meetings/[id]/review` | Duyệt các item AI trích xuất |
 | `/meetings/[id]/minutes` | Biên bản đã phát hành / xuất |
 | `/qa` | Hỏi đáp trên các cuộc họp đã phát hành, kèm chip trích dẫn |
+| `/overview` | Tổng hợp: chương trình họp kế tiếp (sao chép, gửi Discord), việc của tôi (nhớ tên đã chọn trong localStorage), sổ quyết định; lọc theo dự án |
 | `/sign-in`, `/sign-up` | Đăng nhập / đăng ký (Clerk) |
 | `/settings` | Cài đặt: Discord (webhook, bản tin 8h sáng, link mời server; thành viên chỉ xem), bot `/hoi`, mã tham gia và yêu cầu tham gia (admin) |
 | `/select-org` | Chọn hoặc tạo organization, hoặc xin vào organization có sẵn bằng mã tham gia |

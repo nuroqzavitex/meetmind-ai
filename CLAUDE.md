@@ -77,6 +77,7 @@ Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they nee
 **AI core** (`backend/app/ai`) has no dependency on the web layer.
 - `pipeline.py` is a LangGraph graph: parse transcript → chunk/normalize → `extract` dialogue acts (LLM, parallel per chunk) → `check_quotes` (verbatim evidence, one retry) → `topics` (LLM) → **deterministic state machine** `domain/state_machine.py` → `arbitrate` (LLM, only on ambiguity signals) → `build_items` → `validate`.
 - Final decisions come from the state machine, not the LLM. Only an explicit `DECIDE` act creates a decision.
+- `domain/commitment_guard.py` runs after `build_items`: it never drops items, but holds tentative, conditional, declined, waiting and ownerless tasks, and decisions whose label lost a "chốt không …", by adding `needs_confirmation` plus a reason flag and `MeetingItem.hold` (reason, full sentence, triggering phrase). The review screen's confirmation queue settles them: `approve` releases the hold (official), `to_question` (PATCH action) turns the item into an open question that keeps the hold. `evals` scores `official_precision`; `evals.runners.replay_guard` re-scores a saved report with the guard applied.
 - `domain/decide_guard.py` runs before the state machine: a `DECIDE` keeps its option only if its own quote names it (diacritic-insensitive word match), and `"null"`-like labels become `None`. An unnamed `DECIDE` is resolved to the sole live option unless the topic was deferred.
 - Prompts are versioned files `ai/prompts/<agent>/<version>.md`, selected by `PROMPT_VERSION`.
 - LLM clients:
@@ -95,7 +96,7 @@ Evals (call the real LLM configured by `LLM_PROVIDER`/`LLM_MODEL_*`, so they nee
 
 **Discord** (`notify/`, `services/notifications.py`): per-org webhook in `org_settings` (`/settings/discord`: everyone reads, only admins write or send a test (`core/auth.py::require_admin`), URL never returned, only Discord webhook hosts accepted). The daily digest is `POST /internal/digest` guarded by `X-Cron-Secret` = `CRON_SECRET`, called by `.github/workflows/digest.yml` at 01:00 UTC.
 
-**Discord bot** (`api/v1/endpoints/discord.py`, `services/discord_bot.py`, `notify/discord_bot.py`): `POST /discord/interactions` is Discord's Interactions Endpoint (Ed25519 signature with `DISCORD_PUBLIC_KEY`, no Clerk). `/ketnoi <code>` (needs Manage Server) links a guild to an org (`org_settings.discord_guild_id`, code `discord_link_code`); `/hoi` replies deferred, then a background task runs `services/qa.ask` for that org and PATCHes `@original`. Commands are registered with `backend/scripts/register_discord_commands.py` (needs `DISCORD_BOT_TOKEN`). Admin card: `/settings/discord-bot`.
+**Discord bot** (`api/v1/endpoints/discord.py`, `services/discord_bot.py`, `notify/discord_bot.py`): `POST /discord/interactions` is Discord's Interactions Endpoint (Ed25519 signature with `DISCORD_PUBLIC_KEY`, no Clerk). `/ketnoi <code>` (needs Manage Server) links a guild to an org (`org_settings.discord_guild_id`, code `discord_link_code`); `/hoi` replies deferred, then a background task runs `services/qa.ask` for that org and PATCHes `@original`. `/chuongtrinh`, `/viec ten:` and `/quyetdinh` answer at once from `services/overview.py` (DB only). Commands are registered with `backend/scripts/register_discord_commands.py` (needs `DISCORD_BOT_TOKEN`). Admin card: `/settings/discord-bot`.
 
 Job rules:
 - Only `queued` jobs run.
@@ -117,7 +118,7 @@ Fallbacks and errors:
 - Embeddings come from `EMBEDDING_PROVIDER=local` (bge-m3, 1024-dim, about 2 GB download), `gemini` (`gemini-embedding-001` requested at 1024 dims and L2-normalised, needs `GEMINI_API_KEY`) or `hash` (tests and e2e). The DB columns are fixed at `vector(1024)`; `core/embedding.py::build_embedder(settings)` picks the embedder. Compose build arg `INSTALL_EMBEDDINGS=false` drops torch from the image.
 
 **Frontend** (`frontend/src`):
-- `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/settings` (Discord webhook and team invite link, and for admins the join code and pending join requests), `/select-org` (Clerk org list plus "join by code"), and sign-in/up.
+- `app/` holds the routes: `/`, `/meetings/new`, `/meetings/[id]/review`, `/meetings/[id]/minutes`, `/qa`, `/overview` (next-meeting agenda, tasks per owner, decision log across published meetings; no LLM), `/settings` (Discord webhook and team invite link, and for admins the join code and pending join requests), `/select-org` (Clerk org list plus "join by code"), and sign-in/up.
 - `features/<area>/` holds UI and hooks.
 - `lib/api-client.ts` and `lib/use-api.ts` attach the Clerk token.
 - `middleware.ts` enforces sign-in and redirects users without an active org to `/select-org`.

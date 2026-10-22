@@ -77,6 +77,10 @@ không dùng khi chạy thật hay eval. Unit/integration test dùng `FakeLLM` t
 | POST | `/items/{item_id}/reopen` | Mở lại item |
 | GET | `/jobs/{job_id}` | Trạng thái job phân tích |
 | POST | `/qa` | Hỏi đáp trên các cuộc họp đã phát hành của org, trả lời kèm trích dẫn |
+| GET | `/overview/agenda?project=` | Chương trình họp kế tiếp: câu hỏi mở, điều kiện, việc quá hạn/sắp đến hạn, kèm bản text |
+| POST | `/overview/agenda/discord?project=` | Gửi chương trình họp vào webhook Discord (mọi thành viên; 409 `no_webhook`) |
+| GET | `/overview/tasks?project=&owner=` | Việc cần làm trên các cuộc họp đã phát hành, lọc theo người phụ trách |
+| GET | `/overview/decisions?project=` | Sổ quyết định, kể cả phương án đã bị thay thế, mới nhất trước |
 | GET / PUT | `/settings/discord` | Webhook (chỉ trả 4 ký tự cuối), bản tin 8h sáng, link mời server. Mọi thành viên đọc, chỉ admin sửa |
 | POST | `/settings/discord/test` | Gửi tin thử vào webhook (admin) |
 | GET | `/settings/discord-bot` | Trạng thái bot `/hoi`, mã liên kết, link mời bot (admin) |
@@ -115,7 +119,8 @@ hai lần worker hỏi hàng đợi.
   gần nhất), đến hạn hôm nay và trong 2 ngày tới, theo giờ Việt Nam.
 - **Bot `/hoi`** (`api/v1/endpoints/discord.py`, `services/discord_bot.py`): trả lời "đang suy nghĩ" ngay (Discord
   chỉ chờ 3 giây), chạy `services/qa.ask` cho org đã liên kết rồi sửa tin bằng câu trả lời. `/ketnoi <mã>` (cần quyền
-  quản lý server) liên kết server với org. Đăng ký lệnh một lần: `uv run python scripts/register_discord_commands.py`
+  quản lý server) liên kết server với org. `/chuongtrinh`, `/viec ten:` và `/quyetdinh` (`services/overview.py`) chỉ đọc DB
+  nên trả lời ngay, không chạy nền. Đăng ký lệnh (chạy lại khi thêm lệnh): `uv run python scripts/register_discord_commands.py`
   (cần `DISCORD_APP_ID`, `DISCORD_BOT_TOKEN`). Cách cấu hình: [deploy.md, mục 7](deploy.md#7-bot-hỏi-đáp-discord-tuỳ-chọn).
 
 ## Hỏi đáp (Q&A)
