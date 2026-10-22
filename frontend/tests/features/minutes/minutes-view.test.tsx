@@ -59,12 +59,30 @@ test("renders only approved/edited non-superseded items under ordered headings",
   expect(await screen.findByText("nd a")).toBeInTheDocument()
   expect(screen.getByText("nd b")).toBeInTheDocument()
   for (const t of ["nd c", "nd d", "nd e"]) expect(screen.queryByText(t)).toBeNull()
-  const heads = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)
+  const parts = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)
+  expect(parts).toEqual(["Đã chốt"])
+  const heads = screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)
   expect(heads).toEqual(["Quyết định", "Việc cần làm"])
   expect(screen.getByText("Họp tuần")).toBeInTheDocument()
   expect(screen.getByText(/05\/03\/2026/)).toBeInTheDocument()
   expect(screen.getByText(/Phát hành: 06\/03\/2026/)).toBeInTheDocument()
   expect(screen.getAllByRole("button", { name: "Báo sai" })).toHaveLength(2)
+})
+
+test("unsettled items get their own part and say why", async () => {
+  items = [
+    item("a", "decision", "approved"),
+    item("q", "open_question", "edited", {
+      hold: { reason: "declined", quote: "Em kín lịch rồi.", phrase: "kín lịch", speaker: "Quốc", ts: "00:03:05" },
+    }),
+    item("k", "knowledge", "approved"),
+  ]
+  renderIt()
+  await screen.findByText("nd q")
+  const parts = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)
+  expect(parts).toEqual(["Đã chốt", "Chưa chốt – cần theo dõi", "Thông tin khác"])
+  expect(screen.getByText(/Chưa chốt · Người nhận từ chối/)).toBeInTheDocument()
+  expect(screen.getByText("kín lịch").tagName).toBe("MARK")
 })
 
 test("download buttons call download with format", async () => {

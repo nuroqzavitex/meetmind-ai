@@ -5,6 +5,7 @@ from typing import Any
 
 from app.ai.domain.enums import ItemStatus, ItemType, ReviewState
 from app.ai.domain.models import MeetingContext, MeetingItem
+from app.ai.retrieval.indexing import HOLD_LABELS
 
 _SECTIONS: list[tuple[ItemType, str]] = [
     (ItemType.DECISION, "Quyết định"),
@@ -45,6 +46,8 @@ def _bullet(item: MeetingItem) -> str:
         line += f" [{ev.ts} {ev.speaker}]"
     if item.type == ItemType.DECISION and item.supersedes:
         line += f" (thay cho: {', '.join(item.supersedes)})"
+    if item.hold:
+        line += f" (chưa chốt: {HOLD_LABELS[item.hold.reason]} — \"{_one_line(item.hold.quote)}\")"
     return line
 
 

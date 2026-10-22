@@ -11,6 +11,7 @@ export type Participant = S["Participant"];
 export type Utterance = S["Utterance"];
 export type JobOut = S["JobOut"];
 export type ItemOut = S["ItemOut"];
+export type Hold = S["Hold"];
 export type ItemAction = S["ItemAction"];
 export type ItemPatch = S["ItemPatch"];
 export type ItemEventOut = S["ItemEventOut"];

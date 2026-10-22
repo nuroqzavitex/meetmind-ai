@@ -1550,6 +1550,66 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "Hold": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "declined",
+              "conditional",
+              "negation",
+              "waiting",
+              "tentative",
+              "no_owner"
+            ],
+            "title": "Reason"
+          },
+          "quote": {
+            "type": "string",
+            "title": "Quote"
+          },
+          "phrase": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phrase"
+          },
+          "speaker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speaker"
+          },
+          "ts": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason",
+          "quote"
+        ],
+        "title": "Hold",
+        "description": "Why a decision or task is held for confirmation instead of presented as official."
+      },
       "ItemAction": {
         "properties": {
           "action": {
@@ -1557,7 +1617,8 @@
             "enum": [
               "approve",
               "edit",
-              "reject"
+              "reject",
+              "to_question"
             ],
             "title": "Action"
           },
@@ -1767,6 +1828,16 @@
           "review_state": {
             "$ref": "#/components/schemas/ReviewState",
             "default": "pending"
+          },
+          "hold": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Hold"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",

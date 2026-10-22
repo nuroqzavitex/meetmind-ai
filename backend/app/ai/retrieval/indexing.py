@@ -13,6 +13,15 @@ TYPE_LABELS = {
     "knowledge": "Tri thức",
     "feedback": "Góp ý",
 }
+# Why an item was not settled (MeetingItem.hold), worded for the Q&A answer.
+HOLD_LABELS = {
+    "declined": "người được giao đã từ chối",
+    "conditional": "chỉ làm khi có điều kiện",
+    "negation": "câu chốt mang ý phủ định",
+    "waiting": "chỉ là chờ phản hồi",
+    "tentative": "mới là gợi ý, chưa ai cam kết",
+    "no_owner": "chưa có người nhận",
+}
 
 
 def item_search_text(item: MeetingItem) -> str:
@@ -21,6 +30,10 @@ def item_search_text(item: MeetingItem) -> str:
         text += f". Lý do: {item.rationale}"
     if item.owner:
         text += f". Phụ trách: {item.owner}"
+    if item.hold:
+        h = item.hold
+        who = f"{h.speaker} ({h.ts})" if h.speaker and h.ts else (h.speaker or "")
+        text += f". Chưa chốt vì {HOLD_LABELS[h.reason]}: {who} nói \"{h.quote}\""
     return text
 
 

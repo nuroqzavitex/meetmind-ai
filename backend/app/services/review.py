@@ -3,7 +3,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ai.agents.validate import REQUIRED_FLAGS
-from app.ai.domain.enums import ItemType, ReviewState
+from app.ai.domain.commitment_guard import release
+from app.ai.domain.enums import ItemStatus, ItemType, ReviewState
 from app.ai.domain.models import MeetingItem
 from app.ai.domain.state_machine import Topic
 from app.core.auth import Principal
@@ -77,6 +78,21 @@ def _edit(item: MeetingItem, action: ItemAction) -> MeetingItem:
     )
 
 
+def _to_question(item: MeetingItem) -> MeetingItem:
+    """Keep what was said as an open question; the hold stays to explain why it is open."""
+    if item.type not in (ItemType.DECISION, ItemType.ACTION_ITEM):
+        raise Unprocessable(
+            "Chỉ chuyển được quyết định hoặc việc cần làm thành câu hỏi mở", "not_convertible"
+        )
+    question = item.content.rsplit("→", 1)[0].strip() if item.type == ItemType.DECISION else item.content
+    kept = release(item).flags
+    return item.model_copy(update={
+        "type": ItemType.OPEN_QUESTION, "status": ItemStatus.OPEN, "content": question or item.content,
+        "due_date": None, "due_text": None, "supersedes": [], "flags": kept,
+        "review_state": ReviewState.EDITED,
+    })
+
+
 async def act_on_item(
     session: AsyncSession, *, principal: Principal, item_id: str, action: ItemAction
 ) -> MeetingItem:
@@ -85,9 +101,12 @@ async def act_on_item(
         raise NotFound(_NOT_FOUND_ITEM)
     await _require_in_review(session, principal, row.meeting_id)
     before = items_repo.to_model(row)
-    if action.action == "approve":
-        after = before.model_copy(update={"review_state": ReviewState.APPROVED})
+    if action.action == "approve":  # confirming a held item makes it official
+        after = release(before).model_copy(update={"review_state": ReviewState.APPROVED})
         event = "approved"
+    elif action.action == "to_question":
+        after = _to_question(before)
+        event = "to_question"
     elif action.action == "reject":
         after = before.model_copy(update={"review_state": ReviewState.REJECTED})
         event = "rejected"
@@ -95,7 +114,7 @@ async def act_on_item(
         after = _edit(before, action)
         event = "edited"
     await items_repo.save(session, item=row, model=after)
-    if action.action in ("edit", "reject"):
+    if action.action in ("edit", "reject", "to_question"):
         await retrieval_repo.clear_item_index(session, item=row)
     await items_repo.add_event(
         session,

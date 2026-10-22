@@ -3,11 +3,13 @@ import pytest
 from app.ai.domain.commitment_guard import (
     CONDITIONAL,
     DECLINED,
+    NEGATION,
     TENTATIVE,
     WAITING,
     guard_items,
     is_conditional,
     is_tentative,
+    release,
 )
 from app.ai.domain.enums import ItemType
 from app.ai.domain.models import Evidence, MeetingItem, Utterance
@@ -176,3 +178,76 @@ def test_flags_are_not_duplicated() -> None:
     item = _item(ItemType.ACTION_ITEM, u, [0]).model_copy(update={"flags": [NEEDS]})
     [out] = guard_items([item], u)
     assert out.flags.count(NEEDS) == 1
+
+
+def test_hold_records_the_sentence_and_the_exact_phrase() -> None:
+    u = _utts(("Hằng", "Quốc làm luôn dashboard nhé."),
+              ("Quốc", "Tuần này em Kín lịch rồi chị, em không nhận thêm được đâu."))
+    [out] = guard_items([_item(ItemType.ACTION_ITEM, u, [0], owner="Quốc")], u)
+    assert out.hold is not None
+    assert out.hold.reason == "declined" and out.hold.speaker == "Quốc"
+    assert out.hold.phrase == "Kín lịch"  # as written, so the UI can highlight it
+    assert out.hold.phrase in out.hold.quote
+    assert [e.utterance_id for e in out.evidence] == [u[0].id, u[1].id]  # refusal is evidence
+
+
+def test_condition_hold_highlights_the_if_clause_from_the_full_sentence() -> None:
+    u = _utts(("Hằng", "Nếu bên pháp chế duyệt nội dung thì Vân soạn bộ mẫu."),)
+    item = _item(ItemType.ACTION_ITEM, u, [0], owner="Vân")
+    ev = item.evidence[0].model_copy(update={"quote": "Vân soạn bộ mẫu."})
+    [out] = guard_items([item.model_copy(update={"evidence": [ev]})], u)
+    assert out.hold is not None and out.hold.reason == "conditional"
+    assert out.hold.phrase == "Nếu bên pháp chế duyệt nội dung thì"
+
+
+def test_strongest_reason_is_the_hold_and_every_reason_is_a_flag() -> None:
+    u = _utts(("Hằng", "Hay là nếu kịp thì Quốc làm dashboard nhé."),
+              ("Quốc", "Em không kịp đâu chị."))
+    [out] = guard_items([_item(ItemType.ACTION_ITEM, u, [0], owner="Quốc")], u)
+    assert out.hold is not None and out.hold.reason == "declined"
+    assert {TENTATIVE, CONDITIONAL, DECLINED} <= set(out.flags)
+
+
+def test_no_owner_hold_without_a_phrase() -> None:
+    u = _utts(("Hằng", "Cần cập nhật lại tài liệu cài đặt."),)
+    [out] = guard_items([_item(ItemType.ACTION_ITEM, u, [0])], u)
+    assert out.hold is not None and out.hold.reason == "no_owner" and out.hold.phrase is None
+
+
+def test_official_items_have_no_hold() -> None:
+    u = _utts(("Lan", "Minh dựng schema Postgres, xong trước thứ Sáu nhé."), ("Minh", "Vâng ạ."))
+    [out] = guard_items([_item(ItemType.ACTION_ITEM, u, [0, 1], owner="Minh")], u)
+    assert out.hold is None and out.flags == []
+
+
+def test_negated_decision_with_a_positive_label_is_held() -> None:
+    u = _utts(("Đạt", "Vậy mình chốt không mời Bách vào vòng ba."),)
+    item = _item(ItemType.DECISION, u, [0], owner="Đạt").model_copy(
+        update={"content": "Có mời Bách vào vòng 3 không? → Mời Bách vòng 3"})
+    [out] = guard_items([item], u)
+    assert out.hold is not None and out.hold.reason == "negation"
+    assert out.hold.phrase == "chốt không" and NEGATION in out.flags and NEEDS in out.flags
+
+
+def test_negated_decision_with_a_negative_label_is_fine() -> None:
+    u = _utts(("Đạt", "Vậy mình chốt không mời Bách vào vòng ba."),)
+    item = _item(ItemType.DECISION, u, [0], owner="Đạt").model_copy(
+        update={"content": "Có mời Bách vào vòng 3 không? → Không mời Bách"})
+    [out] = guard_items([item], u)
+    assert out.hold is None and out.flags == []
+
+
+def test_dropping_an_option_while_deciding_another_is_not_a_negation() -> None:
+    u = _utts(("Hạnh", "Ok, vậy bỏ SendGrid, mình chốt Amazon SES."),)
+    item = _item(ItemType.DECISION, u, [0], owner="Hạnh").model_copy(
+        update={"content": "Chọn dịch vụ gửi email? → Amazon SES"})
+    [out] = guard_items([item], u)
+    assert out.hold is None
+
+
+def test_release_makes_the_item_official() -> None:
+    u = _utts(("Vân", "Hay là ai đó làm việc này."),)
+    item = _item(ItemType.ACTION_ITEM, u, [0]).model_copy(update={"flags": ["missing_due_date"]})
+    [held] = guard_items([item], u)
+    out = release(held)
+    assert out.hold is None and out.flags == ["missing_due_date"]

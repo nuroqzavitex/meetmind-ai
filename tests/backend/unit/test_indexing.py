@@ -1,7 +1,7 @@
 from typing import Any
 
 from app.ai.domain.enums import ItemType
-from app.ai.domain.models import Evidence, MeetingItem, Utterance
+from app.ai.domain.models import Evidence, Hold, MeetingItem, Utterance
 from app.ai.retrieval.indexing import item_search_text, make_transcript_chunks
 
 
@@ -27,6 +27,16 @@ def test_search_text_full() -> None:
 
 def test_search_text_minimal() -> None:
     assert item_search_text(_item()) == "Quyết định: Dùng PostgreSQL → Postgres"
+
+
+def test_search_text_says_why_an_item_is_not_settled() -> None:
+    hold = Hold(reason="declined", quote="Tuần này em kín lịch rồi.", phrase="kín lịch",
+                speaker="Quốc", ts="00:03:05")
+    item = _item(type=ItemType.OPEN_QUESTION, content="Làm dashboard", owner="Quốc", hold=hold)
+    assert item_search_text(item) == (
+        "Câu hỏi mở: Làm dashboard. Phụ trách: Quốc. Chưa chốt vì người được giao đã từ chối: "
+        'Quốc (00:03:05) nói "Tuần này em kín lịch rồi."'
+    )
 
 
 def test_search_text_other_label() -> None:

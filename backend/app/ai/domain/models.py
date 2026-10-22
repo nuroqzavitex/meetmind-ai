@@ -1,6 +1,7 @@
 """Pydantic domain models for the AI core (spec section 7.1)."""
 
 from datetime import date
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -58,6 +59,19 @@ class Evidence(BaseModel):
     quote: str
 
 
+HoldReason = Literal["declined", "conditional", "negation", "waiting", "tentative", "no_owner"]
+
+
+class Hold(BaseModel):
+    """Why a decision or task is held for confirmation instead of presented as official."""
+
+    reason: HoldReason
+    quote: str                            # the full sentence said, verbatim
+    phrase: str | None = None             # exact substring of `quote` that triggered the hold
+    speaker: str | None = None
+    ts: str | None = None                 # "00:03:05"
+
+
 class MeetingItem(BaseModel):
     id: str
     meeting_id: str
@@ -77,3 +91,4 @@ class MeetingItem(BaseModel):
     flags: list[str] = []
     evidence: list[Evidence]
     review_state: ReviewState = ReviewState.PENDING
+    hold: Hold | None = None

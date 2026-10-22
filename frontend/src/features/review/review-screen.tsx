@@ -11,7 +11,9 @@ import { useMeeting } from "@/features/meetings/hooks"
 import { ApiError } from "@/lib/api-client"
 import { ITEM_TYPES, ITEM_TYPE_LABEL, MEETING_STATUS_LABEL, fmtDate } from "@/lib/format"
 import { ITEM_TYPE_STYLE } from "@/lib/item-style"
+import type { ItemAction } from "@/lib/types"
 import { cn } from "@/lib/utils"
+import { ConfirmQueue } from "./confirm-queue"
 import { useItemAction, useItems } from "./hooks"
 import { ItemCard } from "./item-card"
 import { ReviewToolbar } from "./review-toolbar"
@@ -36,6 +38,28 @@ export function ReviewScreen({ meetingId }: { meetingId: string }) {
     return <p className="text-sm text-destructive">Không tải được dữ liệu duyệt.</p>
 
   const readOnly = meeting.data.status !== "in_review"
+  const seek = (id: string) => setHighlight((h) => ({ id, nonce: (h?.nonce ?? 0) + 1 }))
+  const run = (id: string, body: ItemAction) => {
+    const p = act.mutateAsync({ id, body })
+    // Edit errors are shown inline by the edit form, not in the banner.
+    if (body.action === "edit") {
+      return p.then((r) => {
+        setActionError(null)
+        return r
+      })
+    }
+    return p.then(
+      (r) => {
+        setActionError(null)
+        return r
+      },
+      (e: unknown) => {
+        setActionError(e instanceof ApiError ? e.message : "Không cập nhật được mục.")
+        throw e
+      },
+    )
+  }
+  const pendingId = act.isPending ? (act.variables?.id ?? null) : null
 
   return (
     <div className="space-y-6">
@@ -60,6 +84,13 @@ export function ReviewScreen({ meetingId }: { meetingId: string }) {
           {actionError}
         </p>
       )}
+      <ConfirmQueue
+        items={items.data}
+        readOnly={readOnly}
+        pendingId={pendingId}
+        onAction={(id, body) => void run(id, body).catch(() => {})}
+        onEvidenceClick={seek}
+      />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Tabs defaultValue={ITEM_TYPES[0]} className="min-w-0">
           {/* Tabs wrap on narrow screens: the list and every tab size to their content (h-auto). */}
@@ -87,30 +118,9 @@ export function ReviewScreen({ meetingId }: { meetingId: string }) {
                   key={item.id}
                   item={item}
                   readOnly={readOnly}
-                  pending={act.isPending && act.variables?.id === item.id}
-                  onAction={(body) => {
-                    const p = act.mutateAsync({ id: item.id, body })
-                    // Edit errors are shown inline by the edit form, not in the banner.
-                    if (body.action === "edit") {
-                      return p.then((r) => {
-                        setActionError(null)
-                        return r
-                      })
-                    }
-                    return p.then(
-                      (r) => {
-                        setActionError(null)
-                        return r
-                      },
-                      (e: unknown) => {
-                        setActionError(
-                          e instanceof ApiError ? e.message : "Không cập nhật được mục.",
-                        )
-                        throw e
-                      },
-                    )
-                  }}
-                  onEvidenceClick={(id) => setHighlight((h) => ({ id, nonce: (h?.nonce ?? 0) + 1 }))}
+                  pending={pendingId === item.id}
+                  onAction={(body) => run(item.id, body)}
+                  onEvidenceClick={seek}
                 />
               ))}
             </TabsContent>
@@ -118,7 +128,7 @@ export function ReviewScreen({ meetingId }: { meetingId: string }) {
           <TabsContent value="topics">
             <TopicTimeline
               meetingId={meetingId}
-              onSeek={(id) => setHighlight((h) => ({ id, nonce: (h?.nonce ?? 0) + 1 }))}
+              onSeek={seek}
             />
           </TabsContent>
         </Tabs>

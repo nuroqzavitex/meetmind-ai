@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { REVIEW_STATE_LABEL, fmtDate, fmtPercent } from "@/lib/format"
 import { ITEM_TYPE_STYLE, REVIEW_STATE_STYLE } from "@/lib/item-style"
 import type { ItemAction, ItemOut } from "@/lib/types"
+import { HoldNote } from "./hold"
 import { ItemEditForm } from "./item-edit-form"
 
 const FLAG_LABEL: Record<string, string> = {
@@ -81,6 +82,7 @@ export function ItemCard({
             ))}
           </p>
         )}
+        {item.hold && <HoldNote hold={item.hold} />}
         {meta.some(([, v]) => v) && (
           <dl className="grid gap-x-4 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
             {meta.map(([k, val]) =>

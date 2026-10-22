@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.ai.domain.enums import ItemStatus, ItemType, ReviewState
-from app.ai.domain.models import Evidence, MeetingContext, MeetingItem
+from app.ai.domain.models import Evidence, Hold, MeetingContext, MeetingItem
 from app.services.export import render_json, render_markdown
 
 CTX = MeetingContext(meeting_id="m1", title="Họp dự án", meeting_date=date(2026, 10, 9))
@@ -69,3 +69,11 @@ def test_markdown_bullet_collapses_newlines() -> None:
     md = render_markdown(CTX, [item], None)
     assert "- Dòng một ## Chèn heading - bullet giả — A B" in md
     assert "\n## Chèn" not in md
+
+
+def test_markdown_says_why_an_open_question_is_not_settled() -> None:
+    hold = Hold(reason="conditional", quote="Nếu pháp chế duyệt thì\nVân soạn mẫu.",
+                phrase="Nếu pháp chế duyệt thì")
+    item = _item(1, ItemType.OPEN_QUESTION, "Soạn mẫu thông báo", hold=hold)
+    md = render_markdown(CTX, [item], None)
+    assert '(chưa chốt: chỉ làm khi có điều kiện — "Nếu pháp chế duyệt thì Vân soạn mẫu.")' in md

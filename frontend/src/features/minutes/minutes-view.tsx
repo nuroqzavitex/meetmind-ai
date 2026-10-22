@@ -1,6 +1,6 @@
 "use client"
 
-import { Download, FileJson, ScrollText } from "lucide-react"
+import { CircleCheckBig, Download, FileJson, Info, ScrollText, ShieldAlert } from "lucide-react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
@@ -20,6 +20,34 @@ import { ReopenDialog } from "./reopen-dialog"
 import { ReportDialog } from "./report-dialog"
 
 const noop = () => {}
+
+/** Settled outcomes first, then what is still open, then everything else. */
+const MINUTES_PARTS = [
+  {
+    title: "Đã chốt",
+    description: "Quyết định và việc cần làm đã được người duyệt xác nhận.",
+    types: ["decision", "action_item"],
+    icon: CircleCheckBig,
+    iconClass: "text-emerald-600",
+    className: "border-emerald-200 bg-emerald-50/30 dark:border-emerald-500/30 dark:bg-emerald-950/10",
+  },
+  {
+    title: "Chưa chốt – cần theo dõi",
+    description: "Những điều cuộc họp chưa quyết hoặc chưa ai nhận. Không phải việc chính thức.",
+    types: ["open_question"],
+    icon: ShieldAlert,
+    iconClass: "text-amber-600",
+    className: "border-amber-200 bg-amber-50/30 dark:border-amber-500/30 dark:bg-amber-950/10",
+  },
+  {
+    title: "Thông tin khác",
+    description: "Vướng mắc, yêu cầu, tri thức và góp ý được ghi nhận trong buổi họp.",
+    types: ["blocker", "request", "knowledge", "feedback"],
+    icon: Info,
+    iconClass: "text-muted-foreground",
+    className: "bg-card",
+  },
+]
 
 export function MinutesView({ meetingId }: { meetingId: string }) {
   const { download } = useApi()
@@ -107,26 +135,41 @@ export function MinutesView({ meetingId }: { meetingId: string }) {
         )}
       </header>
 
-      {ITEM_TYPES.map((t) => {
-        const group = shown.filter((i) => i.type === t)
-        if (group.length === 0) return null
+      {MINUTES_PARTS.map((part) => {
+        const types = ITEM_TYPES.filter((t) => part.types.includes(t))
+        if (!types.some((t) => shown.some((i) => i.type === t))) return null
         return (
-          <section key={t} className="space-y-3">
-            <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <span aria-hidden className={cn("size-2.5 rounded-full", ITEM_TYPE_STYLE[t].dot)} />
-              {ITEM_TYPE_LABEL[t]}
-            </h2>
-            {group.map((i) => (
-              <div key={i.id} className="space-y-1">
-                <ItemCard item={i} readOnly onAction={noop} onEvidenceClick={onEvidence} />
-                {m.status === "published" && (
-                  <div className="flex gap-2 pl-1">
-                    <ReportDialog itemId={i.id} />
-                    <ReopenDialog itemId={i.id} meetingId={meetingId} />
-                  </div>
-                )}
-              </div>
-            ))}
+          <section key={part.title} className={cn("space-y-4 rounded-xl border p-4", part.className)}>
+            <div className="space-y-0.5">
+              <h2 className="flex items-center gap-2 text-xl font-semibold">
+                <part.icon aria-hidden className={cn("size-5", part.iconClass)} />
+                {part.title}
+              </h2>
+              <p className="text-sm text-muted-foreground">{part.description}</p>
+            </div>
+            {types.map((t) => {
+              const group = shown.filter((i) => i.type === t)
+              if (group.length === 0) return null
+              return (
+                <div key={t} className="space-y-3">
+                  <h3 className="flex items-center gap-2 font-semibold">
+                    <span aria-hidden className={cn("size-2.5 rounded-full", ITEM_TYPE_STYLE[t].dot)} />
+                    {ITEM_TYPE_LABEL[t]}
+                  </h3>
+                  {group.map((i) => (
+                    <div key={i.id} className="space-y-1">
+                      <ItemCard item={i} readOnly onAction={noop} onEvidenceClick={onEvidence} />
+                      {m.status === "published" && (
+                        <div className="flex gap-2 pl-1">
+                          <ReportDialog itemId={i.id} />
+                          <ReopenDialog itemId={i.id} meetingId={meetingId} />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )
+            })}
           </section>
         )
       })}

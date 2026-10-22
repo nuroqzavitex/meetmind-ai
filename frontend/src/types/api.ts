@@ -612,13 +612,32 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /**
+         * Hold
+         * @description Why a decision or task is held for confirmation instead of presented as official.
+         */
+        Hold: {
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "declined" | "conditional" | "negation" | "waiting" | "tentative" | "no_owner";
+            /** Quote */
+            quote: string;
+            /** Phrase */
+            phrase?: string | null;
+            /** Speaker */
+            speaker?: string | null;
+            /** Ts */
+            ts?: string | null;
+        };
         /** ItemAction */
         ItemAction: {
             /**
              * Action
              * @enum {string}
              */
-            action: "approve" | "edit" | "reject";
+            action: "approve" | "edit" | "reject" | "to_question";
             patch?: components["schemas"]["ItemPatch"] | null;
             /** Reason */
             reason?: string | null;
@@ -686,6 +705,7 @@ export interface components {
             evidence: components["schemas"]["Evidence"][];
             /** @default pending */
             review_state: components["schemas"]["ReviewState"];
+            hold?: components["schemas"]["Hold"] | null;
         };
         /** ItemPatch */
         ItemPatch: {

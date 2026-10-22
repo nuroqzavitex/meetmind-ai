@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from tests.backend.api_helpers import auth
 from tests.backend.pipeline_helpers import seed_analyzed_meeting
 
-from app.ai.domain.models import MeetingItem
+from app.ai.domain.models import Hold, MeetingItem
 from app.repositories import items as items_repo
 from app.repositories import meetings as meetings_repo
 
@@ -192,3 +192,68 @@ async def test_topics_endpoint(
     topic = next(t for t in r.json() if "Postgres" in t["options"])
     assert topic["options"]["Postgres"]["state"] == "decided"
     assert topic["options"]["MongoDB"]["state"] == "superseded"
+
+
+async def _hold_first(
+    sessionmaker: async_sessionmaker[AsyncSession], item_type: str
+) -> str:
+    """Put a guard hold on the first item of `item_type`, as the analysis would; return its id."""
+    hold = Hold(reason="declined", quote="Tuần này em kín lịch rồi.", phrase="kín lịch",
+                speaker="Minh", ts="00:04:20")
+    async with sessionmaker() as s:
+        rows = await items_repo.list_for_meeting(s, org_id="org_a", meeting_id="m1")
+        row = next(r for r in rows if r.type == item_type)
+        model = items_repo.to_model(row)
+        held = model.model_copy(update={
+            "hold": hold, "flags": [*model.flags, "needs_confirmation", "declined"]})
+        await items_repo.save(s, item=row, model=held)
+        await s.commit()
+        return row.id
+
+
+async def test_approving_a_held_item_makes_it_official(
+    client: httpx.AsyncClient, sessionmaker: async_sessionmaker[AsyncSession]
+) -> None:
+    await seed_analyzed_meeting(sessionmaker)
+    iid = await _hold_first(sessionmaker, "action_item")
+    r = await client.patch(f"/items/{iid}", json={"action": "approve"}, headers=auth())
+    body = r.json()
+    assert r.status_code == 200 and body["review_state"] == "approved"
+    assert body["hold"] is None
+    assert "needs_confirmation" not in body["flags"] and "declined" not in body["flags"]
+
+
+async def test_held_task_becomes_an_open_question(
+    client: httpx.AsyncClient, sessionmaker: async_sessionmaker[AsyncSession]
+) -> None:
+    await seed_analyzed_meeting(sessionmaker)
+    iid = await _hold_first(sessionmaker, "action_item")
+    r = await client.patch(f"/items/{iid}", json={"action": "to_question"}, headers=auth())
+    body = r.json()
+    assert r.status_code == 200
+    assert body["type"] == "open_question" and body["status"] == "open"
+    assert body["review_state"] == "edited" and body["due_date"] is None
+    assert body["hold"]["reason"] == "declined"  # kept: it explains why the question is open
+    assert "needs_confirmation" not in body["flags"]
+    ev = (await client.get(f"/items/{iid}/events", headers=auth())).json()
+    assert ev[-1]["action"] == "to_question"
+
+
+async def test_held_decision_becomes_its_question(
+    client: httpx.AsyncClient, sessionmaker: async_sessionmaker[AsyncSession]
+) -> None:
+    await seed_analyzed_meeting(sessionmaker)
+    iid = await _hold_first(sessionmaker, "decision")
+    before = next(i for i in await _items(client, "m1") if i["id"] == iid)
+    r = await client.patch(f"/items/{iid}", json={"action": "to_question"}, headers=auth())
+    assert r.json()["content"] == before["content"].rsplit("→", 1)[0].strip()
+
+
+async def test_only_decisions_and_tasks_convert_to_questions(
+    client: httpx.AsyncClient, sessionmaker: async_sessionmaker[AsyncSession]
+) -> None:
+    mid = await seed_analyzed_meeting(sessionmaker)
+    other = next(i for i in await _items(client, mid)
+                 if i["type"] not in ("decision", "action_item"))
+    r = await client.patch(f"/items/{other['id']}", json={"action": "to_question"}, headers=auth())
+    assert r.status_code == 422 and r.json()["error"]["code"] == "not_convertible"

@@ -44,7 +44,8 @@ class ItemPatch(BaseModel):
 
 
 class ItemAction(BaseModel):
-    action: Literal["approve", "edit", "reject"]
+    # to_question: a held decision/task was never settled; keep it as an open question instead.
+    action: Literal["approve", "edit", "reject", "to_question"]
     patch: ItemPatch | None = None
     reason: str | None = Field(default=None, max_length=1000)
 
