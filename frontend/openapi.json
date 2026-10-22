@@ -1153,6 +1153,223 @@
           }
         }
       }
+    },
+    "/api/v1/overview/agenda": {
+      "get": {
+        "tags": [
+          "overview"
+        ],
+        "summary": "Agenda",
+        "operationId": "agenda_api_v1_overview_agenda_get",
+        "parameters": [
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgendaOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/overview/agenda/discord": {
+      "post": {
+        "tags": [
+          "overview"
+        ],
+        "summary": "Send Agenda",
+        "operationId": "send_agenda_api_v1_overview_agenda_discord_post",
+        "parameters": [
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgendaSentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/overview/tasks": {
+      "get": {
+        "tags": [
+          "overview"
+        ],
+        "summary": "Tasks",
+        "operationId": "tasks_api_v1_overview_tasks_get",
+        "parameters": [
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project"
+            }
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasksOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/overview/decisions": {
+      "get": {
+        "tags": [
+          "overview"
+        ],
+        "summary": "Decisions",
+        "operationId": "decisions_api_v1_overview_decisions_get",
+        "parameters": [
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1178,6 +1395,83 @@
           "hypothetical"
         ],
         "title": "Act"
+      },
+      "AgendaOut": {
+        "properties": {
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project"
+          },
+          "projects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Projects"
+          },
+          "generated_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Generated On"
+          },
+          "to_decide": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewEntry"
+            },
+            "type": "array",
+            "title": "To Decide"
+          },
+          "conditions": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewEntry"
+            },
+            "type": "array",
+            "title": "Conditions"
+          },
+          "due": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewEntry"
+            },
+            "type": "array",
+            "title": "Due"
+          },
+          "markdown": {
+            "type": "string",
+            "title": "Markdown"
+          }
+        },
+        "type": "object",
+        "required": [
+          "project",
+          "projects",
+          "generated_on",
+          "to_decide",
+          "conditions",
+          "due",
+          "markdown"
+        ],
+        "title": "AgendaOut",
+        "description": "Next-meeting agenda built from what published meetings left open (no LLM)."
+      },
+      "AgendaSentOut": {
+        "properties": {
+          "sent": {
+            "type": "boolean",
+            "title": "Sent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sent"
+        ],
+        "title": "AgendaSentOut"
       },
       "ApproveCleanOut": {
         "properties": {
@@ -1259,6 +1553,30 @@
           "utterance_id"
         ],
         "title": "Citation"
+      },
+      "DecisionsOut": {
+        "properties": {
+          "projects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Projects"
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewEntry"
+            },
+            "type": "array",
+            "title": "Decisions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "projects",
+          "decisions"
+        ],
+        "title": "DecisionsOut"
       },
       "DialogueAct": {
         "properties": {
@@ -2441,6 +2759,174 @@
         ],
         "title": "Option"
       },
+      "OverviewEntry": {
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "title": "Item Id"
+          },
+          "meeting_id": {
+            "type": "string",
+            "title": "Meeting Id"
+          },
+          "meeting_title": {
+            "type": "string",
+            "title": "Meeting Title"
+          },
+          "meeting_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Meeting Date"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ItemType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due Date"
+          },
+          "due_state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "overdue",
+                  "today",
+                  "soon",
+                  "later"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due State"
+          },
+          "condition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Condition"
+          },
+          "supersedes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supersedes",
+            "default": []
+          },
+          "hold": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Hold"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "speaker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speaker"
+          },
+          "ts": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts"
+          },
+          "quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quote"
+          },
+          "utterance_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utterance Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item_id",
+          "meeting_id",
+          "meeting_title",
+          "meeting_date",
+          "project",
+          "type",
+          "status",
+          "content"
+        ],
+        "title": "OverviewEntry",
+        "description": "One published item, with the meeting it comes from and its first piece of evidence."
+      },
       "Participant": {
         "properties": {
           "name": {
@@ -2627,6 +3113,38 @@
           "speakers"
         ],
         "title": "SpeakersIn"
+      },
+      "TasksOut": {
+        "properties": {
+          "projects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Projects"
+          },
+          "owners": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Owners"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewEntry"
+            },
+            "type": "array",
+            "title": "Tasks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "projects",
+          "owners",
+          "tasks"
+        ],
+        "title": "TasksOut"
       },
       "TopicOut": {
         "properties": {

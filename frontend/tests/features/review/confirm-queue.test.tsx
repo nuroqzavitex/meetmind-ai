@@ -32,8 +32,8 @@ test("counts settled decisions and tasks apart from held ones", () => {
     mk({ id: "b", type: "decision" }),
     mk({ id: "c", type: "blocker" }),
     mk({ id: "d", review_state: "rejected" }),
-    { ...declined, id: "e" },
-    { ...declined, id: "f", review_state: "edited" },
+    mk({ ...declined, id: "e" }),
+    mk({ ...declined, id: "f", review_state: "edited" }),
   ]
   expect(settledCount(items)).toBe(2)
   expect(heldPending(items).map((i) => i.id)).toEqual(["e"])
@@ -84,7 +84,7 @@ test("read-only hides the actions; nothing held means no queue", () => {
 })
 
 test("all held items settled shows a done note", () => {
-  render(<ConfirmQueue items={[{ ...declined, review_state: "edited" }]} readOnly={false} pendingId={null}
+  render(<ConfirmQueue items={[mk({ ...declined, review_state: "edited" })]} readOnly={false} pendingId={null}
     onAction={vi.fn()} onEvidenceClick={vi.fn()} />)
   expect(screen.getByText("Đã xử lý hết các mục cần xác nhận.")).toBeInTheDocument()
 })

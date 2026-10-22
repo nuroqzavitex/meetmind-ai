@@ -196,3 +196,46 @@ async def test_rotating_the_code_invalidates_the_old_one(
     assert new != old
     r = (await _send(client, _command("ketnoi", old, perms=MANAGE_GUILD))).json()
     assert "không đúng" in r["data"]["content"]
+
+
+def _overview(name: str, **opts: str) -> dict[str, Any]:
+    payload = _command(name, "")
+    payload["data"]["options"] = [{"name": k, "type": 3, "value": v} for k, v in opts.items()]
+    return payload
+
+
+async def test_overview_commands_answer_from_published_minutes(
+    client: httpx.AsyncClient, bot: Recorder, sessionmaker: Any
+) -> None:
+    from tests.backend.pipeline_helpers import seed_analyzed_meeting
+
+    await seed_analyzed_meeting(sessionmaker)
+    for it in (await client.get("/meetings/m1/items", headers=auth())).json():
+        await client.patch(f"/items/{it['id']}", json={"action": "approve"}, headers=auth())
+    await client.post("/meetings/m1/publish", headers=auth())
+    code = await _link_code(client)
+    await _send(client, _command("ketnoi", code, perms=MANAGE_GUILD))
+
+    r = (await _send(client, _overview("quyetdinh"))).json()
+    assert r["type"] == 4 and "flags" not in r["data"]  # public, answered at once
+    assert r["data"]["content"].startswith("🧭 **Quyết định gần đây**")
+    assert "Postgre" in r["data"]["content"]
+
+    r = (await _send(client, _overview("viec", ten="minh"))).json()
+    assert r["data"]["content"].startswith("🗂️ **Việc của Minh**")
+
+    r = (await _send(client, _overview("chuongtrinh"))).json()
+    assert r["data"]["content"].startswith("**📋 Chương trình họp kế tiếp**")
+    assert r["data"]["allowed_mentions"] == {"parse": []}
+    assert bot.patches == []  # no background follow-up for these commands
+
+
+async def test_tasks_command_needs_a_name_and_a_linked_server(
+    client: httpx.AsyncClient, bot: Recorder
+) -> None:
+    r = (await _send(client, _overview("viec", ten="Minh"))).json()
+    assert "chưa liên kết" in r["data"]["content"]
+    code = await _link_code(client)
+    await _send(client, _command("ketnoi", code, perms=MANAGE_GUILD))
+    r = (await _send(client, _overview("viec"))).json()
+    assert r["data"]["flags"] == 64 and "/viec ten:" in r["data"]["content"]

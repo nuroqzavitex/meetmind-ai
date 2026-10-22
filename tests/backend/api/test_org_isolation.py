@@ -134,3 +134,17 @@ async def test_discord_settings_are_per_org(client: httpx.AsyncClient) -> None:
     }
     test = await client.post("/settings/discord/test", headers=auth(org="org_a"))
     assert test.status_code == 409 and test.json()["error"]["code"] == "not_configured"
+
+
+async def test_overview_shows_only_the_callers_org(
+    client: httpx.AsyncClient, org_b: OrgB
+) -> None:
+    def total(body: dict[str, object]) -> int:
+        lists = ("tasks", "decisions", "to_decide", "conditions", "due")
+        return sum(len(body[k]) for k in lists if k in body)  # type: ignore[arg-type]
+
+    for path in ("/overview/tasks", "/overview/decisions", "/overview/agenda"):
+        mine = await client.get(path, headers=auth(org="org_a"))
+        assert mine.status_code == 200 and total(mine.json()) == 0, path
+    theirs = (await client.get("/overview/decisions", headers=auth(org="org_b"))).json()
+    assert total(theirs) > 0  # positive control: org_b does see its own published meeting

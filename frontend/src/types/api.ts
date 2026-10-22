@@ -485,6 +485,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/overview/agenda": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Agenda */
+        get: operations["agenda_api_v1_overview_agenda_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/overview/agenda/discord": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send Agenda */
+        post: operations["send_agenda_api_v1_overview_agenda_discord_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/overview/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Tasks */
+        get: operations["tasks_api_v1_overview_tasks_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/overview/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Decisions */
+        get: operations["decisions_api_v1_overview_decisions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -494,6 +562,34 @@ export interface components {
          * @enum {string}
          */
         Act: "propose" | "support" | "object" | "amend" | "decide" | "reject" | "defer" | "reopen" | "assign" | "accept_task" | "raise_blocker" | "request" | "feedback" | "knowledge" | "ask" | "hypothetical";
+        /**
+         * AgendaOut
+         * @description Next-meeting agenda built from what published meetings left open (no LLM).
+         */
+        AgendaOut: {
+            /** Project */
+            project: string | null;
+            /** Projects */
+            projects: string[];
+            /**
+             * Generated On
+             * Format: date
+             */
+            generated_on: string;
+            /** To Decide */
+            to_decide: components["schemas"]["OverviewEntry"][];
+            /** Conditions */
+            conditions: components["schemas"]["OverviewEntry"][];
+            /** Due */
+            due: components["schemas"]["OverviewEntry"][];
+            /** Markdown */
+            markdown: string;
+        };
+        /** AgendaSentOut */
+        AgendaSentOut: {
+            /** Sent */
+            sent: boolean;
+        };
         /** ApproveCleanOut */
         ApproveCleanOut: {
             /** Approved */
@@ -527,6 +623,13 @@ export interface components {
             quote: string;
             /** Utterance Id */
             utterance_id: string;
+        };
+        /** DecisionsOut */
+        DecisionsOut: {
+            /** Projects */
+            projects: string[];
+            /** Decisions */
+            decisions: components["schemas"]["OverviewEntry"][];
         };
         /** DialogueAct */
         DialogueAct: {
@@ -900,6 +1003,51 @@ export interface components {
                 string
             ][];
         };
+        /**
+         * OverviewEntry
+         * @description One published item, with the meeting it comes from and its first piece of evidence.
+         */
+        OverviewEntry: {
+            /** Item Id */
+            item_id: string;
+            /** Meeting Id */
+            meeting_id: string;
+            /** Meeting Title */
+            meeting_title: string;
+            /**
+             * Meeting Date
+             * Format: date
+             */
+            meeting_date: string;
+            /** Project */
+            project: string | null;
+            type: components["schemas"]["ItemType"];
+            status: components["schemas"]["ItemStatus"];
+            /** Content */
+            content: string;
+            /** Owner */
+            owner?: string | null;
+            /** Due Date */
+            due_date?: string | null;
+            /** Due State */
+            due_state?: ("overdue" | "today" | "soon" | "later") | null;
+            /** Condition */
+            condition?: string | null;
+            /**
+             * Supersedes
+             * @default []
+             */
+            supersedes: string[];
+            hold?: components["schemas"]["Hold"] | null;
+            /** Speaker */
+            speaker?: string | null;
+            /** Ts */
+            ts?: string | null;
+            /** Quote */
+            quote?: string | null;
+            /** Utterance Id */
+            utterance_id?: string | null;
+        };
         /** Participant */
         Participant: {
             /** Name */
@@ -966,6 +1114,15 @@ export interface components {
         SpeakersIn: {
             /** Speakers */
             speakers: components["schemas"]["SpeakerAssignment"][];
+        };
+        /** TasksOut */
+        TasksOut: {
+            /** Projects */
+            projects: string[];
+            /** Owners */
+            owners: string[];
+            /** Tasks */
+            tasks: components["schemas"]["OverviewEntry"][];
         };
         /**
          * TopicOut
@@ -1984,6 +2141,131 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DiscordBotOut"];
+                };
+            };
+        };
+    };
+    agenda_api_v1_overview_agenda_get: {
+        parameters: {
+            query?: {
+                project?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgendaOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_agenda_api_v1_overview_agenda_discord_post: {
+        parameters: {
+            query?: {
+                project?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgendaSentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    tasks_api_v1_overview_tasks_get: {
+        parameters: {
+            query?: {
+                project?: string | null;
+                owner?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TasksOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decisions_api_v1_overview_decisions_get: {
+        parameters: {
+            query?: {
+                project?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

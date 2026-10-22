@@ -19,8 +19,11 @@ from app.models import OrgSettings
 from app.notify.discord import DiscordClient, DiscordError
 from app.notify.discord_bot import (
     ASK_COMMAND,
+    CHANNEL_MESSAGE,
     DEFERRED_CHANNEL_MESSAGE,
     LINK_COMMAND,
+    OVERVIEW_COMMANDS,
+    TASKS_COMMAND,
     answer_message,
     can_manage_server,
     ephemeral,
@@ -29,7 +32,7 @@ from app.notify.discord_bot import (
 )
 from app.repositories import org_settings as settings_repo
 from app.schemas.settings import DiscordBotOut
-from app.services import qa
+from app.services import overview, qa
 from app.services.join_requests import ALPHABET
 
 logger = logging.getLogger(__name__)
@@ -143,7 +146,7 @@ async def handle_command(
         return ephemeral("Hãy dùng lệnh này trong server Discord đã liên kết với MeetMind."), None, ""
     if name == LINK_COMMAND:
         return await _link(session, payload, str(guild_id)), None, ""
-    if name != ASK_COMMAND:
+    if name != ASK_COMMAND and name not in OVERVIEW_COMMANDS:
         return ephemeral("Lệnh không được hỗ trợ."), None, ""
     row = await session.scalar(
         select(OrgSettings).where(OrgSettings.discord_guild_id == str(guild_id))
@@ -157,6 +160,16 @@ async def handle_command(
             None,
             "",
         )
+    if name in OVERVIEW_COMMANDS:
+        who = option(data, "ten")[:100] or None
+        if name == TASKS_COMMAND and not who:
+            return ephemeral("Hãy nhập tên, ví dụ: `/viec ten:Minh`"), None, ""
+        text = await overview.command_message(
+            session, org_id=row.org_id, command=name, project=option(data, "du_an")[:200] or None,
+            who=who, today=overview.vn_today(),
+        )
+        message = {"content": text, "allowed_mentions": {"parse": []}}
+        return {"type": CHANNEL_MESSAGE, "data": message}, None, ""
     question = option(data, "cau_hoi")[:MAX_QUESTION]
     if not question:
         return ephemeral("Hãy nhập câu hỏi, ví dụ: `/hoi Chốt dùng CSDL nào?`"), None, ""
